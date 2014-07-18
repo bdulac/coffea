@@ -1,7 +1,7 @@
 BODY {
 	background-image: url("background.png");
 	background-attachment: fixed;
-	font-style: italic;
+	/*font-style: italic;*/
 }
 
 H1 {
@@ -33,6 +33,7 @@ TD {
 	line-height: 2.3;
 	font-weight: normal;
 	font-size: x-large;
+	font-style: italic;
 	padding-bottom: 10px;
 }
 
@@ -68,14 +69,6 @@ TD {
 	position: fixed;
 	color: brown;
 	text-align: right;
-	/*
-	border-style: outset;
-	padding: 5px;
-	margin: 5px;
-	border-width: 1px;
-	-moz-border-radius: 0px 15px 15px 15px;
-	-webkit-border-radius: 0px 15px 15px 15px;
-	*/
 }
 
 .links A {
@@ -85,10 +78,8 @@ TD {
 	border-width: 1px;
 	padding: 5px;
 	margin: 5px;
-	-webkit-border-radius: 0px 7px 7px 7px;
-	-moz-border-radius: 0px 7px 7px 7px;
-	-moz-box-shadow: 2px 0 3px #333, 3px 0 3px brown;
-    -webkit-box-shadow: 2px 0 3px #333, 3px 0 3px brown;
+	border-radius: 0px 7px 7px 7px;
+	box-shadow: 2px 0 3px #333, 3px 0 3px brown;
 }
 
 .internalLinks {
@@ -120,16 +111,14 @@ TD {
 	border-right-style: solid;
 	padding: 2px;
 	margin: 2px;
-	-moz-border-radius: 0px 15px 15px 15px;
-	-webkit-border-radius: 0px 15px 15px 15px;
+	border-radius: 0px 15px 15px 15px;
 }
 
 .selection A {
 	background-image: url("selection.png");
 	padding: 5px;
 	margin: 5px;
-	-moz-border-radius: 0px 15px 15px 15px;
-	-webkit-border-radius: 0px 15px 15px 15px;	
+	border-radius: 0px 15px 15px 15px;	
 }
 
 .download A {
@@ -139,8 +128,7 @@ TD {
 	padding: 1px;
 	margin: 1px;
 	border-width: 1px;
-	-moz-border-radius: 15px 15px 15px 15px;
-	-webkit-border-radius: 15px 15px 15px 15px;
+	border-radius: 15px 15px 15px 15px;
 }
 
 .special {
@@ -151,26 +139,9 @@ TD {
     text-align: center;
     border-style: solid;
     border-color: brown;
-    -moz-border-radius: 10px 10px 10px 10px;
-    -webkit-border-radius: 10px 10px 10px 10px;
-    -moz-box-shadow: 2px 0 3px #333, 3px 0 3px brown;
-    -webkit-box-shadow: 2px 0 3px #333, 3px 0 3px brown;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 2px 0 3px #333, 3px 0 3px brown;
 }
-
-/*
-.special P {
-	background-image: url("cartouche.png");
-	border-style: ridge;
-	border-width: 1px;
-	padding: 20px;
-	margin: 10px;
-	border-color: gold;
-	-moz-border-radius: 30px 30px 30px 30px;
-	-webkit-border-radius: 30px 30px 30px 30px;
-	-moz-box-shadow: 2px 0 2px #333, 2px 0 2px brown;
-    -webkit-box-shadow: 2px 0 2px #333, 2px 0 2px brown;
-}
-*/
 
 .step {
 	width: 50%;
@@ -187,8 +158,7 @@ TD {
 	border-width: 1px;
 	padding: 5px;
 	margin: 5px;
-	-moz-border-radius: 20px 20px 20px 20px;
-	-webkit-border-radius: 20px 20px 20px 20px;
+	border-radius: 20px 20px 20px 20px;
 }
 
 .step IMG {
