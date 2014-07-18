@@ -1,3 +1,129 @@
-_Coffea_ is an _Eclipse_ plug-in linking the [_Eclipse_ Java Development Tools](http://www.eclipse.org/jdt/) (JDT) to UML editors.
-A [previous version](http://coffea.sourceforge.net) hosted on sourceforge used the [_Eclipse_ UML2Tools](http://wiki.eclipse.org/MDT-UML2Tools) editors. According to Ed Merks, these tools are [no longer being maintained](http://www.eclipse.org/forums/index.php?t=msg&goto=544976). Therefore, this _Coffea_ version does not work with _Eclipse_ distributions above _Galileo_.
-A re-factoring work aims to adapt the initial work for [_Eclipse_ Papyrus](http://www.eclipse.org/papyrus/).
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Coffea - UML Eclipse plug-in</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <link 
+    rel="stylesheet" 
+    media="screen, projection, print" 
+    type="text/css" 
+    href="coffea.css" />
+  <link rel="icon" href="coffea.ico" type="image/x-icon" />
+</head>
+<body>
+  <div class="links">
+    <div class="internalLinks">
+      <p class="selection">
+        <a href="index.html">
+          Main page
+        </a>
+      </p>
+      <p>
+        <a href="the_idea.html">
+          The idea
+        </a>
+      </p>
+      <p>
+        <a href="new_project.html">Tutorial</a>
+      </p>
+      <p>
+        <a href="downloads.html">Downloads</a>
+      </p>
+      <p>
+        <a href="diagrams_net.sourceforge.coffea.html">Diagrams</a>
+      </p>
+    </div>
+    <div class="externalLinks">
+      <p>
+        <a 
+          href="http://sourceforge.net/projects/coffea/"
+          target="_blank">
+          Project details
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://www.eclipse.org/modeling/mdt/?project=uml2" 
+          target="_blank">
+          Eclipse UML2 tools
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://www.eclipse.org/jdt/" 
+          target="_blank">
+          Eclipse JDT
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://marketplace.eclipse.org/taxonomy/term/19%2C39"
+          target="_blank">
+          Eclipse Marketplace
+        </a>
+      </p>
+    </div>
+  </div>
+  <div class="logo">
+    <a href="index.html">
+      <img alt="Logo" src="logo.png" />
+    </a>
+  </div>
+  <div class="content" align="center">
+          <div  class="title">Coffea</div>
+          <div class="special">
+          <p>
+            <a href="http://wiki.eclipse.org/MDT-UML2Tools">UML2 Tools</a> are 
+            not part of the <a href="">Helios relase</a>. According to Ed Merks 
+            <a href="http://www.eclipse.org/forums/index.php?t=msg&goto=544976&">
+            they are no longer being maintained</a>. Consequently, the Coffea 
+            plug-in needs refactoring. The coming objective will be to separate 
+            the UML2 Tools dependencies from the rest of the plug-in. As a 
+            result, the current plug-in will only allow reverse-engineering 
+            using the <a href="http://wiki.eclipse.org/MDT-UML2">UML2</a> API 
+            to produce an  
+            <a href="http://www.omgwiki.org/model-interchange/doku.php?id=start">
+            XMI</a> compliant document. An independent new plug-in should 
+            propose code edition with the UML2 Tools.
+          </p>
+        </div>
+        <div class="text">
+          <p>
+            This project is an eclipse plug-in aiming to link the 
+            <a href="http://www.eclipse.org">eclipse</a> 
+        	<a href="http://wiki.eclipse.org/MDT-UML2">
+        	UML2</a> and 
+        	<a href="http://wiki.eclipse.org/MDT-UML2Tools">UML2 Tools</a>
+        	 to the 
+        	<a href="http://www.eclipse.org/jdt/">Java development tools</a>.
+          </p>
+          <p>
+            To use the plug-in, you need an eclipse Galileo 
+            distribution including the Java development tools and the UML2 
+            tools : just 
+            <span>
+              <a 
+              href="http://sourceforge.net/project/showfiles.php?group_id=249590">
+              download the jar file </a>
+            </span> and deploy it in the eclipse <em>plug-ins</em> directory.
+          </p>
+          <p>
+            In the latest package, the plug-in allows to reverse java packages 
+            code to UML diagrams ; selected classes and attributes are 
+            <a href="http://sourceforge.net/dbimage.php?id=200578">displayed
+            </a> in the class diagram editor in the workbench navigators views. 
+            Classes, properties and packages creation, renaming and removal 
+            performed using the editor are propagated to the code. 
+          </p>
+        </div>
+        <div class="note">
+          To join this project, please contact the 
+          <a href="http://sourceforge.net/users/berenger_dulac">administrator</a>, as 
+          shown on the <a href="http://sourceforge.net/projects/coffea/">project
+          summary</a> page. 
+        </div>
+  </div>
+</body>
+</html>

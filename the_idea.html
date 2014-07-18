@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Coffea - The idea</title>
+  <link 
+    rel="stylesheet" 
+    media="screen, projection, print" 
+    type="text/css" 
+    href="coffea.css" />
+  <link rel="icon" href="coffea.ico" type="image/x-icon" />
+</head>
+<body>
+  <div class="links">
+    <div class="internalLinks">
+      <p>
+        <a href="index.html">
+          Main page
+        </a>
+      </p>
+      <p class="selection">
+        <a href="the_idea.html">
+          The idea
+        </a>
+      </p>
+      <p>
+        <a href="new_project.html">Tutorial</a>
+      </p>
+      <p>
+        <a href="downloads.html">Downloads</a>
+      </p>
+      <p>
+        <a href="diagrams_net.sourceforge.coffea.html">Diagrams</a>
+      </p>
+    </div>
+    <div class="externalLinks">
+      <p>
+        <a 
+          href="http://sourceforge.net/projects/coffea/"
+          target="_blank">
+          Project details
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://www.eclipse.org/modeling/mdt/?project=uml2" 
+          target="_blank">
+          Eclipse UML2 tools
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://www.eclipse.org/jdt/" 
+          target="_blank">
+          Eclipse JDT
+        </a>
+      </p>
+      <p>
+        <a 
+          href="http://marketplace.eclipse.org/taxonomy/term/19%2C39"
+          target="_blank">
+          Eclipse Marketplace
+        </a>
+      </p>
+    </div>
+  </div>
+  <div class="logo">
+    <a href="index.html">
+      <img alt="Logo" src="logo.png" />
+    </a>
+  </div>
+  <div class="content" align="center">
+          <div class="title">Coffea</div>
+          <div class="subtitle">The idea</div>
+        <div class="text">
+          <p>
+            As UML is a language, it can seem natural to consider its use in 
+            the perspective we consider programming languages.  
+          </p>
+          <p>
+            In the 
+            <a href="http://www.eclipse.org/modeling/">
+            Eclipse Modeling Project</a>, 
+            <a href="http://www.eclipse.org/modeling/emf">EMF</a>
+            is a modeling framework combined with a code generation 
+            tooling. 
+            <a href="http://www.eclipse.org/modeling/mdt/?project=uml2">
+        	UML2 tools</a> complete the EMF modeling functionalities, 
+        	implementing standards. The link between code and modeling is 
+        	code generation, as seems natural to programmers used to compile 
+        	code.  
+          </p>
+          <p>
+            If such a use of UML can be very efficient with appropriate 
+            tools, it becomes very difficult to perform re-factoring operations 
+            on a code which was not generated from a formal model. The 
+            following question is : where can be a model found to allow this 
+            kind of operation ?
+          </p>
+          <p>
+            The Eclipse <a href="http://www.eclipse.org/jdt/">Java development 
+            tools</a> provide, after a compilation, an 
+            <a href="http://wiki.eclipse.org/FAQ_What_is_an_AST%3F">AST</a> : 
+            an analyzed version of the code, which can be accessed through a 
+            <a href="http://wiki.eclipse.org/FAQ_What_is_the_Java_model%3F">
+            Java Model</a>, what becomes interesting especially for 
+            re-factoring operations. On this infrastructure rely Eclipse 
+            functions for code changes (packages, classes, properties, 
+            methods renaming, etc).
+          </p>
+          <p>
+            The project idea is to manipulate this model through the Eclipse 
+            UML2 tools, as Java developers do every day using the Eclipse Java 
+            views.
+          </p>
+          <p>
+            Another <em>Sourceforge</em> project has a similar shape : 
+            the <a href="http://green.sourceforge.net/">Green UML</a> Eclipse 
+            plug-in. <em>Coffea</em> is today less evolved but aims to provide 
+            integration with the foundation UML2 editors. Developers could in 
+            a same time use interesting modeling tools and manipulate 
+            code with it.
+          </p> 
+          <p>
+            Some could object UML allows to 
+            express things that do not exist in a language like Java. This is 
+            a point which has not been solved until now.
+          </p>
+          <p>
+            UML graphical notations provide a synthetic perception of 
+            verbose text resources from programming languages. It can be used   
+            as a software architecture tool, as the 
+            <a href="http://www.pearsonhighered.com/educator/product/Unified-Modeling-Language-User-Guide-The/9780321267979.page">
+            UML user guide</a> illustrations 
+            suggest it. 
+            Along the code modification functionality, <em>Coffea</em> also aims to 
+            provide an overview of the code.
+          </p>
+        </div>
+  </div>
+</body>
+</html>
