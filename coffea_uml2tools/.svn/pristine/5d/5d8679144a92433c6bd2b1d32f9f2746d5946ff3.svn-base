@@ -1,0 +1,99 @@
+package net.sourceforge.coffea.uml2tools.diagram.creation;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.uml2.uml.Model;
+import org.eclipse.uml2.uml.resource.UMLResource;
+
+import net.sourceforge.coffea.uml2.Resources;
+import net.sourceforge.coffea.uml2.model.IModelHandling;
+import net.sourceforge.coffea.uml2.model.creation.ClassDiagramManager;
+import net.sourceforge.coffea.uml2.model.creation.CreateModelRunnable;
+
+public class CreateClassDiagramRunnable extends CreateModelRunnable {
+
+	public CreateClassDiagramRunnable(String uri, IModelHandling m) {
+		super(uri, m);
+	}
+	
+	@Override
+	protected URI buildEMFModelURI(String uri, Model m) {
+		return  
+			URI.createURI(
+					"file://" + uri
+			).appendSegment(
+					Resources.getParameter(
+							"constants.editingFileNamePrefix"
+					) 
+					+ m.getName())
+					.appendFileExtension(
+							UMLResource.FILE_EXTENSION
+					);
+	}
+	
+	@Override
+	protected String buildUMLModelPath(String uri, Model m) {
+		String modelPath = 
+			uri 
+			+ '/' 
+			+ 
+			Resources.getParameter(
+					"constants.editingFileNamePrefix"
+			)
+			+ m.getName() + ".uml";
+		return modelPath;
+	}
+	
+	@Override
+	protected void buildDiagram(
+			String diagramDirectoryUri, 
+			URI modelLocation, 
+			Model m, 
+			IProgressMonitor monitor
+	) {
+		if(getSourceWorkbenchWindow()!=null) {
+
+			ClassDiagramBuilder diagBuilder = 
+				new ClassDiagramBuilder(location, uri, m.getName());
+			diagBuilder.build(monitor);
+			monitor.worked(4);
+			String resourcePath = uri;
+			resourcePath = 
+				resourcePath.substring(
+						ResourcesPlugin.getWorkspace().getRoot()
+						.getLocation().toOSString().length()
+				);
+			IResource workspaceResource = 
+				ResourcesPlugin.getWorkspace().getRoot().findMember(
+						// new Path(resourcePath)
+						resourcePath
+				);
+			monitor.worked(2);
+			try {
+				workspaceResource.refreshLocal(
+						1, 
+						monitor
+				);
+				diagBuilder.openDiagram();
+			}catch (PartInitException ex) {
+				CoffeaUML2Plugin.getInstance().logError(
+						"Unable to open editor", 
+						ex
+				);
+				CoffeaUML2Plugin.getInstance().logError(
+						"Unable to open editor", 
+						ex
+				);
+			} catch (CoreException e) {
+				CoffeaUML2Plugin.getInstance().logError(
+						"Unable to refresh project " + m.getName(), 
+						e
+				);
+			}
+		ClassDiagramBuilder diagBuilder = 
+			new ClassDiagramBuilder(modelLocation, diagramDirectoryUri, m.getName());
+		diagBuilder.build(monitor);
+		monitor.worked(4);
+	}
+
+}

@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_XibtwQBlEd6CU4CM30bYVw" name="net.sourceforge.coffea">
+  <packagedElement xmi:type="uml:Package" xmi:id="_XieKAABlEd6CU4CM30bYVw" name="net.sourceforge.coffea.tools">
+    <packagedElement xmi:type="uml:Package" xmi:id="_XieKAQBlEd6CU4CM30bYVw" name="capacities">
+      <packagedElement xmi:type="uml:Class" xmi:id="_XieKAgBlEd6CU4CM30bYVw" name="IPackageHandling" clientDependency="_Xiq-hQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XieKAwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a {@link Package} 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XieKBABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XieKBQBlEd6CU4CM30bYVw" name="setGroupHandler" visibility="public"/>
+        <ownedOperation xmi:id="_XieKBgBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XieKBwBlEd6CU4CM30bYVw" type="_XiexKQBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_XieKCABlEd6CU4CM30bYVw" name="retrieveContainerFromHierarchy" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XieKCQBlEd6CU4CM30bYVw" name="ITypesContainerHandling" clientDependency="_XiexNABlEd6CU4CM30bYVw _XiexNgBlEd6CU4CM30bYVw _XifYIwBlEd6CU4CM30bYVw _XigmQgBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XieKCgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a types container 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XieKCwBlEd6CU4CM30bYVw" name="getTypesHandlers" visibility="public"/>
+        <ownedOperation xmi:id="_XieKDABlEd6CU4CM30bYVw" name="addTypeHandler" visibility="public"/>
+        <ownedOperation xmi:id="_XieKDQBlEd6CU4CM30bYVw" name="getTypeHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XieKDgBlEd6CU4CM30bYVw" name="ITypesOwnerContainableHandling" clientDependency="_XifYIQBlEd6CU4CM30bYVw _Xif_RQBlEd6CU4CM30bYVw _XigmQABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XieKDwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an element containable in a types owner 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XieKEABlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XieKEQBlEd6CU4CM30bYVw" type="_XieKCQBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XieKEgBlEd6CU4CM30bYVw" name="IOwnerHandling" clientDependency="_XifYIABlEd6CU4CM30bYVw _Xif_QABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XieKEwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an element owning other elements 
+ */
+</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XieKFABlEd6CU4CM30bYVw" name="IContainerHandling" clientDependency="_XiexMgBlEd6CU4CM30bYVw _XiexOABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XieKFQBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a &lt;em>container&lt;/em> of elements 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XiexEABlEd6CU4CM30bYVw" name="getElementHandler" visibility="public">
+          <ownedParameter xmi:id="_XiexEQBlEd6CU4CM30bYVw" type="_XiexEwBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_XiexEgBlEd6CU4CM30bYVw" name="getElementsHandlers" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XiexEwBlEd6CU4CM30bYVw" name="IElementHandling" clientDependency="_XiexNwBlEd6CU4CM30bYVw _XifYKQBlEd6CU4CM30bYVw _XifYNgBlEd6CU4CM30bYVw _XipJLQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XiexFABlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an {@link Element} 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XiexFQBlEd6CU4CM30bYVw" name="getWorker" visibility="public"/>
+        <ownedOperation xmi:id="_XiexFgBlEd6CU4CM30bYVw" name="getModelHandler" visibility="public">
+          <ownedParameter xmi:id="_XiexFwBlEd6CU4CM30bYVw" type="_XiexHwBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_XiexGABlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+        <ownedOperation xmi:id="_XiexGQBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XiexGgBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+        <ownedOperation xmi:id="_XiexGwBlEd6CU4CM30bYVw" name="getFullName" visibility="public"/>
+        <ownedOperation xmi:id="_XiexHABlEd6CU4CM30bYVw" name="fetchGraphicalEditPart" visibility="public"/>
+        <ownedOperation xmi:id="_XiexHQBlEd6CU4CM30bYVw" name="getEditor" visibility="public"/>
+        <ownedOperation xmi:id="_XiexHgBlEd6CU4CM30bYVw" name="findEditorUMLElement" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XiexHwBlEd6CU4CM30bYVw" name="IModelHandling" clientDependency="_XipwWQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XiexIABlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a {@link Model} 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XiexIQBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XiexIgBlEd6CU4CM30bYVw" name="getJavaProject" visibility="public"/>
+        <ownedOperation xmi:id="_XiexIwBlEd6CU4CM30bYVw" name="setJavaProject" visibility="public"/>
+        <ownedOperation xmi:id="_XiexJABlEd6CU4CM30bYVw" name="setName" visibility="public"/>
+        <ownedOperation xmi:id="_XiexJQBlEd6CU4CM30bYVw" name="createModelFile" visibility="public"/>
+        <ownedOperation xmi:id="_XiexJgBlEd6CU4CM30bYVw" name="getModelResource" visibility="public"/>
+        <ownedOperation xmi:id="_XiexJwBlEd6CU4CM30bYVw" name="arePackageInHierarchy" visibility="public"/>
+        <ownedOperation xmi:id="_XiexKABlEd6CU4CM30bYVw" name="getTypeHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XiexKQBlEd6CU4CM30bYVw" name="IPackagesGroupHandling" clientDependency="_XiexNQBlEd6CU4CM30bYVw _XifYJABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XiexKgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a packages group 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XiexKwBlEd6CU4CM30bYVw" name="getPackagesHandlers" visibility="public"/>
+        <ownedOperation xmi:id="_XiexLABlEd6CU4CM30bYVw" name="getPackageHandler" visibility="public">
+          <ownedParameter xmi:id="_XiexLQBlEd6CU4CM30bYVw" type="_XieKAgBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_XiexLgBlEd6CU4CM30bYVw" name="addPackageHandler" visibility="public"/>
+        <ownedOperation xmi:id="_XiexLwBlEd6CU4CM30bYVw" name="fetchSubPackagesFromHierarchy" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XiexMABlEd6CU4CM30bYVw" name="IGroupHandling" clientDependency="_XiexMwBlEd6CU4CM30bYVw _XifYIgBlEd6CU4CM30bYVw _Xif_UABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XiexMQBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a group of elements 
+ */
+</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexMgBlEd6CU4CM30bYVw" supplier="_XiexMABlEd6CU4CM30bYVw" client="_XieKFABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexMwBlEd6CU4CM30bYVw" supplier="_XiexKQBlEd6CU4CM30bYVw" client="_XiexMABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexNABlEd6CU4CM30bYVw" supplier="_XiexKQBlEd6CU4CM30bYVw" client="_XieKCQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexNQBlEd6CU4CM30bYVw" supplier="_XiexHwBlEd6CU4CM30bYVw" client="_XiexKQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexNgBlEd6CU4CM30bYVw" supplier="_XiexHwBlEd6CU4CM30bYVw" client="_XieKCQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexNwBlEd6CU4CM30bYVw" supplier="_XieKFABlEd6CU4CM30bYVw" client="_XiexEwBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XiexOABlEd6CU4CM30bYVw" supplier="_XieKEgBlEd6CU4CM30bYVw" client="_XieKFABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYIABlEd6CU4CM30bYVw" supplier="_XieKDgBlEd6CU4CM30bYVw" client="_XieKEgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYIQBlEd6CU4CM30bYVw" supplier="_XieKCQBlEd6CU4CM30bYVw" client="_XieKDgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYIgBlEd6CU4CM30bYVw" supplier="_XieKCQBlEd6CU4CM30bYVw" client="_XiexMABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYIwBlEd6CU4CM30bYVw" supplier="_XieKAgBlEd6CU4CM30bYVw" client="_XieKCQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYJABlEd6CU4CM30bYVw" supplier="_XieKAgBlEd6CU4CM30bYVw" client="_XiexKQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYJQBlEd6CU4CM30bYVw" name="IContainableElementHandling">
+        <ownedComment xmi:id="_XifYJgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a &lt;em>containable&lt;/em> element 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XifYJwBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XifYKABlEd6CU4CM30bYVw" type="_XieKFABlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYKQBlEd6CU4CM30bYVw" supplier="_XifYJQBlEd6CU4CM30bYVw" client="_XiexEwBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYKgBlEd6CU4CM30bYVw" name="IOwnableElementHandling">
+        <ownedComment xmi:id="_XifYKwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an ownable element 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XifYLABlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XifYLQBlEd6CU4CM30bYVw" type="_XieKEgBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYLgBlEd6CU4CM30bYVw" name="IAttributeHandling" clientDependency="_XiqXTgBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XifYLwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a class attribute 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XifYMABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XifYMQBlEd6CU4CM30bYVw" name="resolveTypeHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYMgBlEd6CU4CM30bYVw" name="IStructuralFeatureHandling" clientDependency="_XifYOABlEd6CU4CM30bYVw _XifYPQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XifYMwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a structural feature 
+ */
+</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYNABlEd6CU4CM30bYVw" name="IFeatureHandling" clientDependency="_XifYNwBlEd6CU4CM30bYVw _Xif_OABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_XifYNQBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a feature 
+ */
+</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYNgBlEd6CU4CM30bYVw" supplier="_XifYNABlEd6CU4CM30bYVw" client="_XiexEwBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYNwBlEd6CU4CM30bYVw" supplier="_XifYMgBlEd6CU4CM30bYVw" client="_XifYNABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYOABlEd6CU4CM30bYVw" supplier="_XifYLgBlEd6CU4CM30bYVw" client="_XifYMgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYOQBlEd6CU4CM30bYVw" name="IDependencyHandling">
+        <ownedComment xmi:id="_XifYOgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a dependency
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XifYOwBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XifYPABlEd6CU4CM30bYVw" name="resolveSupplierHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XifYPQBlEd6CU4CM30bYVw" supplier="_XifYOQBlEd6CU4CM30bYVw" client="_XifYMgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XifYPgBlEd6CU4CM30bYVw" name="IMemberHandling">
+        <ownedComment xmi:id="_XifYPwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a class member 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XifYQABlEd6CU4CM30bYVw" name="getSyntaxNode" visibility="public"/>
+        <ownedOperation xmi:id="_XifYQQBlEd6CU4CM30bYVw" name="getVisibility" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_MABlEd6CU4CM30bYVw" name="isStatic" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_MQBlEd6CU4CM30bYVw" name="isAbstract" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_MgBlEd6CU4CM30bYVw" name="IMethodHandling" clientDependency="_XiqXZQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_Xif_MwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a class method 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_NABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_NQBlEd6CU4CM30bYVw" name="resolveReturnTypeHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_NgBlEd6CU4CM30bYVw" name="IBehavioralFeatureHandling" clientDependency="_Xif_OQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_Xif_NwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a behavioral feature 
+ */
+</body>
+        </ownedComment>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_Xif_OABlEd6CU4CM30bYVw" supplier="_Xif_NgBlEd6CU4CM30bYVw" client="_XifYNABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_Xif_OQBlEd6CU4CM30bYVw" supplier="_Xif_MgBlEd6CU4CM30bYVw" client="_Xif_NgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_OgBlEd6CU4CM30bYVw" name="IPropertiesOwnerHandling" clientDependency="_XigmQQBlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_Xif_OwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a properties owner 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_PABlEd6CU4CM30bYVw" name="getPropertiesHandlers" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_PQBlEd6CU4CM30bYVw" name="getPropertyHandler" visibility="public">
+          <ownedParameter xmi:id="_Xif_PgBlEd6CU4CM30bYVw" type="_XifYLgBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_Xif_PwBlEd6CU4CM30bYVw" name="addPropertyHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_Xif_QABlEd6CU4CM30bYVw" supplier="_Xif_OgBlEd6CU4CM30bYVw" client="_XieKEgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_QQBlEd6CU4CM30bYVw" name="ITypeHandling">
+        <ownedComment xmi:id="_Xif_QgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a type element 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_QwBlEd6CU4CM30bYVw" name="setContainerHandler" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_RABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_Xif_RQBlEd6CU4CM30bYVw" supplier="_Xif_QQBlEd6CU4CM30bYVw" client="_XieKDgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_RgBlEd6CU4CM30bYVw" name="IASTNodeHandling">
+        <ownedComment xmi:id="_Xif_RwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a syntax node 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_SABlEd6CU4CM30bYVw" name="getSyntaxNode" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_SQBlEd6CU4CM30bYVw" name="getJavaElement" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_SgBlEd6CU4CM30bYVw" name="IOperationsOwnerHandler" clientDependency="_XigmTABlEd6CU4CM30bYVw">
+        <ownedComment xmi:id="_Xif_SwBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an operations owner 
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_TABlEd6CU4CM30bYVw" name="getOperationsHandlers" visibility="public"/>
+        <ownedOperation xmi:id="_Xif_TQBlEd6CU4CM30bYVw" name="getOperationHandler" visibility="public">
+          <ownedParameter xmi:id="_Xif_TgBlEd6CU4CM30bYVw" type="_Xif_MgBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+        <ownedOperation xmi:id="_Xif_TwBlEd6CU4CM30bYVw" name="addOperationHandler" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_Xif_UABlEd6CU4CM30bYVw" supplier="_Xif_SgBlEd6CU4CM30bYVw" client="_XiexMABlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_Xif_UQBlEd6CU4CM30bYVw" name="IClassHandling">
+        <ownedComment xmi:id="_Xif_UgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a class element 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_Xif_UwBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XigmQABlEd6CU4CM30bYVw" supplier="_Xif_UQBlEd6CU4CM30bYVw" client="_XieKDgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XigmQQBlEd6CU4CM30bYVw" supplier="_Xif_UQBlEd6CU4CM30bYVw" client="_Xif_OgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XigmQgBlEd6CU4CM30bYVw" supplier="_Xif_UQBlEd6CU4CM30bYVw" client="_XieKCQBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XigmQwBlEd6CU4CM30bYVw" name="IGroupableElementHandling">
+        <ownedComment xmi:id="_XigmRABlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an element groupable in a handled group 
+ * ({@link IGroupHandling})
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XigmRQBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XigmRgBlEd6CU4CM30bYVw" type="_XiexMABlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XigmRwBlEd6CU4CM30bYVw" name="IInterfaceHandling">
+        <ownedComment xmi:id="_XigmSABlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling an interface 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XigmSQBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+        <ownedOperation xmi:id="_XigmSgBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+          <ownedParameter xmi:id="_XigmSwBlEd6CU4CM30bYVw" type="_XieKCQBlEd6CU4CM30bYVw" direction="return"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Realization" xmi:id="_XigmTABlEd6CU4CM30bYVw" supplier="_XigmRwBlEd6CU4CM30bYVw" client="_Xif_SgBlEd6CU4CM30bYVw"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XigmTQBlEd6CU4CM30bYVw" name="IClassifierHandling">
+        <ownedComment xmi:id="_XigmTgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handling a classifier element 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XigmTwBlEd6CU4CM30bYVw" name="getRewriter" visibility="public"/>
+        <ownedOperation xmi:id="_XigmUABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_XigmUQBlEd6CU4CM30bYVw" name="IPackageableElementHandling">
+        <ownedComment xmi:id="_XigmUgBlEd6CU4CM30bYVw">
+          <body>/** 
+ * Capacity of handing a {@link PackageableElement} 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+        </ownedComment>
+        <ownedOperation xmi:id="_XigmUwBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XigmVABlEd6CU4CM30bYVw" name="MemberHandler" isAbstract="true">
+      <ownedComment xmi:id="_XigmVQBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Member of a class handler 
+ * @param&lt;E>
+ * Handled member type 
+ * @param&lt;S>
+ * Corresponding member AST node
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XigmVgBlEd6CU4CM30bYVw" general="_XigmYgBlEd6CU4CM30bYVw"/>
+      <ownedOperation xmi:id="_XigmVwBlEd6CU4CM30bYVw" name="MemberHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XigmWABlEd6CU4CM30bYVw" name="MemberHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XigmWQBlEd6CU4CM30bYVw" name="MemberHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XigmWgBlEd6CU4CM30bYVw" name="MemberHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XigmWwBlEd6CU4CM30bYVw" name="getModelHandler" visibility="public">
+        <ownedParameter xmi:id="_XigmXABlEd6CU4CM30bYVw" type="_XiexHwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XigmXQBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_XigmXgBlEd6CU4CM30bYVw" type="_XieKDgBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XigmXwBlEd6CU4CM30bYVw" name="getVisibility" visibility="public"/>
+      <ownedOperation xmi:id="_XigmYABlEd6CU4CM30bYVw" name="isStatic" visibility="public"/>
+      <ownedOperation xmi:id="_XigmYQBlEd6CU4CM30bYVw" name="isAbstract" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XigmYgBlEd6CU4CM30bYVw" name="ASTNodeHandler" isAbstract="true">
+      <ownedComment xmi:id="_XigmYwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Element handler corresponding to an AST node
+ * @param&lt;E>
+ * Handled element type
+ * @param&lt;S>
+ *  
+ * Corresponding AST node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XigmZABlEd6CU4CM30bYVw" general="_XihNWABlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XigmZQBlEd6CU4CM30bYVw" name="syntaxTreeNode" visibility="protected"/>
+      <ownedAttribute xmi:id="_XigmZgBlEd6CU4CM30bYVw" name="javaElement" visibility="protected"/>
+      <ownedOperation xmi:id="_XihNUABlEd6CU4CM30bYVw" name="ASTNodeHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XihNUQBlEd6CU4CM30bYVw" name="ASTNodeHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XihNUgBlEd6CU4CM30bYVw" name="ASTNodeHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XihNUwBlEd6CU4CM30bYVw" name="ASTNodeHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XihNVABlEd6CU4CM30bYVw" name="completeConstruction" visibility="private"/>
+      <ownedOperation xmi:id="_XihNVQBlEd6CU4CM30bYVw" name="completeConstruction" visibility="private"/>
+      <ownedOperation xmi:id="_XihNVgBlEd6CU4CM30bYVw" name="getSyntaxNode" visibility="public"/>
+      <ownedOperation xmi:id="_XihNVwBlEd6CU4CM30bYVw" name="getJavaElement" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XihNWABlEd6CU4CM30bYVw" name="ContainedElementHandler" clientDependency="_XipJLgBlEd6CU4CM30bYVw" isAbstract="true">
+      <ownedComment xmi:id="_XihNWQBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Contained element handler 
+ * @param&lt;E>
+ * Handled element type 
+ * @param&lt;S>
+ * Handled syntax node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XihNWgBlEd6CU4CM30bYVw" general="_XihNYwBlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XihNWwBlEd6CU4CM30bYVw" name="container" visibility="protected" type="_XieKFABlEd6CU4CM30bYVw"/>
+      <ownedOperation xmi:id="_XihNXABlEd6CU4CM30bYVw" name="ContainedElementHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XihNXQBlEd6CU4CM30bYVw" name="ContainedElementHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XihNXgBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_XihNXwBlEd6CU4CM30bYVw" type="_XieKFABlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XihNYABlEd6CU4CM30bYVw" name="getFullName" visibility="public"/>
+      <ownedOperation xmi:id="_XihNYQBlEd6CU4CM30bYVw" name="fetchGraphicalEditPart" visibility="public"/>
+      <ownedOperation xmi:id="_XihNYgBlEd6CU4CM30bYVw" name="findEditorUMLElement" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XihNYwBlEd6CU4CM30bYVw" name="ElementHandler" isAbstract="true">
+      <ownedComment xmi:id="_XipJIABlEd6CU4CM30bYVw">
+        <body>/** 
+ * Element handler
+ * @param&lt;E>
+ *  
+ * Handled element type
+ */
+</body>
+      </ownedComment>
+      <ownedAttribute xmi:id="_XipJIQBlEd6CU4CM30bYVw" name="umlModelElement" visibility="protected"/>
+      <ownedOperation xmi:id="_XipJIgBlEd6CU4CM30bYVw" name="ElementHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipJIwBlEd6CU4CM30bYVw" name="ElementHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipJJABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      <ownedOperation xmi:id="_XipJJQBlEd6CU4CM30bYVw" name="getWorker" visibility="public"/>
+      <ownedOperation xmi:id="_XipJJgBlEd6CU4CM30bYVw" name="getEditor" visibility="public"/>
+      <ownedOperation xmi:id="_XipJJwBlEd6CU4CM30bYVw" name="childAdded" visibility="public"/>
+      <ownedOperation xmi:id="_XipJKABlEd6CU4CM30bYVw" name="partActivated" visibility="public"/>
+      <ownedOperation xmi:id="_XipJKQBlEd6CU4CM30bYVw" name="partDeactivated" visibility="public"/>
+      <ownedOperation xmi:id="_XipJKgBlEd6CU4CM30bYVw" name="removingChild" visibility="public"/>
+      <ownedOperation xmi:id="_XipJKwBlEd6CU4CM30bYVw" name="selectedStateChanged" visibility="public"/>
+      <ownedOperation xmi:id="_XipJLABlEd6CU4CM30bYVw" name="toString" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_XipJLQBlEd6CU4CM30bYVw" supplier="_XihNYwBlEd6CU4CM30bYVw" client="_XiexEwBlEd6CU4CM30bYVw"/>
+    <packagedElement xmi:type="uml:Dependency" xmi:id="_XipJLgBlEd6CU4CM30bYVw" visibility="protected" supplier="_XieKFABlEd6CU4CM30bYVw" client="_XihNWABlEd6CU4CM30bYVw">
+      <ownedComment xmi:id="_XipJLwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Element container handler 
+ */
+</body>
+      </ownedComment>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XipJMABlEd6CU4CM30bYVw" name="ModelHandler">
+      <ownedComment xmi:id="_XipwMABlEd6CU4CM30bYVw">
+        <body>/** 
+ * Model handler 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XipwMQBlEd6CU4CM30bYVw" general="_XihNYwBlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XipwMgBlEd6CU4CM30bYVw" name="javaProject" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwMwBlEd6CU4CM30bYVw" name="packages" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwNABlEd6CU4CM30bYVw" name="types" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwNQBlEd6CU4CM30bYVw" name="worker" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwNgBlEd6CU4CM30bYVw" name="editor" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwNwBlEd6CU4CM30bYVw" name="modelResource" visibility="protected"/>
+      <ownedAttribute xmi:id="_XipwOABlEd6CU4CM30bYVw" name="packagesHierarchy" visibility="protected"/>
+      <ownedOperation xmi:id="_XipwOQBlEd6CU4CM30bYVw" name="ModelHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipwOgBlEd6CU4CM30bYVw" name="ModelHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipwOwBlEd6CU4CM30bYVw" name="getModelHandler" visibility="public">
+        <ownedParameter xmi:id="_XipwPABlEd6CU4CM30bYVw" type="_XiexHwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XipwPQBlEd6CU4CM30bYVw" name="getJavaProject" visibility="public"/>
+      <ownedOperation xmi:id="_XipwPgBlEd6CU4CM30bYVw" name="setJavaProject" visibility="public"/>
+      <ownedOperation xmi:id="_XipwPwBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_XipwQABlEd6CU4CM30bYVw" name="getFullName" visibility="public"/>
+      <ownedOperation xmi:id="_XipwQQBlEd6CU4CM30bYVw" name="setName" visibility="public"/>
+      <ownedOperation xmi:id="_XipwQgBlEd6CU4CM30bYVw" name="fetchGraphicalEditPart" visibility="public"/>
+      <ownedOperation xmi:id="_XipwQwBlEd6CU4CM30bYVw" name="findEditorUMLElement" visibility="public"/>
+      <ownedOperation xmi:id="_XipwRABlEd6CU4CM30bYVw" name="setUpPackageHierarchy" visibility="protected"/>
+      <ownedOperation xmi:id="_XipwRQBlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+      <ownedOperation xmi:id="_XipwRgBlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      <ownedOperation xmi:id="_XipwRwBlEd6CU4CM30bYVw" name="addPackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipwSABlEd6CU4CM30bYVw" name="getPackagesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_XipwSQBlEd6CU4CM30bYVw" name="getPackageHandler" visibility="public">
+        <ownedParameter xmi:id="_XipwSgBlEd6CU4CM30bYVw" type="_XieKAgBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XipwSwBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_XipwTABlEd6CU4CM30bYVw" type="_XieKCQBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XipwTQBlEd6CU4CM30bYVw" name="addTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipwTgBlEd6CU4CM30bYVw" name="getTypesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_XipwTwBlEd6CU4CM30bYVw" name="getTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XipwUABlEd6CU4CM30bYVw" name="arePackageInHierarchy" visibility="public"/>
+      <ownedOperation xmi:id="_XipwUQBlEd6CU4CM30bYVw" name="fetchSubPackagesFromHierarchy" visibility="public"/>
+      <ownedOperation xmi:id="_XipwUgBlEd6CU4CM30bYVw" name="getModelResource" visibility="public"/>
+      <ownedOperation xmi:id="_XipwUwBlEd6CU4CM30bYVw" name="createModelFile" visibility="public"/>
+      <ownedOperation xmi:id="_XipwVABlEd6CU4CM30bYVw" name="getElementHandler" visibility="public">
+        <ownedParameter xmi:id="_XipwVQBlEd6CU4CM30bYVw" type="_XiexEwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XipwVgBlEd6CU4CM30bYVw" name="getElementsHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_XipwVwBlEd6CU4CM30bYVw" name="getWorker" visibility="public"/>
+      <ownedOperation xmi:id="_XipwWABlEd6CU4CM30bYVw" name="getEditor" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_XipwWQBlEd6CU4CM30bYVw" supplier="_XipJMABlEd6CU4CM30bYVw" client="_XiexHwBlEd6CU4CM30bYVw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XipwWgBlEd6CU4CM30bYVw" name="DependencyHandler">
+      <ownedComment xmi:id="_XipwWwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Tool for working with a dependency 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XipwXABlEd6CU4CM30bYVw" general="_XigmVABlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XipwXQBlEd6CU4CM30bYVw" name="supplier" visibility="private"/>
+      <ownedOperation xmi:id="_XipwXgBlEd6CU4CM30bYVw" name="DependencyHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XipwXwBlEd6CU4CM30bYVw" name="DependencyHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XipwYABlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXQABlEd6CU4CM30bYVw" name="getUMLElement" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXQQBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXQgBlEd6CU4CM30bYVw" name="resolveSupplierHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXQwBlEd6CU4CM30bYVw" name="getClient" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXRABlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XiqXRQBlEd6CU4CM30bYVw" name="PropertyHandler">
+      <ownedComment xmi:id="_XiqXRgBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Tool for working with an attribute 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XiqXRwBlEd6CU4CM30bYVw" general="_XigmVABlEd6CU4CM30bYVw"/>
+      <ownedOperation xmi:id="_XiqXSABlEd6CU4CM30bYVw" name="PropertyHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXSQBlEd6CU4CM30bYVw" name="PropertyHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXSgBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXSwBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXTABlEd6CU4CM30bYVw" name="resolveTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXTQBlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_XiqXTgBlEd6CU4CM30bYVw" supplier="_XiqXRQBlEd6CU4CM30bYVw" client="_XifYLgBlEd6CU4CM30bYVw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XiqXTwBlEd6CU4CM30bYVw" name="ClassifierHandler" isAbstract="true">
+      <ownedComment xmi:id="_XiqXUABlEd6CU4CM30bYVw">
+        <body>/** 
+ * Classifier handler 
+ * @param&lt;E>
+ * Handled classifier type 
+ * @param&lt;S>
+ *  
+ * Corresponding AST node type
+ * @param&lt;J>
+ * Handled syntax node Java element
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XiqXUQBlEd6CU4CM30bYVw" general="_XigmVABlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XiqXUgBlEd6CU4CM30bYVw" name="rewriter" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXUwBlEd6CU4CM30bYVw" name="ClassifierHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXVABlEd6CU4CM30bYVw" name="ClassifierHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXVQBlEd6CU4CM30bYVw" name="ClassifierHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXVgBlEd6CU4CM30bYVw" name="ClassifierHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXVwBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_XiqXWABlEd6CU4CM30bYVw" type="_XieKCQBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XiqXWQBlEd6CU4CM30bYVw" name="OperationHandler">
+      <ownedComment xmi:id="_XiqXWgBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Tool for working with a method 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XiqXWwBlEd6CU4CM30bYVw" general="_XigmVABlEd6CU4CM30bYVw"/>
+      <ownedOperation xmi:id="_XiqXXABlEd6CU4CM30bYVw" name="OperationHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXXQBlEd6CU4CM30bYVw" name="OperationHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXXgBlEd6CU4CM30bYVw" name="OperationHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXXwBlEd6CU4CM30bYVw" name="OperationHandler" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXYABlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXYQBlEd6CU4CM30bYVw" name="resolveReturnTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXYgBlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXYwBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXZABlEd6CU4CM30bYVw" name="toString" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_XiqXZQBlEd6CU4CM30bYVw" supplier="_XiqXWQBlEd6CU4CM30bYVw" client="_Xif_MgBlEd6CU4CM30bYVw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_XiqXZgBlEd6CU4CM30bYVw" name="InterfaceHandler">
+      <ownedComment xmi:id="_XiqXZwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Interface handler 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_XiqXaABlEd6CU4CM30bYVw" general="_XiqXTwBlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_XiqXaQBlEd6CU4CM30bYVw" name="superInterfacesNames" visibility="protected"/>
+      <ownedAttribute xmi:id="_XiqXagBlEd6CU4CM30bYVw" name="superInterfaces" visibility="protected"/>
+      <ownedAttribute xmi:id="_XiqXawBlEd6CU4CM30bYVw" name="dependencies" visibility="protected"/>
+      <ownedAttribute xmi:id="_XiqXbABlEd6CU4CM30bYVw" name="operations" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXbQBlEd6CU4CM30bYVw" name="InterfaceHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXbgBlEd6CU4CM30bYVw" name="InterfaceHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXbwBlEd6CU4CM30bYVw" name="InterfaceHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXcABlEd6CU4CM30bYVw" name="InterfaceHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XiqXcQBlEd6CU4CM30bYVw" name="completeConstruction" visibility="protected"/>
+      <ownedOperation xmi:id="_XiqXcgBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_XiqXcwBlEd6CU4CM30bYVw" type="_XieKCQBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XiqXdABlEd6CU4CM30bYVw" name="getRewriter" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-UABlEd6CU4CM30bYVw" name="getDependencies" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-UQBlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-UgBlEd6CU4CM30bYVw" name="setupSuperTypeUMLModelElement" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-UwBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-VABlEd6CU4CM30bYVw" name="getOperationsHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-VQBlEd6CU4CM30bYVw" name="addOperationHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-VgBlEd6CU4CM30bYVw" name="getOperationHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-VwBlEd6CU4CM30bYVw" type="_Xif_MgBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-WABlEd6CU4CM30bYVw" name="getElementHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-WQBlEd6CU4CM30bYVw" type="_XiexEwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-WgBlEd6CU4CM30bYVw" name="getElementsHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-WwBlEd6CU4CM30bYVw" name="setContainerHandler" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Xiq-XABlEd6CU4CM30bYVw" name="CodeProcessor">
+      <ownedComment xmi:id="_Xiq-XQBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Tool for reading a &lt;a href=&quot;http://www.java.net&quot;>Java&lt;/a> {@link IJavaProject project} in the workspace. Processing the types 
+ * through a syntax tree (provided by the {@link ASTParser eclipse parser}),  
+ * this tool delegates the {@link org.eclipse.uml2.uml.Model UML model} 
+ * management to {@link #worker a model worker}. 
+ */
+</body>
+      </ownedComment>
+      <ownedAttribute xmi:id="_Xiq-XgBlEd6CU4CM30bYVw" name="javaProject" visibility="protected"/>
+      <ownedAttribute xmi:id="_Xiq-XwBlEd6CU4CM30bYVw" name="worker" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-YABlEd6CU4CM30bYVw" name="CodeProcessor" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-YQBlEd6CU4CM30bYVw" name="process" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-YgBlEd6CU4CM30bYVw" name="readElement" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-YwBlEd6CU4CM30bYVw" name="readDirectory" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-ZABlEd6CU4CM30bYVw" name="readFile" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-ZQBlEd6CU4CM30bYVw" name="readJavaFile" visibility="protected"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Xiq-ZgBlEd6CU4CM30bYVw" name="PackageHandler">
+      <ownedComment xmi:id="_Xiq-ZwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Tool for working with a package of a project 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_Xiq-aABlEd6CU4CM30bYVw" general="_XigmYgBlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_Xiq-aQBlEd6CU4CM30bYVw" name="packages" visibility="protected"/>
+      <ownedAttribute xmi:id="_Xiq-agBlEd6CU4CM30bYVw" name="types" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-awBlEd6CU4CM30bYVw" name="PackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-bABlEd6CU4CM30bYVw" name="PackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-bQBlEd6CU4CM30bYVw" name="PackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-bgBlEd6CU4CM30bYVw" name="PackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-bwBlEd6CU4CM30bYVw" name="retrieveContainerFromHierarchy" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-cABlEd6CU4CM30bYVw" name="fetchSubPackagesFromHierarchy" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-cQBlEd6CU4CM30bYVw" name="completeConstruction" visibility="private"/>
+      <ownedOperation xmi:id="_Xiq-cgBlEd6CU4CM30bYVw" name="getModelHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-cwBlEd6CU4CM30bYVw" type="_XiexHwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-dABlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-dQBlEd6CU4CM30bYVw" name="getPackageHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-dgBlEd6CU4CM30bYVw" type="_XieKAgBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-dwBlEd6CU4CM30bYVw" name="getTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-eABlEd6CU4CM30bYVw" name="getElementHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-eQBlEd6CU4CM30bYVw" type="_XiexEwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-egBlEd6CU4CM30bYVw" name="getElementsHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-ewBlEd6CU4CM30bYVw" name="getPackagesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-fABlEd6CU4CM30bYVw" name="getTypesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-fQBlEd6CU4CM30bYVw" name="addPackageHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-fgBlEd6CU4CM30bYVw" name="addTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-fwBlEd6CU4CM30bYVw" name="getContainerHandler" visibility="public">
+        <ownedParameter xmi:id="_Xiq-gABlEd6CU4CM30bYVw" type="_XiexKQBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_Xiq-gQBlEd6CU4CM30bYVw" name="setGroupHandler" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-ggBlEd6CU4CM30bYVw" name="getSimpleName" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-gwBlEd6CU4CM30bYVw" name="getFullName" visibility="public"/>
+      <ownedOperation xmi:id="_Xiq-hABlEd6CU4CM30bYVw" name="childAdded" visibility="public"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Realization" xmi:id="_Xiq-hQBlEd6CU4CM30bYVw" supplier="_Xiq-ZgBlEd6CU4CM30bYVw" client="_XieKAgBlEd6CU4CM30bYVw"/>
+    <packagedElement xmi:type="uml:Class" xmi:id="_Xiq-hgBlEd6CU4CM30bYVw" name="ClassHandler">
+      <ownedComment xmi:id="_Xiq-hwBlEd6CU4CM30bYVw">
+        <body>/** 
+ * Class handler 
+ */
+</body>
+      </ownedComment>
+      <generalization xmi:id="_Xiq-iABlEd6CU4CM30bYVw" general="_XiqXZgBlEd6CU4CM30bYVw"/>
+      <ownedAttribute xmi:id="_Xiq-iQBlEd6CU4CM30bYVw" name="superClassName" visibility="protected"/>
+      <ownedAttribute xmi:id="_Xiq-igBlEd6CU4CM30bYVw" name="superType" visibility="protected"/>
+      <ownedAttribute xmi:id="_Xiq-iwBlEd6CU4CM30bYVw" name="properties" visibility="protected"/>
+      <ownedAttribute xmi:id="_Xiq-jABlEd6CU4CM30bYVw" name="types" visibility="protected"/>
+      <ownedOperation xmi:id="_Xiq-jQBlEd6CU4CM30bYVw" name="ClassHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlYABlEd6CU4CM30bYVw" name="ClassHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlYQBlEd6CU4CM30bYVw" name="ClassHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlYgBlEd6CU4CM30bYVw" name="ClassHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlYwBlEd6CU4CM30bYVw" name="completeConstruction" visibility="protected"/>
+      <ownedOperation xmi:id="_XirlZABlEd6CU4CM30bYVw" name="setUpUMLModelElement" visibility="public"/>
+      <ownedOperation xmi:id="_XirlZQBlEd6CU4CM30bYVw" name="setupSuperTypeUMLModelElement" visibility="protected"/>
+      <ownedOperation xmi:id="_XirlZgBlEd6CU4CM30bYVw" name="addPropertyHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlZwBlEd6CU4CM30bYVw" name="getPropertiesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_XirlaABlEd6CU4CM30bYVw" name="getTypesHandlers" visibility="public"/>
+      <ownedOperation xmi:id="_XirlaQBlEd6CU4CM30bYVw" name="addTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlagBlEd6CU4CM30bYVw" name="getTypeHandler" visibility="public"/>
+      <ownedOperation xmi:id="_XirlawBlEd6CU4CM30bYVw" name="getPropertyHandler" visibility="public">
+        <ownedParameter xmi:id="_XirlbABlEd6CU4CM30bYVw" type="_XifYLgBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XirlbQBlEd6CU4CM30bYVw" name="getElementHandler" visibility="public">
+        <ownedParameter xmi:id="_XirlbgBlEd6CU4CM30bYVw" type="_XiexEwBlEd6CU4CM30bYVw" direction="return"/>
+      </ownedOperation>
+      <ownedOperation xmi:id="_XirlbwBlEd6CU4CM30bYVw" name="getElementsHandlers" visibility="public"/>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+	<extension
+         point="org.eclipse.ui.commands">
+      <category
+            name="Coffea"
+            id="net.sourceforge.coffea.commands.category">
+      </category>
+      <command
+            name="Edit code using the UML class diagram editor"
+            categoryId="net.sourceforge.coffea.commands.category"
+            id="net.sourceforge.coffea.commands.editionCommand">
+      </command>
+      <command
+            name="Reverse Java code to an UML model"
+            categoryId="net.sourceforge.coffea.commands.category"
+            id="net.sourceforge.coffea.commands.reverseCommand">
+
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="net.sourceforge.coffea.commands.reverseCommand"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="Shift+Ctrl+Alt+U"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+         	id="org.eclipse.jdt.ui.refactoring.menu"
+			label="Refactor"
+			mnemonic="t">
+            <command
+                  commandId="net.sourceforge.coffea.commands.reverseCommand"
+                  icon="icons/reverse.gif"
+                  tooltip="Reverse Java code to an UML model"
+                  id="net.sourceforge.coffea.menus.reverseCommand">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.main.popup?after=additions">
+         <menu
+         	id="org.eclipse.jdt.ui.refactoring.menu"
+			label="Refactor"
+			mnemonic="t">
+            <command
+                  commandId="net.sourceforge.coffea.commands.reverseCommand"
+                  icon="icons/reverse.gif"
+                  tooltip="Reverse Java code to an UML model"
+                  id="net.sourceforge.coffea.popup.reverseCommand">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="net.sourceforge.coffea.toolbars.coffeaToolbar">
+            <command
+                  commandId="net.sourceforge.coffea.commands.reverseCommand"
+                  icon="icons/reverse.gif"
+                  tooltip="Reverse Java code to an UML model"
+                  id="net.sourceforge.coffea.toolbars.reverseCommand">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+    <extension point="org.eclipse.ui.editors">
+        <editor
+            id="net.sourceforge.coffea.editors.ClassDiagramEditor"
+            name="UML class diagram editor for Java code"
+            icon="icons/editor.gif"
+            extensions="java"
+            contributorClass="net.sourceforge.coffea.editors.ClassDiagramEditorContributor"
+            class="net.sourceforge.coffea.editors.ClassDiagramEditor"/>
+    </extension>
+    <extension
+          point="org.eclipse.ui.views">
+       <category
+             id="net.sourceforge.coffea.editors.views.category"
+             name="Java as UML">
+       </category>
+       <view
+             category="net.sourceforge.coffea.editors.views.category"
+             class="net.sourceforge.coffea.editors.views.UMLSelectionViewPart"
+             icon="icons/editor.gif"
+             id="net.sourceforge.coffea.editors.selection.view"
+             name="Selected Java as UML"
+             restorable="true">
+       </view>
+    </extension>
+</plugin>
