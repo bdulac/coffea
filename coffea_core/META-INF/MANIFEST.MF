@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Coffea UML2 Plug-in
 Bundle-SymbolicName: net.sourceforge.coffea.uml2;singleton:=true
-Bundle-Version: 0.6.5
+Bundle-Version: 0.7.0
 Bundle-Activator: net.sourceforge.coffea.uml2.CoffeaUML2Plugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Bundle-Vendor: Coffea project
+Bundle-Vendor: B. Dulac
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.jdt.core;bundle-version="3.4.0",
  org.eclipse.uml2.uml;bundle-version="2.0.0",
@@ -33,7 +33,10 @@ Import-Package: org.eclipse.emf.common.ui,
  org.eclipse.ui.handlers,
  org.eclipse.ui.navigator.resources,
  org.eclipse.ui.part
-Export-Package: net.sourceforge.coffea.uml2;version="0.6.5",
- net.sourceforge.coffea.uml2.model;version="0.6.5",
- net.sourceforge.coffea.uml2.model.creation;version="0.6.5",
- net.sourceforge.coffea.uml2.model.impl;version="0.6.5"
+Export-Package: net.sourceforge.coffea.uml2;version="0.7.0",
+ net.sourceforge.coffea.uml2.model;version="0.7.0",
+ net.sourceforge.coffea.uml2.model.impl;version="0.7.0",
+ net.sourceforge.coffea.uml2.model.creation;version="0.7.0",
+ net.sourceforge.coffea.java;version="0.7.0",
+ net.sourceforge.coffea.java.handlers;version="0.7.0",
+ net.sourceforge.coffea.java.actiondelegates;version="0.7.0"
