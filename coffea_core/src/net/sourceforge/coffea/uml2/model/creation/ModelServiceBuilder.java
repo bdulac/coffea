@@ -896,12 +896,12 @@ implements IModelServiceBuilding {
 		coffeeName = n;
 	}
 
-	@Override
+	// @Override
 	public String getSourceViewId() {
 		return sourceViewIdentifier;
 	}
 	
-	@Override
+	// @Override
 	public IWorkbenchWindow getSourceWorkbenchWindow() {
 		return workbenchWindow;
 	}
