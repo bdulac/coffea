@@ -1,6 +1,6 @@
-package net.sourceforge.coffea.editors.actiondelegates;
+package net.sourceforge.coffea.java.actiondelegates;
 
-import net.sourceforge.coffea.editors.JavaElementsReverseReceiver;
+import net.sourceforge.coffea.java.JavaElementsReverseReceiver;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IAction;

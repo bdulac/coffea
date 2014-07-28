@@ -374,42 +374,42 @@ implements IModelService {
 		return ret;	
 	}
 
-	@Override
+	// @Override
 	public Element findEditorUMLElement() {
 		return umlModelElement;
 	}
 
-	@Override
+	// @Override
 	public void acceptModelChangeNotification(Notification nt) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	// @Override
 	public NotificationFilter getFilter() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	// @Override
 	public Command transactionAboutToCommit(ResourceSetChangeEvent event)
 			throws RollbackException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	// @Override
 	public void resourceSetChanged(ResourceSetChangeEvent event) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	// @Override
 	public IResource getClassDiagramEMFResource() {
 		return classDiagramEMFResource;
 	}
 
-	@Override
+	// @Override
 	public IResource getClassDiagramWorkspaceResource() {
 		return classDiagramWorkspaceResource;
 	}
