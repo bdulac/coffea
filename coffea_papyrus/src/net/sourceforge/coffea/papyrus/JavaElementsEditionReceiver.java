@@ -2,7 +2,7 @@ package net.sourceforge.coffea.papyrus;
 
 import java.lang.reflect.InvocationTargetException;
 
-import net.sourceforge.coffea.editors.JavaElementsReverseReceiver;
+import net.sourceforge.coffea.java.JavaElementsReverseReceiver;
 import net.sourceforge.coffea.papyrus.diagram.creation.ClassDiagramBuilder;
 import net.sourceforge.coffea.uml2.Resources;
 import net.sourceforge.coffea.uml2.model.IModelService;

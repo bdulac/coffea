@@ -24,8 +24,8 @@ import net.sourceforge.coffea.uml2.model.IPackageService;
 import net.sourceforge.coffea.uml2.model.creation.IModelServiceBuilding;
 import net.sourceforge.coffea.uml2.model.impl.ClassService;
 import net.sourceforge.coffea.uml2.model.impl.OperationService;
-import net.sourceforge.coffea.uml2.model.impl.PackageService;
 import net.sourceforge.coffea.uml2.model.impl.PropertyService;
+import net.sourceforge.coffea.uml2.model.impl.PackageService;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;

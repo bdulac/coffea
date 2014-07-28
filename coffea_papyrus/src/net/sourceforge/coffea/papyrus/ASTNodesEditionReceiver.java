@@ -2,7 +2,7 @@ package net.sourceforge.coffea.papyrus;
 
 import java.io.File;
 
-import net.sourceforge.coffea.editors.ASTNodesReverseReceiver;
+import net.sourceforge.coffea.java.ASTNodesReverseReceiver;
 import net.sourceforge.coffea.papyrus.diagram.creation.ClassDiagramBuilder;
 import net.sourceforge.coffea.uml2.model.IModelService;
 

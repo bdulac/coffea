@@ -1,6 +1,6 @@
 package net.sourceforge.coffea.papyrus.handlers;
 
-import net.sourceforge.coffea.editors.handlers.FullReverseHandler;
+import net.sourceforge.coffea.java.handlers.FullReverseHandler;
 import net.sourceforge.coffea.papyrus.ASTNodesEditionReceiver;
 
 import org.eclipse.core.commands.ExecutionEvent;

@@ -1,6 +1,6 @@
 package net.sourceforge.coffea.papyrus.actiondelegates;
 
-import net.sourceforge.coffea.editors.actiondelegates.ReverseActionDelegate;
+import net.sourceforge.coffea.java.actiondelegates.ReverseActionDelegate;
 import net.sourceforge.coffea.papyrus.JavaElementsEditionReceiver;
 
 import org.eclipse.core.commands.ExecutionException;

@@ -1,7 +1,7 @@
 package net.sourceforge.coffea.papyrus.handlers;
 
 
-import net.sourceforge.coffea.editors.handlers.ReverseHandler;
+import net.sourceforge.coffea.java.handlers.ReverseHandler;
 import net.sourceforge.coffea.papyrus.JavaElementsEditionReceiver;
 
 import org.eclipse.core.commands.ExecutionEvent;

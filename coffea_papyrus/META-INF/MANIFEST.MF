@@ -1,15 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Coffea UML: JDT - Papyrus bridge
+Bundle-Name: Coffea_papyrus
 Bundle-SymbolicName: net.sourceforge.coffea.papyrus;singleton:=true
-Bundle-Version: 0.6.5
+Bundle-Version: 0.7.0
 Bundle-Activator: net.sourceforge.coffea.papyrus.CoffeaPapyrusPlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
-Bundle-RequiredExecutionEnvironment: J2SE-1.5	
-Bundle-Vendor: Coffea project
-Require-Bundle: net.sourceforge.coffea.uml2;bundle-version="0.6.5",
- net.sourceforge.coffea.editors;bundle-version="0.6.5",
+Bundle-RequiredExecutionEnvironment: JavaSE-1.5
+Bundle-Vendor: B. Dulac
+Require-Bundle: net.sourceforge.coffea.uml2;bundle-version="0.7.0",
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.core.resources;bundle-version="3.4.1",
  org.eclipse.ui;bundle-version="3.4.1",
@@ -26,9 +25,10 @@ Require-Bundle: net.sourceforge.coffea.uml2;bundle-version="0.6.5",
  org.eclipse.papyrus.uml.diagram.clazz;bundle-version="1.0.0",
  org.eclipse.papyrus.uml.diagram.common;bundle-version="1.0.0",
  org.eclipse.papyrus.infra.core;bundle-version="1.0.0"
-Import-Package: net.sourceforge.coffea.editors,
- net.sourceforge.coffea.editors.actiondelegates,
- net.sourceforge.coffea.editors.handlers,
+Import-Package: net.sourceforge.coffea.java,
+ net.sourceforge.coffea.java.handlers,
+ net.sourceforge.coffea.uml2.model,
+ net.sourceforge.coffea.uml2.model.impl,
  org.eclipse.emf.common.ui,
  org.eclipse.emf.transaction,
  org.eclipse.emf.transaction.util,

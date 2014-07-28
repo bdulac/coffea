@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import net.sourceforge.coffea.editors.handlers.ReverseHandler;
+import net.sourceforge.coffea.java.handlers.ReverseHandler;
 import net.sourceforge.coffea.papyrus.editors.UMLClassDiagramJavaEditor;
 import net.sourceforge.coffea.papyrus.handlers.EditionHandler;
 import net.sourceforge.coffea.uml2.model.IElementService;
