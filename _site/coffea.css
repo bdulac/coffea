@@ -1,0 +1,228 @@
+BODY {
+	background-image: url("background.png");
+	background-attachment: fixed;
+	padding: 0;
+	margin: 0;
+	overflow:scroll;
+}
+
+H1 {
+	text-align: center;
+	line-height: 2.3;
+	font-weight: normal;
+	font-size: x-large;
+	padding-bottom: 10px;
+}
+
+H2 {
+    font-weight: normal;
+    font-size: medium;
+	text-align: center;
+	padding-top: 0px;
+	padding-left: 100px;
+	line-height: 0.8;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+A {
+	color: brown;
+	text-decoration: none;
+}
+
+A.VISITED {
+	color: brown;
+}
+
+TD {
+	padding-left: 60px;
+	padding-right: 60px;
+}
+
+.latine {
+	font-style: italic;
+}
+
+.side {
+	width: 20%;
+	margin: 0;
+	padding: 0;
+}
+
+.left {
+	float: left;
+	text-align: right;
+}
+
+.right {
+	float: right;
+	text-align: left;
+}
+.content {
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+}
+
+.text {
+	text-align: justify;
+	text-indent: 30px;
+	margin: 60px;
+}
+
+.logo {
+}
+
+.logo IMG {
+	border-style: none;
+}
+
+.image {
+	padding: 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.image IMG {
+	border-style: inset;
+	border-width: 2px;
+	padding: 0;
+	margin: 0;
+}
+
+.links {
+	color: brown;
+	margin-left: 0;
+	margin-right: 0;
+	width: 100%;
+}
+
+.links P {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.links A {
+	background-image: url("cartouche.png");
+	border-bottom-style: solid;
+	border-right-style: solid;
+	border-width: 1px;
+	padding: 5px;
+	margin: 20px;
+	border-radius: 0px 7px 7px 7px;
+	box-shadow: 2px 0 3px #333, 3px 0 3px brown;
+}
+
+.internalLinks {	
+}
+
+.internalLinks A {
+	border-bottom-style: outset;
+	border-right-style: outset;
+}
+
+.externalLinks {
+}
+
+.externalLinks A {
+	border-style: none;
+	background: none;
+	box-shadow: none;
+	border-bottom-style: inset;
+	border-right-style: inset;
+}
+
+.packages {
+  position: fixed;
+  margin-top: 140px;
+  margin-left: 195px;
+}
+
+.packages A {
+	background-image: url("cartouche.png");
+	border-bottom-style: solid;
+	border-right-style: solid;
+	padding: 2px;
+	margin: 2px;
+	border-radius: 0px 15px 15px 15px;
+}
+
+.selection A {
+	background-image: url("selection.png");
+	padding: 5px;
+	margin: 20px;
+	border-radius: 0px 15px 15px 15px;	
+}
+
+.download A {
+	background-image: url("selection.png");
+	border-bottom-style: outset;
+	border-right-style: outset;
+	padding: 1px;
+	margin: 1px;
+	border-width: 1px;
+	border-radius: 15px 15px 15px 15px;
+}
+
+.special {
+	width: 94%;
+	background-image: url("cartouche.png");
+	padding: 3%;
+    border-width: 1px;
+    text-align: justify;
+    border-style: solid;
+    border-color: brown;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 2px 0 3px #333, 3px 0 3px brown;
+}
+
+.step {
+	width: 50%;
+	padding: 5px;
+    /*margin: 5px;*/
+    text-align: center;
+    border-top-style: dotted;
+    border-top-width: 1px;
+}
+
+.step P {
+	background-image: url("cartouche.png");
+	border-style: dashed;
+	border-width: 1px;
+	padding: 5px;
+	margin: 5px;
+	border-radius: 20px 20px 20px 20px;
+	border-radius-style: dashed;
+}
+
+.step IMG {
+	text-align: center;
+	border-style: outset;
+	border-width: 1px;
+	margin-left: auto;
+    margin-right: auto;
+    
+	padding: 2px;
+	background-color: maroon;
+}
+
+.note {
+	font-size: small;
+	text-align: justify;
+}
+
+.references {
+    font-size: smaller;
+	text-align: justify;
+}
+
+.author {
+    font-style: normal;
+}
+
+.publisher {
+    font-style: normal;
+}
