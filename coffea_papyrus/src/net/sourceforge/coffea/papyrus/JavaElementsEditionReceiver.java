@@ -84,7 +84,7 @@ extends JavaElementsReverseReceiver {
 	 * @return Operation result
 	 * @throws ExecutionException
 	 */
-	public Object editSelectedJavaElements(IWorkbenchWindow workbenchWindow) 
+	public IModelService editSelectedJavaElements(IWorkbenchWindow workbenchWindow) 
 	throws ExecutionException { 
 		String sourceViewId = 
 			fetchSourceViewId(
