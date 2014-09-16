@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Coffea_papyrus
+Bundle-Name: Coffea Papyrus Plug-in
 Bundle-SymbolicName: net.sourceforge.coffea.papyrus;singleton:=true
 Bundle-Version: 0.7.0
 Bundle-Activator: net.sourceforge.coffea.papyrus.CoffeaPapyrusPlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: B. Dulac
 Require-Bundle: net.sourceforge.coffea.uml2;bundle-version="0.7.0",
  org.eclipse.core.runtime;bundle-version="3.4.0",
@@ -16,9 +16,9 @@ Require-Bundle: net.sourceforge.coffea.uml2;bundle-version="0.7.0",
  org.eclipse.jdt.core;bundle-version="3.4.2",
  org.eclipse.jdt.ui;bundle-version="3.4.1",
  org.eclipse.gef;bundle-version="3.4.1",
- org.eclipse.uml2.uml;bundle-version="2.2.1",
+ org.eclipse.uml2.uml;bundle-version="2.0.0",
  org.eclipse.ui.ide,
- org.eclipse.ltk.core.refactoring;bundle-version="3.4.1",
+ org.eclipse.ltk.core.refactoring;bundle-version="3.4.0",
  org.eclipse.papyrus.views.modelexplorer;bundle-version="0.9.0",
  org.eclipse.emf.transaction;bundle-version="1.4.0",
  org.eclipse.gmf.runtime.diagram.core;bundle-version="1.7.0",
@@ -39,5 +39,6 @@ Import-Package: net.sourceforge.coffea.java,
  org.eclipse.gmf.runtime.notation,
  org.eclipse.gmf.runtime.notation.impl,
  org.eclipse.jdt.core.refactoring,
+ org.eclipse.papyrus.infra.emf.utils,
  org.eclipse.ui.navigator.resources,
  org.eclipse.ui.part
