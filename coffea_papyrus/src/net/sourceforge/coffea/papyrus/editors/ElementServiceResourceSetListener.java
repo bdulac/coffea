@@ -10,6 +10,7 @@ import org.eclipse.emf.transaction.ResourceSetListener;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 
+import net.sourceforge.coffea.papyrus.commands.OpenClassDiagramCommand;
 import net.sourceforge.coffea.uml2.model.IElementService;
 
 public class ElementServiceResourceSetListener implements ResourceSetListener {
@@ -20,12 +21,12 @@ public class ElementServiceResourceSetListener implements ResourceSetListener {
 	 * Map of diagram editor in which the element is being edited and 
 	 * corresponding EMF editing domains 
 	 */
-	protected Map<UMLClassDiagramJavaEditor, TransactionalEditingDomain> editingDomains;
+	protected Map<OpenClassDiagramCommand, TransactionalEditingDomain> editingDomains;
 	
 	public ElementServiceResourceSetListener(IElementService srv) {
 		if(srv == null)throw new NullPointerException();
 		elementSrv = srv;
-		editingDomains = new HashMap<UMLClassDiagramJavaEditor, TransactionalEditingDomain>();
+		editingDomains = new HashMap<OpenClassDiagramCommand, TransactionalEditingDomain>();
 	}
 	
 	
