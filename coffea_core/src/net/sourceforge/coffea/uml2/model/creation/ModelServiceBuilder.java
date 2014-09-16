@@ -106,6 +106,7 @@ implements IModelServiceBuilding {
 	public void init() {
 	}
 
+	// @Override
 	public IModelService parseFile(File target) {
 		init();
 		if(target!=null) {
@@ -118,10 +119,12 @@ implements IModelServiceBuilding {
 		return model;
 	}	
 
+	// @Override
 	public IModelService buildModelService(IJavaElement el) {
 		return buildModelService(el, null);
 	}
 
+	// @Override
 	public IModelService buildModelService(String path) {
 		IResource resource = 
 			ResourcesPlugin.getWorkspace().getRoot().findMember(
@@ -134,6 +137,7 @@ implements IModelServiceBuilding {
 		else return null;
 	}
 
+	// @Override
 	public IModelService buildModelService(
 			IJavaElement el, 
 			IProgressMonitor monitor
@@ -388,7 +392,6 @@ implements IModelServiceBuilding {
 							}
 						}
 					}
-
 				} catch (JavaModelException e) {
 					e.printStackTrace();
 				}
@@ -802,7 +805,7 @@ implements IModelServiceBuilding {
 						// If we have found the processed project, 
 						if (javaProject != null) {
 							// Then we parse the processed code section
-							ASTParser parser = ASTParser.newParser(AST.JLS3);
+							ASTParser parser = ASTParser.newParser(AST.JLS4);
 							parser.setProject(javaProject);
 							parser.setResolveBindings(true);
 							char[] charArray = new char[buffer.length()];
