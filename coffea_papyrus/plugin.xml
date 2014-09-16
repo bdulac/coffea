@@ -44,6 +44,7 @@
          </activeWhen>
       </handler>
    </extension>
+   <!--
    <extension
    		point="org.eclipse.ui.editors">
    		<editor 
@@ -54,6 +55,7 @@
    			class="net.sourceforge.coffea.papyrus.editors.UMLClassDiagramJavaEditor"
    		/>
    </extension>
+   -->
    <extension
          point="org.eclipse.ui.bindings">
       <key
@@ -75,7 +77,7 @@
                   commandId="net.sourceforge.coffea.papyrus.commands.editionCommand"
                   mnemonic="h"
                   icon="icons/edit.gif"
-                  tooltip="Edit code using UML clas diagram editor"
+                  tooltip="Edit the code using the UML class diagram editor"
                   id="net.sourceforge.coffea.menus.editionCommand">
             </command>
          </menu>
@@ -90,10 +92,22 @@
                   commandId="net.sourceforge.coffea.papyrus.commands.editionCommand"
                   mnemonic="h"
                   icon="icons/edit.gif"
-                  tooltip="Edit code using UML clas diagram editor"
+                  tooltip="Edit the code using the UML class diagram editor"
                   id="net.sourceforge.coffea.popup.editionCommand">
             </command>
          </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="net.sourceforge.coffea.toolbars.coffeaToolbar">
+            <command
+                  commandId="net.sourceforge.coffea.papyrus.commands.editionCommand"
+                  icon="icons/edit.gif"
+                  tooltip="Edit the code using the UML class diagram editor"
+                  id="net.sourceforge.coffea.toolbars.editionCommand">
+            </command>
+         </toolbar>
       </menuContribution>
    </extension>
 </plugin>
