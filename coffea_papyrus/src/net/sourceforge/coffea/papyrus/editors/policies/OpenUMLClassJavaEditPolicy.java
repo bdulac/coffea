@@ -85,9 +85,6 @@ public class OpenUMLClassJavaEditPolicy extends OpenEditPolicy {
 				throws ExecutionException {
 			return null;
 		}
-		
-
-		
 	}
 
 	protected static String getDiagramName(EObject diagramDomainElement) {
@@ -101,5 +98,4 @@ public class OpenUMLClassJavaEditPolicy extends OpenEditPolicy {
 		}
 		return result;
 	}
-
 }
