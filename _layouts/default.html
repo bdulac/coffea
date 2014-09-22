@@ -6,14 +6,69 @@
     <body>
 
     {% include header.html %}
+	
+	<main>
+<nav class="side left">
+	<ol class="links internalLinks">
+{% capture f %}{{ site.url }}/feed.xml{% endcapture %}
+{% for p in site.pages %}
+	{% if p.title == page.title %}
+		<li class="selection">
+			<a href="{{ p.url }}">{{ p.title }}</a>
+		</li>
+	{% elsif ((p.url contains "feed.xml") or (p.url contains "blog")) %}
+	<!--
+		<li>
+			<a href="{{ p.url }}">{{ p.title }}</a>
+		</li>
+	 -->
+	{% else %}
+		<li>
+			<a href="{{ p.url }}">{{ p.title }}</a>
+		</li>
+	{% endif %}
+{% endfor %}
+	</ol>
+</nav>
 
-    <div class="page-content">
-      <div class="wrap">
+	<nav class="side right">
+		<div class="logo">
+		</div>
+		<ol class="links externalLinks">
+			<li>
+				<a href="https://github.com/berenger-dulac/coffea/" target="_blank">
+					GitHub project details </a>
+				<span class="icon github">
+              		<svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg">
+              		</svg>
+              	</span>
+			</li>
+			<li>
+				<a href="http://sourceforge.net/projects/coffea/" target="_blank">
+					Sourceforge project details </a>
+			</li>
+			<li>
+				<a href="http://www.eclipse.org/modeling/mdt/?project=uml2"
+					target="_blank"> Eclipse UML2 Tools </a>
+			</li>
+			<li>
+				<a href="http://eclipse.org/papyrus/" target="_blank"> Eclipse
+					Papyrus </a>
+			</li>
+			<li>
+				<a href="http://www.eclipse.org/jdt/" target="_blank"> Eclipse
+					JDT </a>
+			</li>
+		</ol>
+	</nav>
+
+	<div>
       {{ content }}
-      </div>
     </div>
-
+    
+    </main>
+<!-- 
     {% include footer.html %}
-
+-->
     </body>
 </html>
