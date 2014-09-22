@@ -4,7 +4,7 @@ title: Coffea
 description: "Coffea is an Eclipse plug-in trying to link the Java Development Tools (JDT) to UML editors."
 url: "http://bdulac.github.io/coffea/"
 github_username:  bdulac
-
+baseurl: ""
 # Build settings
 markdown: kramdown
 permalink: pretty
