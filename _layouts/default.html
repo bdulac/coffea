@@ -14,7 +14,7 @@
 {% for p in site.pages %}
 	{% if p.title == page.title %}
 		<li class="selection">
-			<a href="{{ p.url }}">{{ p.title }}</a>
+			<a href="{{site.baseurl}}{{ p.url }}">{{ p.title }}</a>
 		</li>
 	{% elsif ((p.url contains "feed.xml") or (p.url contains "blog")) %}
 	<!--
@@ -24,7 +24,7 @@
 	 -->
 	{% else %}
 		<li>
-			<a href="{{ p.url }}">{{ p.title }}</a>
+			<a href="{{site.baseurl}}{{ p.url }}">{{ p.title }}</a>
 		</li>
 	{% endif %}
 {% endfor %}
