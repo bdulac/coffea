@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
@@ -28,157 +29,44 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Receives reverse engineering actions on  
- * {@link org.eclipse.jdt.core.IJavaElement <em>Java</em> elements}, common 
- * resources for actions and handlers
- * @see org.eclipse.jdt.core.IJavaElement
+ * Service locator using elements of the Java model to manage UML model services
+ * @see IJavaModel
+ * @see IJavaElement
  */
-public class JavaElementsReverseReceiver 
-implements IRunnableWithProgress {
-
-	/** Last source workbench window */
-	protected IWorkbenchWindow lastSourceWorkbenchWindow;
-
-	/** Last source view identifier in the last source workbench window */
-	protected String lastSourceViewId;
-
-	/** Java element object of the action */
-	protected IJavaElement element;
-
-	/** Produced model */
-	protected IModelService model;
-
+public class JavaModelServiceLocator implements IRunnableWithProgress {
+	
 	/**
-	 * Returns Last source workbench window
-	 * @return Last source workbench window
+	 * Returns the selected <em>Java</em> element (only if it is in first 
+	 * position in the selection)
+	 * @param treeSel
+	 * Selection
+	 * @return Selected <em>Java</em> element
 	 */
-	public IWorkbenchWindow getLastSourceWorkbenchWindow() {
-		return lastSourceWorkbenchWindow;
-	}
-
-	/**
-	 * Returns last source view identifier in the last source workbench window
-	 * @return Last source view identifier in the last source workbench window
-	 */
-	public String getLastSourceViewId() {
-		return lastSourceViewId;
-	}
-
-	/** 
-	 * Simple reverse of a <em>Java</em> element to an UML model
-	 * @param edition
-	 * Boolean value indicating if the source should be edited through the 
-	 * UML model editor
-	 * @param el
-	 * <em>Java</em> element to reverse
-	 * @param sourceWorkbenchWindow
-	 * Source workbench window from which the operation is triggered
-	 * @param sourceViewId
-	 * Source view identifier in the source workbench window
-	 * @return Produced UML model
-	 */
-	public IModelService reverse(
-			IJavaElement el, 
-			IWorkbenchWindow sourceWorkbenchWindow, 
-			String sourceViewId
-	) {
-		lastSourceWorkbenchWindow = sourceWorkbenchWindow;
-		lastSourceViewId = sourceViewId;
-		element = el;
-		ProgressMonitorDialog dialog = 
-			new ProgressMonitorDialog(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell()
-			);
-		try {
-			dialog.run(false, true, this);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	protected static IJavaElement getJavaElementFromSelection(ITreeSelection treeSel) {
+		IJavaElement el = null;
+		if(treeSel!=null) {
+			Object first = treeSel.getFirstElement();
+			if(first instanceof IJavaElement) {
+				el = (IJavaElement)first;
+			}
 		}
-		return model;
+		return el;
 	}
 
-	protected IJavaElement getSelectedJavaElement(
-			IWorkbenchWindow workbenchWindow	
-	)  throws ExecutionException  {
-		String sourceViewId = 
-			fetchSourceViewId(
-					workbenchWindow
-			);
+	protected static IJavaElement getSelectedJavaElement(IWorkbenchWindow workbenchWindow)  
+			throws ExecutionException  {
+		String sourceViewId = getSourceViewIdForWorkbench(workbenchWindow);
 		ITreeSelection treeSel = 
-			fetchTreeSelection(workbenchWindow, sourceViewId);
+			getTreeSelectionFromWorbench(workbenchWindow, sourceViewId);
 		// If we have a selection, 
 		if(treeSel!=null) {
-			IJavaElement el = selectedJavaElement(treeSel);
+			IJavaElement el = getJavaElementFromSelection(treeSel);
 			return el;
 		}
 		return null;
 	}
 
-	/** 
-	 * Simple reverse of the current selection to an UML model
-	 * @param edition
-	 * Boolean value indicating if the source should be edited through the 
-	 * UML model editor
-	 * @param workbenchWindow
-	 * Workbench window in which the current selection must be reversed
-	 * @param sourceViewId
-	 * Source view identifier in the source workbench window
-	 * @return Operation result
-	 * @throws ExecutionException
-	 */
-	public Object reverseFromJavaElements(IWorkbenchWindow workbenchWindow) 
-	throws ExecutionException { 
-		String sourceViewId = 
-			fetchSourceViewId(
-					workbenchWindow
-			);
-		IJavaElement el = getSelectedJavaElement(workbenchWindow);
-		if(el != null) {
-			return reverse(
-					el, 
-					workbenchWindow, 
-					sourceViewId
-			);
-		}
-		workbenchWindow = null;
-		return null;
-	}
-
-	/** 
-	 * Simple reverse of the current selection to an UML model
-	 * @param edition
-	 * Boolean value indicating if the source should be edited through the 
-	 * UML model editor
-	 * @param workbenchWindow
-	 * Workbench window in which the current selection must be reversed
-	 * @param sourceViewId
-	 * Source view identifier in the source workbench window
-	 * @return Operation result
-	 * @throws ExecutionException
-	 */
-	public Object reverseFromSelectedJavaElement(
-			IWorkbenchWindow workbenchWindow, 
-			String sourceViewId
-	) throws ExecutionException { 
-		ITreeSelection treeSel = 
-			fetchTreeSelection(workbenchWindow, sourceViewId);
-		// If we have a selection, 
-		if(treeSel!=null) {
-			IJavaElement el = selectedJavaElement(treeSel);
-			return reverse(
-					el, 
-					workbenchWindow, 
-					sourceViewId
-			);
-		}
-		workbenchWindow = null;
-		return null;
-	}
-
-	protected String fetchSourceViewId(
+	protected static String getSourceViewIdForWorkbench(
 			IWorkbenchWindow workbenchWindow
 	) {
 		String sourceViewId = null;
@@ -209,10 +97,9 @@ implements IRunnableWithProgress {
 	 * @param sourceViewId
 	 * Source view identifier in the source workbench window
 	 * @return Current tree selection
-	 * 
 	 * @throws ExecutionException
 	 */
-	protected ITreeSelection fetchTreeSelection(
+	protected static ITreeSelection getTreeSelectionFromWorbench(
 			IWorkbenchWindow workbenchWindow, 
 			String sourceViewId
 	) 
@@ -244,51 +131,95 @@ implements IRunnableWithProgress {
 		return treeSel;
 	}
 
-	/**
-	 * Returns the selected <em>Java</em> element (only if it is in first 
-	 * position in the selection)
-	 * @param treeSel
-	 * Selection
-	 * @return Selected <em>Java</em> element
-	 */
-	protected IJavaElement selectedJavaElement(ITreeSelection treeSel) {
-		IJavaElement el = null;
-		if(treeSel!=null) {
-			Object first = treeSel.getFirstElement();
-			if(first instanceof IJavaElement) {
-				el = (IJavaElement)first;
-			}
-		}
-		return el;
-	}
+	/** Last source workbench window */
+	protected IWorkbenchWindow lastSourceWorkbenchWindow;
+
+	/** Last source view identifier in the last source workbench window */
+	protected String lastSourceViewId;
+
+	/** Java element object of the action */
+	protected IJavaElement element;
+
+	/** Produced model */
+	protected IModelService model;
 
 	/** Simple reverse action construction */
-	public JavaElementsReverseReceiver() {
+	public JavaModelServiceLocator() {
+	}
+	
+	/**
+	 * Returns Last source workbench window
+	 * @return Last source workbench window
+	 */
+	public IWorkbenchWindow getLastSourceWorkbenchWindow() {
+		return lastSourceWorkbenchWindow;
+	}
+
+	/**
+	 * Returns last source view identifier in the last source workbench window
+	 * @return Last source view identifier in the last source workbench window
+	 */
+	public String getLastSourceViewId() {
+		return lastSourceViewId;
+	}
+	
+	/** 
+	 * Simple reverse of a <em>Java</em> element to an UML model
+	 * @param edition
+	 * Boolean value indicating if the source should be edited through the 
+	 * UML model editor
+	 * @param el
+	 * <em>Java</em> element to reverse
+	 * @param sourceWorkbenchWindow
+	 * Source workbench window from which the operation is triggered
+	 * @param sourceViewId
+	 * Source view identifier in the source workbench window
+	 * @return Produced UML model
+	 */
+	private IModelService getModelService(
+			IJavaElement el, 
+			IWorkbenchWindow sourceWorkbenchWindow, 
+			String sourceViewId
+	) {
+		lastSourceWorkbenchWindow = sourceWorkbenchWindow;
+		lastSourceViewId = sourceViewId;
+		element = el;
+		ProgressMonitorDialog dialog = 
+			new ProgressMonitorDialog(
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getShell()
+			);
+		try {
+			dialog.run(false, true, this);
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return model;
 	}
 
 	/** 
 	 * Simple reverse of the current selection to an UML model
-	 * @param edition
-	 * Boolean value indicating if the source should be edited through the 
-	 * UML model editor
 	 * @param w
-	 * Workbench window in which the reverse is done
+	 * Workbench window in which the selection should be reversed
 	 * @return Result of the operation
 	 * @throws ExecutionException
 	 */
-	protected Object reverse(IWorkbenchWindow w)
+	/*
+	protected IModelService getModelService(IWorkbenchWindow w)
 	throws ExecutionException {
 		lastSourceWorkbenchWindow = w;
-		String sourceViewId = fetchSourceViewId(w);
+		String sourceViewId = getSourceViewIdForWorkbench(w);
 		lastSourceViewId = sourceViewId;
-		ITreeSelection treeSel = fetchTreeSelection(
+		ITreeSelection treeSel = getTreeSelectionFromWorbench(
 				w, 
 				sourceViewId
 		);
 		// If we have a selection, 
 		if(treeSel!=null) {
-			IJavaElement el = selectedJavaElement(treeSel);
-			return reverse(
+			IJavaElement el = getJavaElementFromSelection(treeSel);
+			return getModelService(
 					el, 
 					w, 
 					sourceViewId
@@ -296,7 +227,7 @@ implements IRunnableWithProgress {
 		}
 		w = null;
 		return null;
-	}
+	}*/
 
 	protected IProject selectedProject(ITreeSelection treeSel) {
 		// We get the first selected element (we consider only one 
@@ -361,5 +292,59 @@ implements IRunnableWithProgress {
 			lastSourceWorkbenchWindow = null;
 		}
 	}
+	
+	/** 
+	 * Creation of an UML model service from the active selection in a workbench : uses the 
+	 * Java model to produce the service
+	 * @param workbench
+	 * Workbench window
+	 * @return Model service
+	 * @throws ExecutionException
+	 */
+	public IModelService getModelService(IWorkbenchWindow workbench) 
+	throws ExecutionException { 
+		String sourceViewId = getSourceViewIdForWorkbench(workbench);
+		IJavaElement el = getSelectedJavaElement(workbench);
+		if(el != null) {
+			return getModelService(
+					el, 
+					workbench, 
+					sourceViewId
+			);
+		}
+		workbench = null;
+		return null;
+	}
 
+	/** 
+	 * Simple reverse of the current selection to an UML model
+	 * @param edition
+	 * Boolean value indicating if the source should be edited through the 
+	 * UML model editor
+	 * @param workbenchWindow
+	 * Workbench window in which the current selection must be reversed
+	 * @param sourceViewId
+	 * Source view identifier in the source workbench window
+	 * @return Service for action on the model
+	 * @throws ExecutionException
+	 */
+	/*
+	public IModelService getModelForWorkbench(
+			IWorkbenchWindow workbenchWindow, 
+			String sourceViewId
+	) throws ExecutionException { 
+		ITreeSelection treeSel = 
+			getTreeSelectionFromWorbench(workbenchWindow, sourceViewId);
+		// If we have a selection, 
+		if(treeSel!=null) {
+			IJavaElement el = getJavaElementFromSelection(treeSel);
+			return getModelService(
+					el, 
+					workbenchWindow, 
+					sourceViewId
+			);
+		}
+		workbenchWindow = null;
+		return null;
+	}*/
 }

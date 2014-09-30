@@ -1,6 +1,6 @@
 package net.sourceforge.coffea.java.actiondelegates;
 
-import net.sourceforge.coffea.java.JavaElementsReverseReceiver;
+import net.sourceforge.coffea.java.JavaModelServiceLocator;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IAction;
@@ -23,12 +23,12 @@ public class ReverseActionDelegate implements IObjectActionDelegate {
 	protected ISelection selection;
 	
 	/** Receiver handling the interactions */
-	private JavaElementsReverseReceiver interactionsReceiver;
+	private JavaModelServiceLocator interactionsReceiver;
 	
 	/** Action delegate */
 	public ReverseActionDelegate() {
 		super();
-		interactionsReceiver = new JavaElementsReverseReceiver();
+		interactionsReceiver = new JavaModelServiceLocator();
 	}
 	
 	public void dispose() {
@@ -42,7 +42,7 @@ public class ReverseActionDelegate implements IObjectActionDelegate {
 	public void run(IAction act) {
 		if(window!=null) {
 			try {
-				interactionsReceiver.reverseFromJavaElements(window);
+				interactionsReceiver.getModelService(window);
 			} catch (ExecutionException e) {
 				e.printStackTrace();
 			}

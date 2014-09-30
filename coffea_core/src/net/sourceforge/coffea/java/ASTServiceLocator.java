@@ -10,22 +10,21 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 /**
- * Receives reverse engineering actions on 
- * {@link org.eclipse.jdt.core.dom.AST AST} nodes, common resources for 
- * actions and handlers
- * @see org.eclipse.jdt.core.dom.AST AST
+ * Service locator using elements of the AST to manage UML model services
+ * @see AST
  */
-public class ASTNodesReverseReceiver 
-extends JavaElementsReverseReceiver {
+public class ASTServiceLocator 
+extends JavaModelServiceLocator {
 
 	/** Full reverse handler construction */
-	public ASTNodesReverseReceiver() {
+	public ASTServiceLocator() {
 	}
 	
 	protected IWorkbenchWindow getSourceWorkbenchWindow() {
@@ -35,27 +34,28 @@ extends JavaElementsReverseReceiver {
 	}
 	
 	/** 
-	 * Full reverse to an UML model : uses an AST to produce the model
-	 * @param edition
-	 * @param event
-	 * Event triggering the operation
-	 * @return Result of the operation
+	 * Creation of an UML model service from the active selection in a workbench : uses an 
+	 * AST to produce the service
+	 * @param workbench
+	 * Workbench window
+	 * @return Model service
 	 * @throws ExecutionException
 	 */
-	public Object reverseFromASTNodes(IWorkbenchWindow workbenchWindow)
+	@Override
+	public IModelService getModelService(IWorkbenchWindow workbench)
 	throws ExecutionException {
-		lastSourceWorkbenchWindow = workbenchWindow;
+		lastSourceWorkbenchWindow = workbench;
 		String sourceViewId = 
-			fetchSourceViewId(workbenchWindow);
+			getSourceViewIdForWorkbench(workbench);
 		lastSourceViewId = sourceViewId;
 		File target = null;
 		ITreeSelection treeSel = 
-			fetchTreeSelection(workbenchWindow, sourceViewId);
+			getTreeSelectionFromWorbench(workbench, sourceViewId);
 		// If we have a selection, 
 		if(treeSel!=null) {
 			IProject proj = null;
 			// Then we try to get a selected Java element
-			IJavaElement el = selectedJavaElement(treeSel);
+			IJavaElement el = getJavaElementFromSelection(treeSel);
 			// If a Java element is selected, 
 			if(el!=null) {
 				// Then we get the file system path to the workspace
@@ -94,11 +94,11 @@ extends JavaElementsReverseReceiver {
 						target.getPath(), 
 						worker.getCoffeeName()
 				);
-				workbenchWindow = null;
+				workbench = null;
 				return model;
 			}
 		}
-		workbenchWindow = null;
+		workbench = null;
 		return null;
 	}
 }
