@@ -1,6 +1,7 @@
 package net.sourceforge.coffea.papyrus.handlers;
 
-import net.sourceforge.coffea.java.handlers.ReverseHandler;
+import net.sourceforge.coffea.java.handlers.ASTServiceHandler;
+import net.sourceforge.coffea.java.handlers.JavaModelServiceHandler;
 import net.sourceforge.coffea.papyrus.JavaElementsEditionReceiver;
 import net.sourceforge.coffea.papyrus.commands.OpenClassDiagramCommand;
 import net.sourceforge.coffea.uml2.model.IModelService;
@@ -14,6 +15,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.emf.workspace.AbstractEMFOperation;
 import org.eclipse.gmf.runtime.notation.HintedDiagramLinkStyle;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.papyrus.infra.core.services.ServiceException;
 import org.eclipse.papyrus.infra.emf.utils.ServiceUtilsForHandlers;
@@ -23,23 +25,21 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.uml2.uml.Model;
 
 /**
- * Simple edition using the UML editor : : uses the workspace 
- * {@link org.eclipse.jdt.core.IJavaElement <em>Java</em> elements} to produce 
- * the model
- * @see org.eclipse.jdt.core.IJavaElement
- * @see ReverseHandler
+ * Handler for an UML model service in coordination with Papyrus editors : uses the Java Model 
+ * to produce the service
+ * @see IJavaModel
+ * @see ASTServiceHandler
  */
-public class EditionHandler extends ReverseHandler {
+public class PapyrusJavaModelServiceHandler extends JavaModelServiceHandler {
 	
 	/** Receiver handling the edition interactions */
 	private static JavaElementsEditionReceiver editionReceiver;
 	
 	/**
-	 * Returns the receiver handling the edition interactions
-	 * @return Receiver handling the edition interactions
+	 * Returns the service locator
+	 * @return Service locator
 	 */
-	public static synchronized JavaElementsEditionReceiver 
-	getEditionReceiver() {
+	public static synchronized JavaElementsEditionReceiver getPapyrusServiceLocator() {
 		if(editionReceiver==null) {
 			editionReceiver = 
 				new JavaElementsEditionReceiver();
@@ -52,7 +52,7 @@ public class EditionHandler extends ReverseHandler {
 	throws ExecutionException {
 		IWorkbenchWindow workbenchWindow = 
 			HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		IModelService service = getEditionReceiver().editSelectedJavaElements(
+		IModelService service = getPapyrusServiceLocator().editSelectedJavaElements(
 				workbenchWindow
 		);
 		Model m = service.getUMLElement();
@@ -94,6 +94,5 @@ public class EditionHandler extends ReverseHandler {
 			e.printStackTrace();
 		}
 		return service;
-	}
-	
+	}	
 }

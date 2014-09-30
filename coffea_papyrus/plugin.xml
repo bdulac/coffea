@@ -17,7 +17,7 @@
          point="org.eclipse.ui.handlers">
       <handler
             commandId="net.sourceforge.coffea.papyrus.commands.editionCommand"
-            class="net.sourceforge.coffea.papyrus.handlers.EditionHandler">
+            class="net.sourceforge.coffea.papyrus.handlers.PapyrusJavaModelServiceHandler">
          <activeWhen>
                <iterate>
                   <or>

@@ -2,7 +2,7 @@ package net.sourceforge.coffea.papyrus;
 
 import java.lang.reflect.InvocationTargetException;
 
-import net.sourceforge.coffea.java.JavaElementsReverseReceiver;
+import net.sourceforge.coffea.java.JavaModelServiceLocator;
 import net.sourceforge.coffea.papyrus.diagram.creation.ClassDiagramBuilder;
 import net.sourceforge.coffea.uml2.Resources;
 import net.sourceforge.coffea.uml2.model.IModelService;
@@ -17,7 +17,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -29,7 +28,7 @@ import org.eclipse.ui.PlatformUI;
  * @see org.eclipse.jdt.core.IJavaElement
  */
 public class JavaElementsEditionReceiver 
-extends JavaElementsReverseReceiver {
+extends JavaModelServiceLocator {
 
 	/** Java element object of the action */
 	protected IJavaElement element;
@@ -51,7 +50,7 @@ extends JavaElementsReverseReceiver {
 	 * Source view identifier in the source workbench window
 	 * @return Produced UML model
 	 */
-	public IModelService edit(
+	public IModelService getModelService(
 			IJavaElement el, 
 			IWorkbenchWindow sourceWorkbenchWindow, 
 			String sourceViewId
@@ -87,12 +86,12 @@ extends JavaElementsReverseReceiver {
 	public IModelService editSelectedJavaElements(IWorkbenchWindow workbenchWindow) 
 	throws ExecutionException { 
 		String sourceViewId = 
-			fetchSourceViewId(
+			getSourceViewIdForWorkbench(
 					workbenchWindow
 			);
 		IJavaElement el = getSelectedJavaElement(workbenchWindow);
 		if(el != null) {
-			return edit(
+			return getModelService(
 					el, 
 					workbenchWindow, 
 					sourceViewId
@@ -114,15 +113,16 @@ extends JavaElementsReverseReceiver {
 	 * @return Operation result
 	 * @throws ExecutionException
 	 */
-	public Object editSelectedJavaElement(
+	/*
+	public IModelService editSelectedJavaElement(
 			IWorkbenchWindow workbenchWindow, 
 			String sourceViewId
 	) throws ExecutionException { 
 		ITreeSelection treeSel = 
-			fetchTreeSelection(workbenchWindow, sourceViewId);
+			getTreeSelectionFromWorbench(workbenchWindow, sourceViewId);
 		// If we have a selection, 
 		if(treeSel!=null) {
-			IJavaElement el = selectedJavaElement(treeSel);
+			IJavaElement el = getJavaElementFromSelection(treeSel);
 			return edit(
 					el, 
 					workbenchWindow, 
@@ -131,7 +131,7 @@ extends JavaElementsReverseReceiver {
 		}
 		workbenchWindow = null;
 		return null;
-	}
+	}*/
 
 	/** Simple reverse action construction */
 	public JavaElementsEditionReceiver() {
@@ -151,19 +151,20 @@ extends JavaElementsReverseReceiver {
 	 * @return Result of the operation
 	 * @throws ExecutionException
 	 */
-	protected Object editCurrentSelection(IWorkbenchWindow w)
+	/*
+	protected IModelService getModelForWorkbench(IWorkbenchWindow w)
 	throws ExecutionException {
 		lastSourceWorkbenchWindow = w;
-		String sourceViewId = fetchSourceViewId(w);
+		String sourceViewId = getSourceViewIdForWorkbench(w);
 		lastSourceViewId = sourceViewId;
-		ITreeSelection treeSel = fetchTreeSelection(
+		ITreeSelection treeSel = getTreeSelectionFromWorbench(
 				w, 
 				sourceViewId
 		);
 		// If we have a selection, 
 		if(treeSel!=null) {
-			IJavaElement el = selectedJavaElement(treeSel);
-			return edit(
+			IJavaElement el = getJavaElementFromSelection(treeSel);
+			return getModelService(
 					el, 
 					w, 
 					sourceViewId
@@ -171,7 +172,7 @@ extends JavaElementsReverseReceiver {
 		}
 		w = null;
 		return null;
-	}
+	}*/
 
 	public void run(IProgressMonitor monitor) 
 	throws InvocationTargetException, InterruptedException {

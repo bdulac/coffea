@@ -14,11 +14,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sourceforge.coffea.java.handlers.ReverseHandler;
+import net.sourceforge.coffea.java.handlers.JavaModelServiceHandler;
 import net.sourceforge.coffea.papyrus.CoffeaPapyrusPlugin;
 import net.sourceforge.coffea.papyrus.editors.policies.OpenUMLClassDiagramJavaEditPolicy;
 import net.sourceforge.coffea.papyrus.editors.policies.OpenUMLClassJavaEditPolicy;
-import net.sourceforge.coffea.papyrus.handlers.EditionHandler;
+import net.sourceforge.coffea.papyrus.handlers.PapyrusJavaModelServiceHandler;
 import net.sourceforge.coffea.papyrus.providers.UMLClassViewProvider;
 import net.sourceforge.coffea.uml2.Resources;
 import net.sourceforge.coffea.uml2.model.IASTNodeService;
@@ -242,12 +242,8 @@ public class OpenClassDiagramCommand extends AbstractTransactionalCommand implem
 				opened = openFromPages(pages);
 			}
 			if(!opened) {
-				EditionHandler.getEditionReceiver()
-				.reverseFromSelectedJavaElement(
-						win, 
-						ReverseHandler.getInteractionsReceiver()
-						.getLastSourceViewId()
-				);
+				PapyrusJavaModelServiceHandler.getPapyrusServiceLocator()
+				.getModelService(win);
 			}
 		}
 		return CommandResult.newOKCommandResult();
@@ -396,13 +392,13 @@ public class OpenClassDiagramCommand extends AbstractTransactionalCommand implem
 													!=null
 											) {
 												String lastId = 
-													ReverseHandler
-													.getInteractionsReceiver()
+													JavaModelServiceHandler
+													.getServiceLocator()
 													.getLastSourceViewId();
 												opened = true;
-												EditionHandler
-												.getEditionReceiver()
-												.edit(
+												PapyrusJavaModelServiceHandler
+												.getPapyrusServiceLocator()
+												.getModelService(
 														packH
 														.getJavaElement(), 
 														win, 
