@@ -1,6 +1,7 @@
 package net.sourceforge.coffea.java.handlers;
 
 import net.sourceforge.coffea.java.JavaModelServiceLocator;
+import net.sourceforge.coffea.uml2.model.IModelService;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -36,7 +37,7 @@ public class JavaModelServiceHandler extends AbstractHandler {
 		super();
 	}
 	
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public IModelService execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow workbenchWindow = 
 			HandlerUtil.getActiveWorkbenchWindowChecked(event);
 		return getServiceLocator().getModelService(
