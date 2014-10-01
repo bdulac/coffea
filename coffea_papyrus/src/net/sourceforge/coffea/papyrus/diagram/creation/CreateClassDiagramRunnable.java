@@ -24,7 +24,7 @@ public class CreateClassDiagramRunnable extends CreateModelRunnable {
 	}
 	
 	@Override
-	protected URI buildEMFModelURI(String uri, Model m) {
+	protected URI createEmfUri(String uri, Model m) {
 		return  
 			URI.createURI(
 					"file://" + uri

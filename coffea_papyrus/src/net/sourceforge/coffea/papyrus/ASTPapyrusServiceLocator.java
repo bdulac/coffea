@@ -85,7 +85,7 @@ public class ASTPapyrusServiceLocator extends ASTServiceLocator {
 				// Save the reversed model in the file system
 				worker.save(
 						target.getPath(), 
-						worker.getCoffeeName()
+						worker.getModelName()
 				);
 				workbenchWindow = null;
 				return model;
