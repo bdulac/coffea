@@ -20,8 +20,7 @@ import org.eclipse.ui.PlatformUI;
  * Service locator using elements of the AST to manage UML model services
  * @see AST
  */
-public class ASTServiceLocator 
-extends JavaModelServiceLocator {
+public class ASTServiceLocator extends JavaModelServiceLocator {
 
 	/** Full reverse handler construction */
 	public ASTServiceLocator() {
@@ -52,12 +51,12 @@ extends JavaModelServiceLocator {
 		ITreeSelection treeSel = 
 			getTreeSelectionFromWorbench(workbench, sourceViewId);
 		// If we have a selection, 
-		if(treeSel!=null) {
+		if(treeSel != null) {
 			IProject proj = null;
 			// Then we try to get a selected Java element
 			IJavaElement el = getJavaElementFromSelection(treeSel);
 			// If a Java element is selected, 
-			if(el!=null) {
+			if(el != null) {
 				// Then we get the file system path to the workspace
 				String path = 
 					ResourcesPlugin.getWorkspace().getRoot()
@@ -66,11 +65,11 @@ extends JavaModelServiceLocator {
 				path += el.getPath().toOSString();
 				target = new File(path);
 				IJavaProject proJ = el.getJavaProject();
-				if(proJ!=null) {
+				if(proJ != null) {
 					proj = proJ.getProject();
 				}
 			}
-			if(proj==null) {
+			if(proj == null) {
 				proj = selectedProject(treeSel);
 			}
 			// Once we have an adequate form of the selection
