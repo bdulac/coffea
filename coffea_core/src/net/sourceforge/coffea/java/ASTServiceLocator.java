@@ -85,13 +85,13 @@ public class ASTServiceLocator extends JavaModelServiceLocator {
 				IWorkbenchWindow win = getSourceWorkbenchWindow();
 				ModelServiceBuilder worker = 
 					new ModelServiceBuilder(sourceViewId, win);
-				worker.setCoffeeName(proj.getName());
+				worker.setModelName(proj.getName());
 				IModelService model =
 					worker.parseFile(target);
 				// Save the reversed model in the file system
 				worker.save(
 						target.getPath(), 
-						worker.getCoffeeName()
+						worker.getModelName()
 				);
 				workbench = null;
 				return model;

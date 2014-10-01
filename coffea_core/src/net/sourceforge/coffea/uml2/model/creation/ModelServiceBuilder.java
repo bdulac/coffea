@@ -70,7 +70,7 @@ implements IModelServiceBuilding {
 	 * Project name, when a file is parsed takes the file name
 	 * @see #parseFile(File)
 	 */
-	protected String coffeeName;
+	protected String modelName;
 
 	/** Model */
 	protected IModelService model;
@@ -86,7 +86,7 @@ implements IModelServiceBuilding {
 	
 	/** Model builder construction */
 	public ModelServiceBuilder() {
-		coffeeName = defaultPackageName;
+		modelName = defaultPackageName;
 	}
 
 	/** 
@@ -110,8 +110,8 @@ implements IModelServiceBuilding {
 	public IModelService parseFile(File target) {
 		init();
 		if(target!=null) {
-			if(getCoffeeName()==null) {
-				this.setCoffeeName(target.getName());
+			if(getModelName()==null) {
+				this.setModelName(target.getName());
 			}
 			model = new ModelService(this);
 			parse(target);
@@ -232,7 +232,7 @@ implements IModelServiceBuilding {
 						if((name==null)||(name.length()==0)) {
 							name = IModelService.defaultPackageFileName;
 						}
-						setCoffeeName(name);
+						setModelName(name);
 					}
 					if(p!=null) {
 						IJavaModel m = p.getJavaModel();
@@ -742,7 +742,7 @@ implements IModelServiceBuilding {
 				monitor.beginTask(parseFile.getName(), 6);
 				IProject project = 
 					ResourcesPlugin.getWorkspace().getRoot().getProject(
-							getCoffeeName()
+							getModelName()
 					);
 				monitor.worked(1);
 				// If the file exists and can be read,
@@ -780,7 +780,7 @@ implements IModelServiceBuilding {
 									||
 									(
 											!javaProject.getElementName()
-											.equals(getCoffeeName())
+											.equals(getModelName())
 									)
 							){
 								// Then we get it
@@ -881,22 +881,17 @@ implements IModelServiceBuilding {
 		}
 	}
 
-	/**
-	 * Returns {@link #coffeeName}
-	 * @return
-	 * 	Value of {@link #coffeeName}
-	 */
-	public String getCoffeeName() {
-		return coffeeName;
+	/** @return Model name */
+	public String getModelName() {
+		return modelName;
 	}
 
 	/**
-	 * Sets {@link #coffeeName}
 	 * @param n
-	 * 	Value of {@link #coffeeName}
+	 * Model name
 	 */
-	public void setCoffeeName(String n) {
-		coffeeName = n;
+	public void setModelName(String n) {
+		modelName = n;
 	}
 
 	// @Override

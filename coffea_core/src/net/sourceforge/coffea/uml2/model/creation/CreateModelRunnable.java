@@ -23,7 +23,7 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 	private String uri;
 
 	/** Handled model from which the UML model is constituted */
-	private IModelService model;
+	private IModelService modelService;
 
 	/** Model EMF resource in which the UML model persists */
 	protected Resource resultingEmfResource;
@@ -33,20 +33,11 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 
 	public CreateModelRunnable(String uri, IModelService m) {
 		this.uri = uri;
-		model = m;
+		modelService = m;
 	}
 	
 	protected String getUri() {
 		return uri;
-	}
-
-	protected URI setupEMFLocation(String uri, String modelName) {
-		return 
-		URI.createURI(
-				"file://" + uri
-		).appendSegment(modelName).appendFileExtension(
-				UMLResource.FILE_EXTENSION
-		);
 	}
 
 	public void run(IProgressMonitor monitor)
@@ -76,13 +67,12 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 	protected void createModel(IProgressMonitor monitor) {
 		monitor.beginTask("labels.buildingModelResources", 10);
 		// Getting the model element
-		Model m = model.getUMLElement();
+		Model m = modelService.getUMLElement();
 		if((m!=null)&&(m.getName()!=null)) {
 			//Setting up the model location
-			URI location = buildEMFModelURI(uri, m);
+			URI location = createEmfUri(uri, m);
 			// Saving the model resource
-			resultingEmfResource = 
-				new ResourceSetImpl().createResource(location);
+			resultingEmfResource = new ResourceSetImpl().createResource(location);
 			monitor.worked(2);
 			resultingEmfResource.getContents().add(m);
 			try {
@@ -152,8 +142,10 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 	 * Model for which an EMF URI must be built
 	 * @return EMF URI for the given model in the given directory
 	 */
-	protected URI buildEMFModelURI(String uri, Model m) {
-		URI location = setupEMFLocation(uri, m.getName());
+	protected URI createEmfUri(String uri, Model m) {
+		URI location = 
+				URI.createURI("file://" + uri).appendSegment(m.getName())
+				.appendFileExtension(UMLResource.FILE_EXTENSION);
 		return location;
 	}
 
