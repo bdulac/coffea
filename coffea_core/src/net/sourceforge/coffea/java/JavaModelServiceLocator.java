@@ -151,7 +151,7 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 	 * Returns Last source workbench window
 	 * @return Last source workbench window
 	 */
-	public IWorkbenchWindow getLastSourceWorkbenchWindow() {
+	private IWorkbenchWindow getLastSourceWorkbenchWindow() {
 		return lastSourceWorkbenchWindow;
 	}
 
@@ -198,36 +198,6 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 		}
 		return model;
 	}
-
-	/** 
-	 * Simple reverse of the current selection to an UML model
-	 * @param w
-	 * Workbench window in which the selection should be reversed
-	 * @return Result of the operation
-	 * @throws ExecutionException
-	 */
-	/*
-	protected IModelService getModelService(IWorkbenchWindow w)
-	throws ExecutionException {
-		lastSourceWorkbenchWindow = w;
-		String sourceViewId = getSourceViewIdForWorkbench(w);
-		lastSourceViewId = sourceViewId;
-		ITreeSelection treeSel = getTreeSelectionFromWorbench(
-				w, 
-				sourceViewId
-		);
-		// If we have a selection, 
-		if(treeSel!=null) {
-			IJavaElement el = getJavaElementFromSelection(treeSel);
-			return getModelService(
-					el, 
-					w, 
-					sourceViewId
-			);
-		}
-		w = null;
-		return null;
-	}*/
 
 	protected IProject selectedProject(ITreeSelection treeSel) {
 		// We get the first selected element (we consider only one 
@@ -315,36 +285,4 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 		workbench = null;
 		return null;
 	}
-
-	/** 
-	 * Simple reverse of the current selection to an UML model
-	 * @param edition
-	 * Boolean value indicating if the source should be edited through the 
-	 * UML model editor
-	 * @param workbenchWindow
-	 * Workbench window in which the current selection must be reversed
-	 * @param sourceViewId
-	 * Source view identifier in the source workbench window
-	 * @return Service for action on the model
-	 * @throws ExecutionException
-	 */
-	/*
-	public IModelService getModelForWorkbench(
-			IWorkbenchWindow workbenchWindow, 
-			String sourceViewId
-	) throws ExecutionException { 
-		ITreeSelection treeSel = 
-			getTreeSelectionFromWorbench(workbenchWindow, sourceViewId);
-		// If we have a selection, 
-		if(treeSel!=null) {
-			IJavaElement el = getJavaElementFromSelection(treeSel);
-			return getModelService(
-					el, 
-					workbenchWindow, 
-					sourceViewId
-			);
-		}
-		workbenchWindow = null;
-		return null;
-	}*/
 }
