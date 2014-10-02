@@ -66,7 +66,7 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 
 	protected void createModel(IProgressMonitor monitor) {
 		monitor.beginTask("labels.buildingModelResources", 10);
-			
+		
 		// Setting up the model location
 		URI location = modelService.createEmfUri(targetDirUri);
 		ResourceSet set = new ResourceSetImpl();
@@ -136,20 +136,6 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 			monitor.worked(2);
 		}
 		 */
-	}
-
-	/**
-	 * Builds a path for a model given its name and the directory URI as a 
-	 * string
-	 * @param uri
-	 * Containing directory URI as a string
-	 * @param m
-	 * Model for which a path must be built
-	 * @return Path as a string for the given model in the given directory
-	 */
-	protected String buildUMLModelPath(String uri, Model m) {
-		String modelPath = uri + '/' + m.getName() + ".uml";
-		return modelPath;
 	}
 
 	/** 
