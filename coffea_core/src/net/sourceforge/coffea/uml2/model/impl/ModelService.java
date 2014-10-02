@@ -262,20 +262,6 @@ implements IModelService {
 	}
 
 	public void createModelFile(String uri) {
-		/*
-		ProgressMonitorDialog dialog = 
-			new ProgressMonitorDialog(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getShell()
-			);
-		try {
-			dialog.run(false, true, new CreateModelRunnable(uri, this));
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		*/
 		CreateModelRunnable runnable = new CreateModelRunnable(uri, this);
 		CoffeaUML2Plugin.getInstance().execute(runnable);
 	}
