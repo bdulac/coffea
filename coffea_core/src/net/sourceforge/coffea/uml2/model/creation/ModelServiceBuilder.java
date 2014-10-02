@@ -30,6 +30,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -73,7 +75,7 @@ implements IModelServiceBuilding {
 	protected String modelName;
 
 	/** Model */
-	protected IModelService model;
+	protected IModelService modelService;
 
 	/** Source workbench window */
 	protected IWorkbenchWindow workbenchWindow;
@@ -113,10 +115,10 @@ implements IModelServiceBuilding {
 			if(getModelName()==null) {
 				this.setModelName(target.getName());
 			}
-			model = new ModelService(this);
+			modelService = new ModelService(this);
 			parse(target);
 		}
-		return model;
+		return modelService;
 	}	
 
 	// @Override
@@ -153,7 +155,7 @@ implements IModelServiceBuilding {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return model;
+		return modelService;
 	}
 
 	/** Runnable processor producing a model from a Java element */
@@ -189,9 +191,10 @@ implements IModelServiceBuilding {
 	}
 
 	public IModelService buildModelService(IJavaProject p) {
-		model = new ModelService(this);
-		model.setJavaProject(p);
-		return model;
+		ResourceSet set = new ResourceSetImpl();
+		modelService = new ModelService(this);
+		modelService.setJavaProject(p);
+		return modelService;
 	}
 
 	/**
@@ -209,11 +212,11 @@ implements IModelServiceBuilding {
 		if(pMonitor == null) {
 			pMonitor = new NullProgressMonitor();
 		}
-		model = null;
+		modelService = null;
 		init();
 		try {
 			if(jElement != null) {
-				if(model == null) {
+				if(modelService == null) {
 					IJavaProject jProject = null;
 					// Resolving the first package fragment in the given 
 					// element parents
@@ -238,7 +241,8 @@ implements IModelServiceBuilding {
 						IJavaModel jModel = jProject.getJavaModel();
 						jModel.open(new SubProgressMonitor(pMonitor, 1));
 						buildModelService(jProject);
-						IPackageFragment processPack = (IPackageFragment)jElement;
+						IPackageFragment processPack = 
+								(IPackageFragment)jElement;
 						processPackageFragment(processPack, pMonitor);
 						IPackageFragment[] packs = 
 								jProject.getPackageFragments();
@@ -339,7 +343,7 @@ implements IModelServiceBuilding {
 		finally {
 			// pm.worked(1);
 		}
-		return model;
+		return modelService;
 	}
 
 	/**
@@ -435,11 +439,11 @@ implements IModelServiceBuilding {
 						name = IModelService.defaultPackageFileName;
 					}
 					IPackageService group = 
-						model.resolvePackageService(name);
+						modelService.resolvePackageService(name);
 					if(group==null) {
 						new PackageService(
 								pack, 
-								model
+								modelService
 						);
 					}
 				}
@@ -525,12 +529,12 @@ implements IModelServiceBuilding {
 								}
 								// Then we have the primary type, the 
 								// container will be the package
-								group = model.resolvePackageService(name);
+								group = modelService.resolvePackageService(name);
 								if(group==null) {
 									group = 
 										new PackageService(
 												t.getPackageFragment(), 
-												model
+												modelService
 										);
 								}
 							}
@@ -552,7 +556,7 @@ implements IModelServiceBuilding {
 							else {
 								// In any other case, we put it directly in 
 								// the model
-								group = model;
+								group = modelService;
 							}
 							// Second step, we can process the type
 							try {
@@ -615,18 +619,18 @@ implements IModelServiceBuilding {
 		ITypesContainerService group;
 		if(cUnit.getPackage()!=null) {
 			group = 
-				model.resolvePackageService(
+				modelService.resolvePackageService(
 						cUnit.getPackage().getName().getFullyQualifiedName()
 				);
 			if(group==null) {
 				group = 
 					new PackageService(
 							cUnit.getPackage(), 
-							model
+							modelService
 					);
 			}
 		}
-		else group = model;
+		else group = modelService;
 		// 2°) Second step, we build a rewriter from the compilation unit
 		AST ast = cUnit.getAST();
 		ImportDeclaration id = ast.newImportDeclaration();
@@ -678,7 +682,7 @@ implements IModelServiceBuilding {
 		if(dir.isDirectory()) {
 			//Then we can process any of the elements it contains...
 			File[] content = dir.listFiles();
-			for(int i = 0 ; i < content.length ; i++) {
+			for(int i = 0 ; i <content.length ; i++) {
 				//...reading any of them
 				File elm = content[i];
 				this.readElement(elm, dir);
@@ -853,23 +857,23 @@ implements IModelServiceBuilding {
 
 	public IModelService getLatestModelServiceBuilt() {
 		init();
-		return model;
+		return modelService;
 	}
 
-	public void save(String uri, String name) {
-		save(uri, name, null);
+	public void save(String uri) {
+		save(uri, null);
 	}
 
-	public void save(String uri, String name, IProgressMonitor mn) {
+	public void save(String uri,  IProgressMonitor mn) {
 		init();
 		if(mn == null) {
 			mn = new NullProgressMonitor();
 		}
 		mn.beginTask("labels.buildingModel", 10);
-		model.setUpUMLModelElement();
+		modelService.setUpUMLModelElement();
 		mn.worked(5);
-		model.setName(name);
-		model.createModelFile(uri, new SubProgressMonitor(mn, 5));
+		modelService.setName(modelName);
+		modelService.createModelFile(uri, new SubProgressMonitor(mn, 5));
 	}
 
 	/**

@@ -10,7 +10,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.uml2.uml.Model;
-import org.eclipse.uml2.uml.resource.UMLResource;
 
 import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
 import net.sourceforge.coffea.uml2.Resources;
@@ -21,21 +20,6 @@ public class CreateClassDiagramRunnable extends CreateModelRunnable {
 
 	public CreateClassDiagramRunnable(String uri, IModelService m) {
 		super(uri, m);
-	}
-	
-	@Override
-	protected URI createEmfUri(String uri, Model m) {
-		return  
-			URI.createURI(
-					"file://" + uri
-			).appendSegment(
-					Resources.getParameter(
-							"constants.editingFileNamePrefix"
-					) 
-					+ m.getName())
-					.appendFileExtension(
-							UMLResource.FILE_EXTENSION
-					);
 	}
 	
 	@Override

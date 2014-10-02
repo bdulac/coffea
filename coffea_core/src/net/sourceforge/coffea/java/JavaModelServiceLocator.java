@@ -255,8 +255,7 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 			// We save documents from the processed elements to the package 
 			// URL
 			builder.save(
-					path, 
-					builder.getModelName(), 
+					path,  
 					new SubProgressMonitor(monitor, 3)
 			);
 			lastSourceWorkbenchWindow = null;

@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.UMLFactory;
+import org.eclipse.uml2.uml.resource.UMLResource;
 
 /** Service for a model */
 public class ModelService 
@@ -96,27 +98,45 @@ implements IModelService {
 		packages = new ArrayList<IPackageService>();
 		types = new ArrayList<ITypeService<?, ?>>();
 	}
+	
+	// @Override
+	public URI createEmfUri(String uri) {
+		Model m = getUMLElement();
+		if(m == null) {
+			throw new IllegalStateException("The model should not be null");
+		}
+		URI location = 
+				URI.createURI("file://" + uri).appendSegment(m.getName())
+				.appendFileExtension(UMLResource.FILE_EXTENSION);
+		return location;
+	}
 
+	// @Override
 	public IModelService getModelService() {
 		return this;
 	}
 
+	// @Override
 	public IJavaProject getJavaProject() {
 		return javaProject;
 	}
 
+	// @Override
 	public void setJavaProject(IJavaProject p) {
 		javaProject = p;
 	}
 
+	// @Override
 	public String getSimpleName() {
 		return umlModelElement.getName();
 	}
 
+	// @Override
 	public String getFullName() {
 		return getSimpleName();
 	}
 
+	// @Override
 	public void setName(String n) {
 		umlModelElement.setName(n);
 	}

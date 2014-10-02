@@ -5,6 +5,7 @@ import net.sourceforge.coffea.uml2.Resources;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.uml2.uml.Model;
 
@@ -26,6 +27,15 @@ ITypesContainerService {
 		Resources.getParameter("constants.defaultPackageFileName");
 	
 	public Model getUMLElement();
+	
+	/**
+	 * Builds an EMF URI for a model given its name and the directory URI as a 
+	 * string
+	 * @param uri
+	 * Containing directory URI as a string
+	 * @return EMF URI for the given model in the given directory
+	 */
+	public URI createEmfUri(String uri);
 
 	/**
 	 * Returns the <em>Java</em> project containing the model handled by the 

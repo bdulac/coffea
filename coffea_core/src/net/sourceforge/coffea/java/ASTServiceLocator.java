@@ -86,13 +86,9 @@ public class ASTServiceLocator extends JavaModelServiceLocator {
 				ModelServiceBuilder worker = 
 					new ModelServiceBuilder(sourceViewId, win);
 				worker.setModelName(proj.getName());
-				IModelService model =
-					worker.parseFile(target);
+				IModelService model = worker.parseFile(target);
 				// Save the reversed model in the file system
-				worker.save(
-						target.getPath(), 
-						worker.getModelName()
-				);
+				worker.save(target.getPath());
 				workbench = null;
 				return model;
 			}

@@ -20,22 +20,17 @@ extends IJavaElementServiceBuilding, IJavaFileParsing {
 	 * Saves the model to the specified URI with the given name
 	 * @param uri
 	 * Saving folder location
-	 * @param name
-	 * Model name
 	 */
-	public void save(String uri, String name);
+	public void save(String uri);
 	
 	/**
 	 * TODO Should only appear on the service
 	 * Saves the model to the specified URI with the given name
 	 * @param uri
 	 * Saving folder location
-	 * @param name
-	 * Model name
 	 */
 	public void save(
 			String uri, 
-			String name, 
 			IProgressMonitor monitor
 	);
 
