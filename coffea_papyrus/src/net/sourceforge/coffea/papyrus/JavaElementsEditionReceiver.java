@@ -216,7 +216,6 @@ extends JavaModelServiceLocator {
 			// URL
 			builder.save(
 					path, 
-					builder.getModelName(), 
 					new SubProgressMonitor(monitor, 3)
 			);
 			lastSourceWorkbenchWindow = null;

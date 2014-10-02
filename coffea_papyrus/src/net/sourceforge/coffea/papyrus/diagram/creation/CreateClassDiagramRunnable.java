@@ -12,7 +12,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.uml2.uml.Model;
 
 import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
-import net.sourceforge.coffea.uml2.Resources;
 import net.sourceforge.coffea.uml2.model.IModelService;
 import net.sourceforge.coffea.uml2.model.creation.CreateModelRunnable;
 
@@ -20,19 +19,6 @@ public class CreateClassDiagramRunnable extends CreateModelRunnable {
 
 	public CreateClassDiagramRunnable(String uri, IModelService m) {
 		super(uri, m);
-	}
-	
-	@Override
-	protected String buildUMLModelPath(String uri, Model m) {
-		String modelPath = 
-			uri 
-			+ '/' 
-			+ 
-			Resources.getParameter(
-					"constants.editingFileNamePrefix"
-			)
-			+ m.getName() + ".uml";
-		return modelPath;
 	}
 	
 	private IWorkbenchWindow getSourceWorkbenchWindow() {
