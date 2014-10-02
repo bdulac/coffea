@@ -242,7 +242,7 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 			IWorkbenchWindow win = getLastSourceWorkbenchWindow();
 			// We will be able to build a model
 			ModelServiceBuilder builder = 
-				new ModelServiceBuilder(lastSourceViewId, win);
+					new ModelServiceBuilder(lastSourceViewId, win);
 			// We can start building the model using a sub-progress monitor
 			model = 
 				builder.buildModelService(
