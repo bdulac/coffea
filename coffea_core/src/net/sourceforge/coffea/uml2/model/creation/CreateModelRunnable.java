@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.resource.UMLResource;
@@ -67,14 +68,15 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 	protected void createModel(IProgressMonitor monitor) {
 		monitor.beginTask("labels.buildingModelResources", 10);
 		// Getting the model element
-		Model m = modelService.getUMLElement();
-		if((m!=null)&&(m.getName()!=null)) {
+		Model model = modelService.getUMLElement();
+		if((model != null) && (model.getName() != null)) {
 			//Setting up the model location
-			URI location = createEmfUri(uri, m);
+			URI location = createEmfUri(uri, model);
+			ResourceSet set = new ResourceSetImpl();
 			// Saving the model resource
-			resultingEmfResource = new ResourceSetImpl().createResource(location);
+			resultingEmfResource = set.createResource(location);
 			monitor.worked(2);
-			resultingEmfResource.getContents().add(m);
+			resultingEmfResource.getContents().add(model);
 			try {
 				resultingEmfResource.save(null);
 			} catch (IOException ioe) {
