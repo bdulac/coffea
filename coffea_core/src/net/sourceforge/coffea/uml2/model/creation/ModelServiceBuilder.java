@@ -196,64 +196,66 @@ implements IModelServiceBuilding {
 
 	/**
 	 * Builds a model service from a Java element using a progress monitor
-	 * @param el
+	 * @param jElement
 	 * Java element from which the model service must be built
-	 * @param pm
+	 * @param pMonitor
 	 * Progress monitor monitoring the operation
 	 * @return Built model service
 	 */
 	protected IModelService processJavaElement(
-			IJavaElement el, 
-			IProgressMonitor pm
+			IJavaElement jElement, 
+			IProgressMonitor pMonitor
 	) {
-		if(pm==null) {
-			pm = new NullProgressMonitor();
+		if(pMonitor == null) {
+			pMonitor = new NullProgressMonitor();
 		}
 		model = null;
 		init();
 		try {
-			if(el!=null) {
-				if(model==null) {
-					IJavaProject p = null;
+			if(jElement != null) {
+				if(model == null) {
+					IJavaProject jProject = null;
 					// Resolving the first package fragment in the given 
 					// element parents
 					while(
-							(el!=null)
-							&&(!(el instanceof IPackageFragment))
+							(jElement != null) 
+							&& (!(jElement instanceof IPackageFragment))
 					) {
-						el = el.getParent();
+						jElement = jElement.getParent();
 					}
 					// Once we have a package fragment, 
-					if(el instanceof IPackageFragment) {
+					if(jElement instanceof IPackageFragment) {
 						// We get the project
-						p = el.getJavaProject();
+						jProject = jElement.getJavaProject();
 						// And the model name
-						String name = el.getElementName();
+						String name = jElement.getElementName();
 						if((name==null)||(name.length()==0)) {
 							name = IModelService.defaultPackageFileName;
 						}
 						setModelName(name);
 					}
-					if(p!=null) {
-						IJavaModel m = p.getJavaModel();
-						m.open(new SubProgressMonitor(pm, 1));
-						buildModelService(p);
-						IPackageFragment processPack = (IPackageFragment)el;
-						processPackageFragment(processPack, pm);
-						IPackageFragment[] packs = p.getPackageFragments();
-						if(packs!=null) {
+					if(jProject != null) {
+						IJavaModel jModel = jProject.getJavaModel();
+						jModel.open(new SubProgressMonitor(pMonitor, 1));
+						buildModelService(jProject);
+						IPackageFragment processPack = (IPackageFragment)jElement;
+						processPackageFragment(processPack, pMonitor);
+						IPackageFragment[] packs = 
+								jProject.getPackageFragments();
+						if(packs != null) {
 							IPackageFragment pack = null;
 							String processedPackage = 
 								processPack.getElementName();
 							// If we have the default package, 
 							// then we are processing all sources
-							boolean sources = (
-									(processedPackage!=null)
-									&&(processedPackage.length()==0)
-							);
+							boolean sources = 
+									(
+										(processedPackage != null)
+										&&(processedPackage.length() == 0)
+									);
 							// For each package of the project
 							int nbPackagesFragments = packs.length;
-							pm.beginTask(
+							pMonitor.beginTask(
 									Resources.getMessage(
 											"labels.processingPackages"
 									), 
@@ -277,7 +279,7 @@ implements IModelServiceBuilding {
 													pack, 
 													new 
 													SubProgressMonitor(
-															pm, 
+															pMonitor, 
 															1
 													)
 											);
@@ -316,7 +318,7 @@ implements IModelServiceBuilding {
 															pack, 
 															new 
 															SubProgressMonitor(
-																	pm, 
+																	pMonitor, 
 																	1
 															)
 													);
@@ -325,7 +327,7 @@ implements IModelServiceBuilding {
 										}
 									}
 								}
-								pm.worked(1);
+								pMonitor.worked(1);
 							}
 						}
 					}
@@ -604,38 +606,38 @@ implements IModelServiceBuilding {
 	}
 
 	public synchronized ITypeService<?, ?> processParsedType(
-			TypeDeclaration t, 
-			CompilationUnit u
+			TypeDeclaration tDeclaration, 
+			CompilationUnit cUnit
 	) {
 		ITypeService<?, ?> result = null;
 		// 1°) In a first step, we are going to process the package 
 		// declaration
 		ITypesContainerService group;
-		if(u.getPackage()!=null) {
+		if(cUnit.getPackage()!=null) {
 			group = 
 				model.resolvePackageService(
-						u.getPackage().getName().getFullyQualifiedName()
+						cUnit.getPackage().getName().getFullyQualifiedName()
 				);
 			if(group==null) {
 				group = 
 					new PackageService(
-							u.getPackage(), 
+							cUnit.getPackage(), 
 							model
 					);
 			}
 		}
 		else group = model;
 		// 2°) Second step, we build a rewriter from the compilation unit
-		AST ast = u.getAST();
+		AST ast = cUnit.getAST();
 		ImportDeclaration id = ast.newImportDeclaration();
 		id.setName(ast.newName(new String[] {"java", "util", "Set"}));
 		ASTRewrite rewriter = ASTRewrite.create(ast);
 		// 3°) Third step, we can process the type declaration
-		if(t.isInterface()) {
-			result = new InterfaceService(t, group, rewriter, u);
+		if(tDeclaration.isInterface()) {
+			result = new InterfaceService(tDeclaration, group, rewriter, cUnit);
 		}
 		else {
-			result = new ClassService(t, group, rewriter, u);
+			result = new ClassService(tDeclaration, group, rewriter, cUnit);
 		}
 		return result;
 	}
@@ -657,8 +659,8 @@ implements IModelServiceBuilding {
 	 * Container directory
 	 */
 	protected void readElement(File elm, File container) {
-		//We adapt the reading technique considering the element type (file or 
-		//directory)
+		// We adapt the reading technique considering the element type (file 
+		// or directory)
 		if(elm.isFile())this.readFile(elm, container);
 		else if(elm.isDirectory())this.readDirectory(elm, container);
 	}
@@ -676,7 +678,7 @@ implements IModelServiceBuilding {
 		if(dir.isDirectory()) {
 			//Then we can process any of the elements it contains...
 			File[] content = dir.listFiles();
-			for(int i=0 ; i<content.length ; i++) {
+			for(int i = 0 ; i < content.length ; i++) {
 				//...reading any of them
 				File elm = content[i];
 				this.readElement(elm, dir);
