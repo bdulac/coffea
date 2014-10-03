@@ -17,22 +17,15 @@ extends IJavaElementServiceBuilding, IJavaFileParsing {
 
 	/**
 	 * TODO Should only appear on the service
-	 * Saves the model to the specified URI with the given name
-	 * @param uri
-	 * Saving folder location
+	 * Saves the model in the underlying project
 	 */
-	public void save(String uri);
+	public void save();
 	
 	/**
 	 * TODO Should only appear on the service
-	 * Saves the model to the specified URI with the given name
-	 * @param uri
-	 * Saving folder location
+	 * Saves the model to the underlying project
 	 */
-	public void save(
-			String uri, 
-			IProgressMonitor monitor
-	);
+	public void save(IProgressMonitor monitor);
 
 	public IWorkbenchWindow getSourceWorkbenchWindow();
 

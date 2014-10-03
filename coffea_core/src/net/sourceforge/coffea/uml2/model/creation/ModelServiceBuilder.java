@@ -30,8 +30,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -108,7 +106,14 @@ implements IModelServiceBuilding {
 	public void init() {
 	}
 
-	// @Override
+	/**
+	 * Parses a  part of a file system containing <em>Java</em> sources aiming 
+	 * to build a {@link IModelService model handler}
+	 * @param f
+	 * 	Part of file system containing <em>Java</em> sources to parse
+	 * @return Built {@link IModelService model handler}
+	 */
+	/*
 	public IModelService parseFile(File target) {
 		init();
 		if(target!=null) {
@@ -119,7 +124,8 @@ implements IModelServiceBuilding {
 			parse(target);
 		}
 		return modelService;
-	}	
+	}
+	*/	
 
 	// @Override
 	public IModelService buildModelService(IJavaElement el) {
@@ -190,10 +196,11 @@ implements IModelServiceBuilding {
 		}
 	}
 
-	public IModelService buildModelService(IJavaProject p) {
-		ResourceSet set = new ResourceSetImpl();
-		modelService = new ModelService(this);
-		modelService.setJavaProject(p);
+	public IModelService buildModelService(
+			IJavaProject jProject, 
+			IJavaElement jElement
+	) {
+		modelService = new ModelService(this, jProject);
 		return modelService;
 	}
 
@@ -217,7 +224,6 @@ implements IModelServiceBuilding {
 		try {
 			if(jElement != null) {
 				if(modelService == null) {
-					IJavaProject jProject = null;
 					// Resolving the first package fragment in the given 
 					// element parents
 					while(
@@ -229,7 +235,6 @@ implements IModelServiceBuilding {
 					// Once we have a package fragment, 
 					if(jElement instanceof IPackageFragment) {
 						// We get the project
-						jProject = jElement.getJavaProject();
 						// And the model name
 						String name = jElement.getElementName();
 						if((name==null)||(name.length()==0)) {
@@ -237,13 +242,14 @@ implements IModelServiceBuilding {
 						}
 						setModelName(name);
 					}
-					if(jProject != null) {
-						IJavaModel jModel = jProject.getJavaModel();
+					if(jElement != null) {
+						IJavaModel jModel = jElement.getJavaModel();
 						jModel.open(new SubProgressMonitor(pMonitor, 1));
-						buildModelService(jProject);
+						buildModelService(jElement);
 						IPackageFragment processPack = 
 								(IPackageFragment)jElement;
 						processPackageFragment(processPack, pMonitor);
+						IJavaProject jProject = jElement.getJavaProject();
 						IPackageFragment[] packs = 
 								jProject.getPackageFragments();
 						if(packs != null) {
@@ -860,11 +866,11 @@ implements IModelServiceBuilding {
 		return modelService;
 	}
 
-	public void save(String uri) {
-		save(uri, null);
+	public void save() {
+		save(null);
 	}
 
-	public void save(String uri,  IProgressMonitor mn) {
+	public void save(IProgressMonitor mn) {
 		init();
 		if(mn == null) {
 			mn = new NullProgressMonitor();
@@ -872,8 +878,7 @@ implements IModelServiceBuilding {
 		mn.beginTask("labels.buildingModel", 10);
 		modelService.setUpUMLModelElement();
 		mn.worked(5);
-		modelService.setName(modelName);
-		modelService.createModelFile(uri, new SubProgressMonitor(mn, 5));
+		modelService.createModelFile(new SubProgressMonitor(mn, 5));
 	}
 
 	/**

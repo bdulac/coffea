@@ -20,8 +20,6 @@ import org.eclipse.uml2.uml.Model;
 /** Runnable creating an UML model from a handled model */
 public class CreateModelRunnable implements IUML2RunnableWithProgress {
 
-	private String targetDirUri;
-
 	/** Handled model from which the UML model is constituted */
 	private IModelService modelService;
 
@@ -31,18 +29,13 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 	/** Model workspace resource corresponding to the UML model */
 	protected IResource resultingWorkspaceResource;
 
-	public CreateModelRunnable(String dirUri, IModelService m) {
-		targetDirUri = dirUri;
+	public CreateModelRunnable(IModelService m) {
 		modelService = m;
-	}
-	
-	protected String getUri() {
-		return targetDirUri;
 	}
 
 	public void run(IProgressMonitor monitor)
 	throws InvocationTargetException, InterruptedException {
-		createModel(monitor);
+		createModelFile(monitor);
 		disposeResources(monitor);
 	}
 
@@ -64,11 +57,10 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 		return resultingEmfResource;
 	}
 
-	protected void createModel(IProgressMonitor monitor) {
-		monitor.beginTask("labels.buildingModelResources", 10);
-		
+	protected void createModelFile(IProgressMonitor monitor) {
+		monitor.beginTask("labels.buildingModelResources", 10);	
 		// Setting up the model location
-		URI location = modelService.createEmfUri(targetDirUri);
+		URI location = modelService.createEmfUri();
 		ResourceSet set = new ResourceSetImpl();
 		// Saving the model resource
 		resultingEmfResource = set.createResource(location);
@@ -89,7 +81,7 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 		}
 		monitor.worked(2);
 		// String modelPath = buildUMLModelPath(uri, m);
-		String modelPath = targetDirUri;
+		String modelPath = modelService.getJavaProjectUriString();
 		modelPath = 
 			modelPath.substring(
 					ResourcesPlugin.getWorkspace().getRoot()

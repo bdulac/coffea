@@ -3,7 +3,6 @@ package net.sourceforge.coffea.uml2.model.creation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 
 import net.sourceforge.coffea.uml2.model.IModelService;
@@ -46,14 +45,6 @@ public interface IJavaElementServiceBuilding {
 			IJavaElement el, 
 			IProgressMonitor monitor
 	);
-	
-	/**
-	 * Builds a model service from a Java project
-	 * @param p
-	 * Java project from which the model service must be built
-	 * @return Built model service
-	 */
-	public IModelService buildModelService(IJavaProject p);
 	
 	/**
 	 * Build a type service given a compilation unit and adds it to a 

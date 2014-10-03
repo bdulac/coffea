@@ -29,13 +29,17 @@ ITypesContainerService {
 	public Model getUMLElement();
 	
 	/**
-	 * Builds an EMF URI for a model given its name and the directory URI as a 
-	 * string
-	 * @param uri
-	 * Containing directory URI as a string
-	 * @return EMF URI for the given model in the given directory
+	 * Builds an EMF URI for a the managed <em>Java</em> project
+	 * @return EMF URI for the given model in project
+	 * @see #getJavaProject()
 	 */
-	public URI createEmfUri(String uri);
+	public URI createEmfUri();
+	
+	/**
+	 * @return The Java project URI string
+	 * @see #getJavaProject()
+	 */
+	public String getJavaProjectUriString();
 
 	/**
 	 * Returns the <em>Java</em> project containing the model handled by the 
@@ -52,29 +56,16 @@ ITypesContainerService {
 	 */
 	public void setJavaProject(IJavaProject p);
 	
-	/**
-	 * Sets the model name
-	 * @param n
-	 * Model name
-	 */
-	public void setName(String n);
+	/** Creates a file for the model underlying the service */
+	public void createModelFile();
 	
 	/**
-	 * Creates a file for the model under the given resource identifier
-	 * @param uri
-	 * Target resource identifier
-	 */
-	public void createModelFile(String uri);
-	
-	/**
-	 * Creates a file for the model under the given resource identifier and 
-	 * monitors the creation
-	 * @param uri
-	 * Target resource identifier
+	 * Creates a file for the model underlying the service with a progression 
+	 * monitor
 	 * @param monitor
 	 * Progress monitor
 	 */
-	public void createModelFile(String uri, IProgressMonitor monitor);
+	public void createModelFile(IProgressMonitor monitor);
 	
 	/**
 	 * Returns a boolean value indicating if the packages form a hierarchy in 

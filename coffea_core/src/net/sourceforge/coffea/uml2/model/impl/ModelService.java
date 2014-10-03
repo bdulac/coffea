@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
@@ -70,8 +72,9 @@ implements IModelService {
 	 * @param w
 	 * Value of {@link #creator}
 	 */
-	public ModelService(IModelServiceBuilding w) {
+	public ModelService(IModelServiceBuilding w, IJavaProject jProject) {
 		super();
+		setJavaProject(jProject);
 		packagesHierarchy = false;
 		creator = w;
 		packages = new ArrayList<IPackageService>();
@@ -82,31 +85,22 @@ implements IModelService {
 		classpathTypesPackage = 
 			new PackageService(this, classpathTypesPackageName);
 		packages.remove(classpathTypesPackage);
-	}
-
-	/**
-	 * Construction of a model handler with an existing UML element
-	 * @param w
-	 * Value of {@link #creator}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	public ModelService(IModelServiceBuilding w, Model ume) {
-		super(ume);
-		packagesHierarchy = false;
-		creator = w;
-		packages = new ArrayList<IPackageService>();
-		types = new ArrayList<ITypeService<?, ?>>();
+		ResourceSet set = new ResourceSetImpl();
+		URI uri = createEmfUri();
+		// TODO Load existing model here
+		
 	}
 	
 	// @Override
-	public URI createEmfUri(String uri) {
+	public URI createEmfUri() {
 		Model m = getUMLElement();
 		if(m == null) {
 			throw new IllegalStateException("The model should not be null");
 		}
+		String dirUri = getJavaProjectUriString();
+		String name = m.getName();
 		URI location = 
-				URI.createURI("file://" + uri).appendSegment(m.getName())
+				URI.createURI("file://" + dirUri).appendSegment(name)
 				.appendFileExtension(UMLResource.FILE_EXTENSION);
 		return location;
 	}
@@ -119,6 +113,16 @@ implements IModelService {
 	// @Override
 	public IJavaProject getJavaProject() {
 		return javaProject;
+	}
+	
+	// @Override
+	public String getJavaProjectUriString() {
+		if(javaProject == null) {
+			throw new IllegalStateException(
+					"The Java project should not be null"
+			);
+		}
+		return javaProject.getResource().getLocation().toOSString();
 	}
 
 	// @Override
@@ -136,20 +140,15 @@ implements IModelService {
 		return getSimpleName();
 	}
 
-	// @Override
-	public void setName(String n) {
-		umlModelElement.setName(n);
-	}
-
 	/** Set up the package hierarchy from the content of {@link #packages} */
 	protected void setUpPackageHierarchy() {
-		if(packages!=null) {
+		if(packages != null) {
 			IPackageService p = null;
 			// In a first loop on the packages list, 
-			for(int i=0 ; i<packages.size() ; i++) {
+			for(int i = 0 ; i < packages.size() ; i++) {
 				//Each package retrieves its parent
 				p = packages.get(i);
-				if(p!=null) {
+				if(p != null) {
 					p.retrieveContainerFromHierarchy();
 				}
 			}
@@ -160,10 +159,12 @@ implements IModelService {
 		}
 	}
 
-
+	// @Override
 	public void setUpUMLModelElement() {
 		if(umlModelElement==null) {
 			umlModelElement = UMLFactory.eINSTANCE.createModel();
+			String name = javaProject.getElementName();
+			umlModelElement.setName(name);
 		}
 		setUpPackageHierarchy();
 		for(int i=0 ; i<packages.size() ; i++) {
@@ -174,14 +175,17 @@ implements IModelService {
 		}
 	}
 
+	// @Override
 	public void addPackageService(IPackageService el) {
 		packages.add(el);
 	}
 
+	// @Override
 	public List<IPackageService> getPackagesServices() {
 		return packages;
 	}
 
+	// @Override
 	public IPackageService resolvePackageService(String n) {
 		for (int i = 0; i < this.packages.size(); i++) {
 			IPackageService pck = this.packages.get(i);
@@ -199,18 +203,22 @@ implements IModelService {
 		return null;
 	}
 
+	// @Override
 	public ITypesContainerService getContainerService() {
 		return null;
 	}
 
+	// @Override
 	public void addTypeService(ITypeService<?, ?> clH) {
 		types.add(clH);
 	}
 
+	// @Override
 	public List<ITypeService<?, ?>> getTypesServices() {
 		return types;
 	}
 
+	// @Override
 	public ITypeService<?, ?> resolveTypeService(String n)  {
 		ITypeService<?, ?> typ = null;
 		if (n != null) {
@@ -259,10 +267,12 @@ implements IModelService {
 		return typ;
 	}
 
+	// @Override
 	public boolean arePackageInHierarchy() {
 		return packagesHierarchy;
 	}
 
+	// @Override
 	public List<IPackageService> fetchSubPackagesFromHierarchy() {
 		// Looping on the packages list, 
 		List<IPackageService> rootPackages = 
@@ -281,16 +291,18 @@ implements IModelService {
 		return rootPackages;
 	}
 
-	public void createModelFile(String uri) {
-		CreateModelRunnable runnable = new CreateModelRunnable(uri, this);
+	// @Override
+	public void createModelFile() {
+		CreateModelRunnable runnable = new CreateModelRunnable(this);
 		CoffeaUML2Plugin.getInstance().execute(runnable);
 	}
 
-	public void createModelFile(String uri, IProgressMonitor monitor) {
+	// @Override
+	public void createModelFile(IProgressMonitor monitor) {
 		if(monitor==null) {
 			monitor = new NullProgressMonitor();
 		}
-		CreateModelRunnable runnable =  new CreateModelRunnable(uri, this);
+		CreateModelRunnable runnable =  new CreateModelRunnable(this);
 		try {
 			runnable.run(monitor);
 		} catch (InvocationTargetException e) {
@@ -300,6 +312,7 @@ implements IModelService {
 		}
 	}
 
+	// @Override
 	public IElementService getElementHandler(Element el) {
 		IElementService elH = null;
 		if(el!=null) {
@@ -311,6 +324,7 @@ implements IModelService {
 		return elH;
 	}
 
+	// @Override
 	public List<IElementService> getElementsHandlers() {
 		List<IElementService> ret = new ArrayList<IElementService>();
 		if(types!=null) {
@@ -339,6 +353,7 @@ implements IModelService {
 		return creator;
 	}
 	
+	// @Override
 	public IElementService getElementService(String n) {
 		IElementService ret = null;
 		if(n!=null) {

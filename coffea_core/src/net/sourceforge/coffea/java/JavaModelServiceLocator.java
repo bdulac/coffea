@@ -9,7 +9,6 @@ import net.sourceforge.coffea.uml2.model.creation.ModelServiceBuilder;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -249,13 +248,9 @@ public class JavaModelServiceLocator implements IRunnableWithProgress {
 						element, 
 						new SubProgressMonitor(monitor, 7)
 				);
-			// We get the package location to have the absolute URL
-			IPath res = element.getResource().getLocation();
-			String path = res.toOSString();
 			// We save documents from the processed elements to the package 
 			// URL
 			builder.save(
-					path,  
 					new SubProgressMonitor(monitor, 3)
 			);
 			lastSourceWorkbenchWindow = null;
