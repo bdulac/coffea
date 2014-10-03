@@ -17,8 +17,8 @@ import net.sourceforge.coffea.uml2.model.creation.CreateModelRunnable;
 
 public class CreateClassDiagramRunnable extends CreateModelRunnable {
 
-	public CreateClassDiagramRunnable(String uri, IModelService m) {
-		super(uri, m);
+	public CreateClassDiagramRunnable(IModelService m) {
+		super(m);
 	}
 	
 	private IWorkbenchWindow getSourceWorkbenchWindow() {
@@ -34,7 +34,7 @@ public class CreateClassDiagramRunnable extends CreateModelRunnable {
 			Model m, 
 			IProgressMonitor monitor
 	) {
-		String uri = getUri();
+		String uri = modelLocation.path();
 		IWorkbenchWindow win = getSourceWorkbenchWindow();
 		ClassDiagramBuilder diagBuilder = new ClassDiagramBuilder(uri, win);
 				// new ClassDiagramBuilder(modelLocation, uri, m.getName());

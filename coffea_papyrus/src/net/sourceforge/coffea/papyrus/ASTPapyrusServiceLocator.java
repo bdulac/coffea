@@ -80,7 +80,7 @@ public class ASTPapyrusServiceLocator extends ASTServiceLocator {
 				IModelService model =
 					worker.buildModelService(proj.getLocation().toOSString());
 				// Save the reversed model in the file system
-				worker.save(target.getPath());
+				worker.save();
 				workbenchWindow = null;
 				return model;
 			}
