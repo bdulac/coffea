@@ -853,8 +853,8 @@ public class OpenClassDiagramCommand extends AbstractTransactionalCommand implem
 							if (cont instanceof IClassifierService<?, ?>) {
 								tpH = (IClassifierService<?, ?>) cont;
 								try {
-									tp = tpH.getModelService().getJavaProject()
-											.findType(tpH.getFullName());
+									tp = tpH.getModelService().getJavaElement()
+											.getJavaProject().findType(tpH.getFullName());
 									if ((memH instanceof IAttributeService)
 											&& (tp != null)) {
 										el = tp.getField(memH.getSimpleName());

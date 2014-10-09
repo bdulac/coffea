@@ -24,15 +24,6 @@ public interface IJavaElementServiceBuilding {
 	public IModelService buildModelService(String modelPath);
 	
 	/**
-	 * Processes a {@link IJavaElement <em>Java</em> element} build a 
-	 * {@link IModelService model service}
-	 * @param el
-	 * 	The {@link IJavaElement <em>Java</em> element} to process
-	 * @return Built {@link IModelService model service}
-	 */
-	public IModelService buildModelService(IJavaElement el);
-	
-	/**
 	 * Processes a {@link IJavaElement <em>Java</em> element} to build a 
 	 * {@link IModelService model service}
 	 * @param el

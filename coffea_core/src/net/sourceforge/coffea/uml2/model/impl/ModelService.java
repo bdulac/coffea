@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
-import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.UMLFactory;
@@ -39,8 +39,8 @@ implements IModelService {
 	/** @see java.io.Serializables */
 	private static final long serialVersionUID = 6187450089919544028L;
 
-	/** <em>Java</em> project containing the model handled by the service */
-	protected IJavaProject javaProject;
+	/** <em>Java</em> element underlying the model handled by the service */
+	protected IJavaElement javaElement;
 
 	/** List services for the packages belonging to the model */
 	protected List<IPackageService> packages;
@@ -69,14 +69,14 @@ implements IModelService {
 
 	/**
 	 * Construction of a model handler
-	 * @param w
+	 * @param builder
 	 * Value of {@link #creator}
 	 */
-	public ModelService(IModelServiceBuilding w, IJavaProject jProject) {
+	public ModelService(IModelServiceBuilding builder, IJavaElement jElement) {
 		super();
-		setJavaProject(jProject);
+		setJavaElement(jElement);
 		packagesHierarchy = false;
-		creator = w;
+		creator = builder;
 		packages = new ArrayList<IPackageService>();
 		types = new ArrayList<ITypeService<?, ?>>();
 		primitiveTypesPackage = 
@@ -111,23 +111,23 @@ implements IModelService {
 	}
 
 	// @Override
-	public IJavaProject getJavaProject() {
-		return javaProject;
+	public IJavaElement getJavaElement() {
+		return javaElement;
 	}
 	
 	// @Override
 	public String getJavaProjectUriString() {
-		if(javaProject == null) {
+		if(javaElement == null) {
 			throw new IllegalStateException(
 					"The Java project should not be null"
 			);
 		}
-		return javaProject.getResource().getLocation().toOSString();
+		return javaElement.getResource().getLocation().toOSString();
 	}
 
 	// @Override
-	public void setJavaProject(IJavaProject p) {
-		javaProject = p;
+	public void setJavaElement(IJavaElement p) {
+		javaElement = p;
 	}
 
 	// @Override
@@ -163,7 +163,15 @@ implements IModelService {
 	public void setUpUMLModelElement() {
 		if(umlModelElement==null) {
 			umlModelElement = UMLFactory.eINSTANCE.createModel();
-			String name = javaProject.getElementName();
+			String name = javaElement.getElementName();
+			if(javaElement == null) {
+				throw new IllegalStateException(
+						"The Java element should not be null"
+				);
+			}
+			if((name == null) || (name.length() == 0)) {
+				name = javaElement.toString();
+			}
 			umlModelElement.setName(name);
 		}
 		setUpPackageHierarchy();

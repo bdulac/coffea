@@ -6,7 +6,7 @@ import net.sourceforge.coffea.uml2.Resources;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.uml2.uml.Model;
 
 /** Service for a model */
@@ -29,32 +29,32 @@ ITypesContainerService {
 	public Model getUMLElement();
 	
 	/**
-	 * Builds an EMF URI for a the managed <em>Java</em> project
+	 * Builds an EMF URI for a the managed <em>Java</em> element
 	 * @return EMF URI for the given model in project
-	 * @see #getJavaProject()
+	 * @see #getJavaElement()
 	 */
 	public URI createEmfUri();
 	
 	/**
 	 * @return The Java project URI string
-	 * @see #getJavaProject()
+	 * @see #getJavaElement()
 	 */
 	public String getJavaProjectUriString();
 
 	/**
-	 * Returns the <em>Java</em> project containing the model handled by the 
+	 * Returns the <em>Java</em> element underlyingthe model handled by the 
 	 * service
-	 * @return <em>Java</em> project containing the model
+	 * @return <em>Java</em> element underlyingthe model
 	 */
-	public IJavaProject getJavaProject();
+	public IJavaElement getJavaElement();
 	
 	/**
-	 * Sets the <em>Java</em> project containing the model handled by the 
+	 * Sets the <em>Java</em> element underlyingthe model handled by the 
 	 * service
-	 * @param p 
-	 * <em>Java</em> project containing the model
+	 * @param jElement 
+	 * <em>Java</em> element underlyingthe model
 	 */
-	public void setJavaProject(IJavaProject p);
+	public void setJavaElement(IJavaElement jElement);
 	
 	/** Creates a file for the model underlying the service */
 	public void createModelFile();

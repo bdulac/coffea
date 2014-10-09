@@ -128,9 +128,11 @@ implements IModelServiceBuilding {
 	*/	
 
 	// @Override
+	/*
 	public IModelService buildModelService(IJavaElement el) {
 		return buildModelService(el, null);
 	}
+	*/
 
 	// @Override
 	public IModelService buildModelService(String path) {
@@ -153,6 +155,7 @@ implements IModelServiceBuilding {
 		if(monitor==null) {
 			monitor = new NullProgressMonitor();
 		}
+		modelService = new ModelService(this, el);
 		IUML2RunnableWithProgress runnable = new ModelProcessorRunnable(el);
 		try {
 			runnable.run(monitor);
@@ -180,6 +183,7 @@ implements IModelServiceBuilding {
 		 */
 		public ModelProcessorRunnable(IJavaElement e) {
 			el = e;
+			// processedModel = new ModelService(el);
 		}
 
 		public void run(IProgressMonitor pm)
@@ -194,14 +198,6 @@ implements IModelServiceBuilding {
 		public IModelService getProcessedModel() {
 			return processedModel;
 		}
-	}
-
-	public IModelService buildModelService(
-			IJavaProject jProject, 
-			IJavaElement jElement
-	) {
-		modelService = new ModelService(this, jProject);
-		return modelService;
 	}
 
 	/**
@@ -219,8 +215,8 @@ implements IModelServiceBuilding {
 		if(pMonitor == null) {
 			pMonitor = new NullProgressMonitor();
 		}
-		modelService = null;
-		init();
+		// modelService = null;
+		// init();
 		try {
 			if(jElement != null) {
 				if(modelService == null) {
@@ -245,7 +241,7 @@ implements IModelServiceBuilding {
 					if(jElement != null) {
 						IJavaModel jModel = jElement.getJavaModel();
 						jModel.open(new SubProgressMonitor(pMonitor, 1));
-						buildModelService(jElement);
+						// buildModelService(jElement);
 						IPackageFragment processPack = 
 								(IPackageFragment)jElement;
 						processPackageFragment(processPack, pMonitor);
@@ -466,10 +462,11 @@ implements IModelServiceBuilding {
 	public IPackageService buildPackageService(
 			IPackageFragment packageFragment
 	) {
-		IModelService projectModelService = 
-			buildModelService(packageFragment);
+		if(modelService == null) {
+			modelService = new ModelService(this, packageFragment);
+		}
 		IElementService elementSrv = 
-			projectModelService.getElementService(
+			modelService.getElementService(
 					packageFragment.getElementName()
 			);
 		if(elementSrv instanceof IPackageService) { 
@@ -481,14 +478,16 @@ implements IModelServiceBuilding {
 	}
 
 	public synchronized ITypeService<?, ?> buildTypeService(
-			ICompilationUnit c, 
+			ICompilationUnit cUnit, 
 			IProgressMonitor mon
 	) {
-		IJavaProject project = c.getJavaProject();
-		buildModelService(project);
-		return processTypeService(c, mon);
+		if(modelService == null) {
+			modelService = new ModelService(this, cUnit);
+		}
+		return processTypeService(cUnit, mon);
 	}
 
+	// @Override
 	public synchronized ITypeService<?, ?> processTypeService(
 			ICompilationUnit c, 
 			IProgressMonitor mon
@@ -804,7 +803,7 @@ implements IModelServiceBuilding {
 									javaProject = JavaCore.create(project);
 								}
 								javaProject.open(null);
-								getLatestModelServiceBuilt().setJavaProject(
+								getLatestModelServiceBuilt().setJavaElement(
 										javaProject
 								);
 							}

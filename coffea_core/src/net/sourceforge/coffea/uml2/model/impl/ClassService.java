@@ -570,15 +570,9 @@ implements IClassService<TypeDeclaration, IType> {
 			if(objective!=null) {
 				String simpleName = 
 					ClassService.simpleNameExtraction(objective);
-				IModelService model = getModelService();
-				IModelServiceBuilding builder = null;
-				if(model!=null) {
-					builder = model.getServiceBuilder();
-				}
 				if(
 						(simpleName!=null)
 						&&(simpleName.length()>0)
-						&&(builder!=null)
 				) {
 					try {
 						String content = new String();

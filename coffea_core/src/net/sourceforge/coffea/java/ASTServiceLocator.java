@@ -8,6 +8,7 @@ import net.sourceforge.coffea.uml2.model.creation.ModelServiceBuilder;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -88,7 +89,7 @@ public class ASTServiceLocator extends JavaModelServiceLocator {
 					new ModelServiceBuilder(sourceViewId, win);
 				worker.setModelName(proj.getName());
 				IJavaProject jProject = JavaCore.create(proj);
-				worker.buildModelService(jProject);
+				worker.buildModelService(jProject, new NullProgressMonitor());
 				// IModelService model = worker.parseFile(target);
 				// Save the reversed model in the file system
 				worker.save();
