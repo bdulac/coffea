@@ -16,6 +16,7 @@ import org.eclipse.uml2.uml.Element;
 public interface IUMLToCodeModificationRunnable
 <U extends Element, R extends IElementService> 
 extends IUML2RunnableWithProgress {
+	
 	/**
 	 * Sets the modification objective
 	 * @param newClass
@@ -36,5 +37,4 @@ extends IUML2RunnableWithProgress {
 	 * @return Handler for the modification
 	 */
 	public abstract R getResult();
-
 }
