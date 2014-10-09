@@ -17,6 +17,9 @@ import org.eclipse.uml2.uml.Type;
 public abstract class ElementService<E extends Element> 
 implements IElementService {
 
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = 3970820673328182566L;
+
 	/**
 	 * Builds an UML element fully qualified name
 	 * @param el

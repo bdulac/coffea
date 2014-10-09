@@ -19,7 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.NotificationFilter;
@@ -57,12 +60,11 @@ implements IModelService {
 	/** Package for class path types */
 	protected IPackageService classpathTypesPackage;
 
-	/** Class diagram EMF resource */
-	// ? private org.eclipse.emf.ecore.resource.Resource classDiagramEMFResource;
-	private IResource classDiagramEMFResource;
+	/** EMF resource */
+	protected Resource emfResource;
 	
-	/** Class diagram workspace resource */
-	private IResource classDiagramWorkspaceResource;
+	/** Workspace resource */
+	protected IResource workspaceResource;
 
 	/** Boolean value indicating if the packages form a hierarchy */
 	protected boolean packagesHierarchy;
@@ -85,10 +87,34 @@ implements IModelService {
 		classpathTypesPackage = 
 			new PackageService(this, classpathTypesPackageName);
 		packages.remove(classpathTypesPackage);
-		ResourceSet set = new ResourceSetImpl();
-		URI uri = createEmfUri();
-		// TODO Load existing model here
-		
+		try {
+			// Loading existing model...
+			ResourceSet set = new ResourceSetImpl();
+			URI uri = createEmfUri();
+			emfResource = set.getResource(uri, true);
+			EList<EObject> objs = emfResource.getContents();
+			for(EObject obj : objs) {
+				if(obj instanceof Model) {
+					umlModelElement = (Model)obj;
+					break;
+				}
+			}
+		} catch(Exception e) {
+			// ...
+		}
+	}
+	
+	public void setEmfRefource(Resource r) {
+		emfResource = r;
+	}
+	
+	public void dispose() {
+		if(emfResource == null) {
+			throw new IllegalStateException(
+					"The EMF resource should not be null"
+			);
+		}
+		emfResource.unload();
 	}
 	
 	// @Override
@@ -97,7 +123,7 @@ implements IModelService {
 		if(m == null) {
 			throw new IllegalStateException("The model should not be null");
 		}
-		String dirUri = getJavaProjectUriString();
+		String dirUri = getJavaElementUriString();
 		String name = m.getName();
 		URI location = 
 				URI.createURI("file://" + dirUri).appendSegment(name)
@@ -116,7 +142,7 @@ implements IModelService {
 	}
 	
 	// @Override
-	public String getJavaProjectUriString() {
+	public String getJavaElementUriString() {
 		if(javaElement == null) {
 			throw new IllegalStateException(
 					"The Java project should not be null"
@@ -431,15 +457,5 @@ implements IModelService {
 	public void resourceSetChanged(ResourceSetChangeEvent event) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	// @Override
-	public IResource getClassDiagramEMFResource() {
-		return classDiagramEMFResource;
-	}
-
-	// @Override
-	public IResource getClassDiagramWorkspaceResource() {
-		return classDiagramWorkspaceResource;
 	}
 }

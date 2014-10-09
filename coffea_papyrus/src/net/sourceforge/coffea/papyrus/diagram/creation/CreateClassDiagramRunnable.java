@@ -12,12 +12,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.uml2.uml.Model;
 
 import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
-import net.sourceforge.coffea.uml2.model.IModelService;
 import net.sourceforge.coffea.uml2.model.creation.CreateModelRunnable;
+import net.sourceforge.coffea.uml2.model.impl.ModelService;
 
 public class CreateClassDiagramRunnable extends CreateModelRunnable {
 
-	public CreateClassDiagramRunnable(IModelService m) {
+	public CreateClassDiagramRunnable(ModelService m) {
 		super(m);
 	}
 	

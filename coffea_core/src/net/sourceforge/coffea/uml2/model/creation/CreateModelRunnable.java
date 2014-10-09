@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import net.sourceforge.coffea.uml2.IUML2RunnableWithProgress;
-import net.sourceforge.coffea.uml2.model.IModelService;
+import net.sourceforge.coffea.uml2.model.impl.ModelService;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,40 +21,16 @@ import org.eclipse.uml2.uml.Model;
 public class CreateModelRunnable implements IUML2RunnableWithProgress {
 
 	/** Handled model from which the UML model is constituted */
-	private IModelService modelService;
+	private ModelService modelService;
 
-	/** Model EMF resource in which the UML model persists */
-	protected Resource resultingEmfResource;
-
-	/** Model workspace resource corresponding to the UML model */
-	protected IResource resultingWorkspaceResource;
-
-	public CreateModelRunnable(IModelService m) {
+	public CreateModelRunnable(ModelService m) {
+		if(m == null)throw new NullPointerException();
 		modelService = m;
 	}
 
 	public void run(IProgressMonitor monitor)
 	throws InvocationTargetException, InterruptedException {
 		createModelFile(monitor);
-		disposeResources(monitor);
-	}
-
-	/** 
-	 * Returns the workspace resource created for the model, relevant only 
-	 * after the runnable execution
-	 * @return Workspace resource created for the model
-	 */
-	public IResource getResultingWorkspaceResource() {
-		return resultingWorkspaceResource;
-	}
-
-	/** 
-	 * Returns the workspace resource created for the model, relevant only 
-	 * after the runnable execution
-	 * @return Workspace resource created for the model
-	 */
-	public Resource getResultingEMFResource() {
-		return resultingEmfResource;
 	}
 
 	protected void createModelFile(IProgressMonitor monitor) {
@@ -63,7 +39,7 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 		URI location = modelService.createEmfUri();
 		ResourceSet set = new ResourceSetImpl();
 		// Saving the model resource
-		resultingEmfResource = set.createResource(location);
+		Resource emfResource = set.createResource(location);
 		monitor.worked(2);
 		// Getting the model element
 		Model model = modelService.getUMLElement();
@@ -72,23 +48,22 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 					"The UML model should not be null"
 			);
 		}
-		resultingEmfResource.getContents().add(model);
+		emfResource.getContents().add(model);
 		try {
-			resultingEmfResource.save(null);
+			emfResource.save(null);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			System.err.print(ioe.getMessage());
 		}
 		monitor.worked(2);
-		// String modelPath = buildUMLModelPath(uri, m);
-		String modelPath = modelService.getJavaProjectUriString();
+		String modelPath = modelService.getJavaElementUriString();
 		modelPath = 
 			modelPath.substring(
 					ResourcesPlugin.getWorkspace().getRoot()
 					.getLocation().toOSString().length()
 			);
 		try {
-			resultingWorkspaceResource = 
+			IResource resultingWorkspaceResource = 
 				ResourcesPlugin.getWorkspace().getRoot().findMember(
 						new Path(modelPath)
 				);
@@ -96,38 +71,11 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 					1, 
 					monitor
 			);
+			modelService.setEmfRefource(emfResource);
+			modelService.dispose();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		/*
-			if(creator.isEditing()) {
-				modelPath = 
-					uri 
-					+ '/' 
-					+ 
-					Resources.getParameter(
-							"constants.editingFileNamePrefix"
-					)
-					+ m.getName() + ".uml";
-			}
-			else {
-				modelPath = uri + '/' + m.getName() + ".uml";
-			}
-		 */
-		/*
-			modelPath = 
-				modelPath.substring(
-						ResourcesPlugin.getWorkspace().getRoot()
-						.getLocation().toOSString().length()
-				);
-			modelWorkspaceResource = 
-				ResourcesPlugin.getWorkspace().getRoot().findMember(
-						new Path(modelPath)
-				)
-				;
-			monitor.worked(2);
-		}
-		 */
 	}
 
 	/** 
@@ -142,10 +90,5 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 			IProgressMonitor monitor
 	) {
 		// To be specialized
-	}
-
-	protected void disposeResources(IProgressMonitor monitor) {
-		resultingEmfResource.unload();
-		resultingEmfResource = null;
 	}
 }

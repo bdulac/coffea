@@ -3,7 +3,6 @@ package net.sourceforge.coffea.uml2.model;
 
 import net.sourceforge.coffea.uml2.Resources;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaElement;
@@ -39,13 +38,9 @@ ITypesContainerService {
 	 * @return The Java project URI string
 	 * @see #getJavaElement()
 	 */
-	public String getJavaProjectUriString();
+	public String getJavaElementUriString();
 
-	/**
-	 * Returns the <em>Java</em> element underlyingthe model handled by the 
-	 * service
-	 * @return <em>Java</em> element underlyingthe model
-	 */
+	/** @return <em>Java</em> element underlying the model */
 	public IJavaElement getJavaElement();
 	
 	/**
@@ -74,14 +69,4 @@ ITypesContainerService {
 	 * model ({@code false} if all packages are considered equal) 
 	 */
 	public boolean arePackageInHierarchy();
-	
-	/**
-	 * @return The class diagram EMF resource
-	 */
-	public IResource getClassDiagramEMFResource();
-	
-	/**
-	 * @return The class diagram workspace resource
-	 */
-	public IResource getClassDiagramWorkspaceResource();
 }

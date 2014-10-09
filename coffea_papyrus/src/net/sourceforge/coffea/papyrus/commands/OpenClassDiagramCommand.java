@@ -740,6 +740,7 @@ public class OpenClassDiagramCommand extends AbstractTransactionalCommand implem
 		public void run(IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException {
 			IModelService mdl = creator.getLatestModelServiceBuilt();
+			/*
 			IResource modelResource = mdl.getClassDiagramEMFResource();
 			IResource classDiagramResource = mdl
 					.getClassDiagramWorkspaceResource();
@@ -753,7 +754,7 @@ public class OpenClassDiagramCommand extends AbstractTransactionalCommand implem
 			} catch (CoreException e) {
 				e.printStackTrace();
 			}
-
+			*/
 		}
 
 	}
