@@ -33,6 +33,9 @@ public abstract class ClassifierService
 extends MemberService<E, S, J> 
 implements IClassifierService<S, J> {
 	
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = -951861172936464096L;
+
 	/**
 	 * Builds an UML type fully qualified name
 	 * @param tp

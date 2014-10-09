@@ -11,10 +11,8 @@ import net.sourceforge.coffea.uml2.model.IClassService;
 import net.sourceforge.coffea.uml2.model.IElementService;
 import net.sourceforge.coffea.uml2.model.IInterfaceService;
 import net.sourceforge.coffea.uml2.model.IMethodService;
-import net.sourceforge.coffea.uml2.model.IModelService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesContainerService;
-import net.sourceforge.coffea.uml2.model.creation.IModelServiceBuilding;
 import net.sourceforge.coffea.uml2.model.impl.CompositionService;
 import net.sourceforge.coffea.uml2.model.impl.PropertyService;
 
@@ -39,6 +37,9 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 public class ClassService 
 extends InterfaceService 
 implements IClassService<TypeDeclaration, IType> {	
+
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = -7998749245698223200L;
 
 	/** Super class name */
 	protected String superClassName;

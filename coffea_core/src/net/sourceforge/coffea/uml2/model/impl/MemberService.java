@@ -38,6 +38,9 @@ public abstract class MemberService
 extends ASTNodeService<E, S, J> 
 implements IMemberService<S, J> {
 
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = -8807849102977391742L;
+
 	/**
 	 * Member service construction without any declaration
 	 * @param p

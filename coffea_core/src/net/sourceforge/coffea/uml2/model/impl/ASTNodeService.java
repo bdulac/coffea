@@ -21,6 +21,9 @@ public abstract class ASTNodeService
 extends ContainedElementService<E, S, J> 
 implements IASTNodeService<S, J> {
 	
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = 2159210408864922876L;
+
 	/** Node corresponding to the element handled by the service in the AST */
 	protected S syntaxTreeNode;
 

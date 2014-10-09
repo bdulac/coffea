@@ -23,6 +23,9 @@ public class CompositionService
 extends AssociationService 
 implements IAssociationService<FieldDeclaration, IField> {
 
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = 8377039626908942363L;
+
 	/**
 	 * Composition service construction from an AST node
 	 * @param stxNode

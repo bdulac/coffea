@@ -50,6 +50,9 @@ public class PackageService
 extends ASTNodeService<Package, PackageDeclaration, IPackageFragment> 
 implements IPackageService {
 
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = -2201865524904227312L;
+
 	/**
 	 * Builds an UML package fully qualified name
 	 * @param resolvPack

@@ -48,6 +48,7 @@ public class PropertyService
 extends MemberService<Property, FieldDeclaration, IField> 
 implements IAttributeService {
 
+	/** @see java.io.Serializable */
 	private static final long serialVersionUID = -7692912393329783975L;
 
 	/**

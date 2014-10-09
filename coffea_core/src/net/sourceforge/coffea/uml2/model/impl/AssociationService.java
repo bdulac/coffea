@@ -19,6 +19,9 @@ import org.eclipse.uml2.uml.Association;
 public abstract class AssociationService extends
 		MemberService<Association, FieldDeclaration, IField> {
 
+	/** @see java.io.Serializable */
+	private static final long serialVersionUID = -6641225616097611108L;
+	
 	/** Tool for manipulating the association supplier */
 	protected ITypeService<?, ?> supplier;
 

@@ -59,6 +59,7 @@ public class InterfaceService
 extends ClassifierService<Class, TypeDeclaration, IType>
 implements IInterfaceService<TypeDeclaration, IType>{
 
+	/** @see java.io.Serializable */
 	private static final long serialVersionUID = -1693022755248903916L;
 
 	/** 
