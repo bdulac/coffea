@@ -204,7 +204,7 @@ implements IModelService {
 
 	// @Override
 	public void setUpUMLModelElement() {
-		if(umlModelElement==null) {
+		if(umlModelElement == null) {
 			umlModelElement = UMLFactory.eINSTANCE.createModel();
 			String name = javaElement.getElementName();
 			if(javaElement == null) {
@@ -281,7 +281,7 @@ implements IModelService {
 			}
 			// No interface found directly in the model, trying to get it from
 			// packages
-			for(int i=0 ; i<packages.size() ; i++) {
+			for(int i = 0 ; i < packages.size() ; i++) {
 				typ = packages.get(i).resolveTypeService(n);
 				if(typ!=null)return typ;
 			}
@@ -293,11 +293,11 @@ implements IModelService {
 				);
 			if(
 					(n.startsWith("java.lang"))
-					||(primitiveTypes.contains(n))
+					|| (primitiveTypes.contains(n))
 			) {
 				// Then we look for the type in the primitive types
 				typ = primitiveTypesPackage.resolveTypeService(n);
-				if(typ!=null) {
+				if(typ != null) {
 					return typ;
 				}
 				// We then have to create a primitive type
@@ -307,7 +307,7 @@ implements IModelService {
 			else {
 				// Else we look for the type in the class path
 				typ = classpathTypesPackage.resolveTypeService(n);
-				if(typ!=null) {
+				if(typ != null) {
 					return typ;
 				}
 				// We then have to create a class path type
