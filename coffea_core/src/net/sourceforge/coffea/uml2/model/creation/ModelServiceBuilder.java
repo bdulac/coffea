@@ -189,6 +189,8 @@ implements IModelServiceBuilding {
 		public void run(IProgressMonitor pm)
 		throws InvocationTargetException, InterruptedException {
 			processedModel = processJavaElement(el, pm);
+			IPackageFragment pack = processedModel.getFirstPackageFragment();
+			processPackageFragment(pack, pm);
 		}
 
 		/**
@@ -415,7 +417,7 @@ implements IModelServiceBuilding {
 			if(pack!=null) {
 				ICompilationUnit[] comps = 
 					pack.getCompilationUnits();
-				if((comps!=null)&&(comps.length>0)) {
+				if((comps != null) && (comps.length > 0)) {
 					int nbUnits = comps.length;
 					try {
 						pm.beginTask(
@@ -424,7 +426,7 @@ implements IModelServiceBuilding {
 								), 
 								nbUnits
 						);
-						for(int j=0 ; j<comps.length ; j++) {
+						for(int j = 0 ; j < comps.length ; j++) {
 							processTypeService(
 									comps[j], 
 									new SubProgressMonitor(pm, 1)
@@ -435,7 +437,7 @@ implements IModelServiceBuilding {
 						pm.done();
 					}
 				}
-				else if(pack.getKind()==IPackageFragmentRoot.K_SOURCE) { 
+				else if(pack.getKind() == IPackageFragmentRoot.K_SOURCE) { 
 					String name = pack.getElementName();
 					if((name==null)||(name.length()==0)) {
 						name = IModelService.defaultPackageFileName;

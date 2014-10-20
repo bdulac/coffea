@@ -29,6 +29,7 @@ import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.UMLFactory;
@@ -102,6 +103,22 @@ implements IModelService {
 		} catch(Exception e) {
 			// ...
 		}
+	}
+	
+	// @Override
+	public IPackageFragment getFirstPackageFragment() {
+		IJavaElement jElement = getJavaElement();
+		while(
+				(jElement != null) 
+				&& (!(jElement instanceof IPackageFragment))
+		) {
+			jElement = jElement.getParent();
+		}
+		// Once we have a package fragment, 
+		if(jElement instanceof IPackageFragment) {
+			return (IPackageFragment)jElement;
+		}
+		else return null;
 	}
 	
 	public void setEmfRefource(Resource r) {
@@ -201,10 +218,10 @@ implements IModelService {
 			umlModelElement.setName(name);
 		}
 		setUpPackageHierarchy();
-		for(int i=0 ; i<packages.size() ; i++) {
+		for(int i = 0 ; i < packages.size() ; i++) {
 			packages.get(i).setUpUMLModelElement();
 		}
-		for(int i=0 ; i<types.size() ; i++) {
+		for(int i = 0 ; i < types.size() ; i++) {
 			types.get(i).setUpUMLModelElement();
 		}
 	}
@@ -256,9 +273,9 @@ implements IModelService {
 	public ITypeService<?, ?> resolveTypeService(String n)  {
 		ITypeService<?, ?> typ = null;
 		if (n != null) {
-			for(int i = 0 ; i<types.size() ; i++) {
+			for(int i = 0 ; i < types.size() ; i++) {
 				typ = types.get(i);
-				if((typ!=null)&&(typ.getFullName().equals(n))) {
+				if((typ != null) && (typ.getFullName().equals(n))) {
 					return typ;
 				}
 			}

@@ -6,6 +6,7 @@ import net.sourceforge.coffea.uml2.Resources;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.uml2.uml.Model;
 
 /** Service for a model */
@@ -44,12 +45,18 @@ ITypesContainerService {
 	public IJavaElement getJavaElement();
 	
 	/**
-	 * Sets the <em>Java</em> element underlyingthe model handled by the 
+	 * Sets the <em>Java</em> element underlying the model handled by the 
 	 * service
 	 * @param jElement 
-	 * <em>Java</em> element underlyingthe model
+	 * <em>Java</em> element underlying the model
 	 */
 	public void setJavaElement(IJavaElement jElement);
+	
+	/** 
+	 * @return First parent of the underlying Java element being a package 
+	 * fragment 
+	 */
+	public IPackageFragment getFirstPackageFragment();
 	
 	/** Creates a file for the model underlying the service */
 	public void createModelFile();
