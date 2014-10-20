@@ -536,7 +536,10 @@ implements IModelServiceBuilding {
 								}
 								// Then we have the primary type, the 
 								// container will be the package
-								group = modelService.resolvePackageService(name);
+								group = 
+										modelService.resolvePackageService(
+												name
+										);
 								if(group==null) {
 									group = 
 										new PackageService(
@@ -566,28 +569,32 @@ implements IModelServiceBuilding {
 								group = modelService;
 							}
 							// Second step, we can process the type
-							try {
-								if(t.isInterface()) {
-									service = 
-										new InterfaceService(
-												t, 
-												group, 
-												c
-										);
+							service = 
+									group.resolveTypeService(t.getElementName());
+							if(service == null) {
+								try {
+									if(t.isInterface()) {
+										service = 
+												new InterfaceService(
+														t, 
+														group, 
+														c
+												);
+									}
+									else {
+										service = 
+												new ClassService(
+														t, 
+														group, 
+														c
+														);
+									}
+								} catch (JavaModelException e) {
+									CoffeaUML2Plugin.getInstance().logError(
+											e.getMessage(), 
+											e
+											);
 								}
-								else {
-									service = 
-										new ClassService(
-												t, 
-												group, 
-												c
-										);
-								}
-							} catch (JavaModelException e) {
-								CoffeaUML2Plugin.getInstance().logError(
-										e.getMessage(), 
-										e
-								);
 							}
 						}
 						// If we are in first position of the list, 

@@ -48,6 +48,7 @@ import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Package;
@@ -210,6 +211,17 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			ASTRewrite r, 
 			IOwnerService p
 	) {
+		if(umlModelElement == null) {
+			ITypesContainerService cont = getContainerService();
+			Element contEl = cont.getUMLElement();
+			if(contEl instanceof Package) {
+				Package pack = (Package)contEl;
+				NamedElement el = pack.getMember(getSimpleName());
+				if(el instanceof Class) {
+					umlModelElement = (Class)el;
+				}
+			}
+		}
 		if(p instanceof ITypesContainerService) {
 			ITypesContainerService cont =
 				(ITypesContainerService)p;
@@ -219,28 +231,28 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		superInterfacesNames = new ArrayList<String>();
 		List<?> interfaces = null;
 		this.operationsServices = new ArrayList<IMethodService>();
-		if(syntaxTreeNode!=null) {
+		if(syntaxTreeNode != null) {
 			// We get all the methods declarations
 			MethodDeclaration[] operations = syntaxTreeNode.getMethods();
 			// We add a handler to the list for each method of the class
-			for (int i=0 ; i<operations.length ; i++) {
+			for (int i = 0 ; i < operations.length ; i++) {
 				addOperationService(
 						new OperationService(operations[i], this)
 				);
 			}
 			interfaces = syntaxTreeNode.superInterfaceTypes();
 			// If this class has super interfaces, 
-			if(interfaces!=null) {
+			if(interfaces != null) {
 				// Then we try to resolves the binding for each interface, 
 				Object ob = null;
 				Type tp = null;
 				ITypeBinding binding = null;
-				for(int i=0 ; i<interfaces.size() ; i++) {
+				for(int i=0 ; i < interfaces.size() ; i++) {
 					ob = interfaces.get(i);
-					if((ob!=null)&&(ob instanceof Type)) {
+					if((ob != null) && (ob instanceof Type)) {
 						tp = (Type)ob;
 						binding = tp.resolveBinding();
-						if(binding!=null) {
+						if(binding != null) {
 							// Aiming to get a qualified name
 							superInterfacesNames.add(
 									binding.getQualifiedName()
@@ -343,20 +355,19 @@ implements IInterfaceService<TypeDeclaration, IType>{
 	}
 
 	public void setUpUMLModelElement() {
-		if(umlModelElement==null) {
+		if(umlModelElement == null) {
 			IGroupService parent = getContainerService();
 			String name = null;
-			if((syntaxTreeNode!=null)&&(syntaxTreeNode.getName()!=null)) {
-				name = 
-					syntaxTreeNode.getName().getFullyQualifiedName();
+			if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {
+				name = syntaxTreeNode.getName().getFullyQualifiedName();
 			}
 			else if(javaElement!=null) {
 				name = javaElement.getTypeQualifiedName();
 			}
-			else if(defaultSimpleName!=null) {
+			else if(defaultSimpleName != null) {
 				name = getSimpleName();
 			}
-			if(name!=null) {
+			if(name != null) {
 				if(parent instanceof IPackageService) {
 					IPackageService pk = (IPackageService)parent;
 					umlModelElement = 
