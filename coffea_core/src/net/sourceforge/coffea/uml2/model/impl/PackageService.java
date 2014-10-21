@@ -35,6 +35,7 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.internal.corext.refactoring.rename.JavaRenameProcessor;
 import org.eclipse.jdt.internal.corext.refactoring.rename
 .RenamePackageProcessor;
+import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.eclipse.ltk.core.refactoring.CheckConditionsOperation;
 import org.eclipse.ltk.core.refactoring.PerformRefactoringOperation;
 import org.eclipse.ltk.core.refactoring.Refactoring;
@@ -189,24 +190,6 @@ implements IPackageService {
 	}
 
 	/**
-	 * Construction of a package service from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param pk
-	 * Value of {@link #umlModelElement}
-	 */
-	public PackageService(
-			PackageDeclaration stxNode, 
-			IPackagesGroupService p,
-			Package pk
-	) {
-		super(stxNode, p, pk);
-		completeConstruction(p);
-	}
-
-	/**
 	 * Construction of a package service from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}
@@ -311,71 +294,100 @@ implements IPackageService {
 			return getContainerService().getModelService();
 		}
 	}
-
-	public void setUpUMLModelElement() {
-		if (umlModelElement == null) {
-			IModelService md = null;
-			IGroupService parent = getContainerService();
-			Package parentElement = null;
-			if (parent instanceof IPackageService) {
-				IPackageService pk = (IPackageService) parent;
-				parentElement = pk.getUMLElement();
-			} else if (parent instanceof IModelService) {
-				md = (IModelService) parent;
-				parentElement = md.getUMLElement();
-			}
-			// If the parent element is a package,
-			if (
-					(parentElement != null) 
-					&& (parent instanceof IPackageService)
-					&& (umlModelElement == null)
+	
+	private void loadExistingUmlElement() {
+		// TODO Auto-generated method stub
+		IGroupService parent = getContainerService();
+		Package parentElement = null;
+		if (parent instanceof IPackageService) {
+			IPackageService pk = (IPackageService) parent;
+			parentElement = pk.getUMLElement();
+		} else if (parent instanceof IModelService) {
+			IModelService md = (IModelService) parent;
+			parentElement = md.getUMLElement();
+		}
+		if(parentElement != null) {
+			Element el = 
+					parentElement.getPackagedElement(getSimpleName());
+			if(el instanceof Package)umlModelElement = (Package)el;
+		}
+	}
+	
+	private void createUmlElement() {
+		
+		IGroupService parent = getContainerService();
+		Package parentElement = null;
+		if (parent instanceof IPackageService) {
+			IPackageService pk = (IPackageService) parent;
+			parentElement = pk.getUMLElement();
+		} else if (parent instanceof IModelService) {
+			IModelService md = (IModelService) parent;
+			parentElement = md.getUMLElement();
+		}
+		// If the parent element is a package,
+		if (
+				(parentElement != null) 
+				&& (parent instanceof IPackageService)
+				&& (umlModelElement == null)
+		) {
+			// Then we create a nested package
+			umlModelElement = 
+				parentElement.createNestedPackage(getSimpleName());
+		} else if (
+				(parent instanceof IModelService)
+				&&(parentElement != null)
+		) {
+			/*
+			 * Else, if the parent is the model, 
+			 * If we have the primitive types package or the class path
+			 */
+			if(
+					(getSimpleName().equals("Primitive types"))
+					||(getSimpleName().equals("classpath"))
 			) {
-				// Then we create a nested package
+				// Then we create a dedicated package
 				umlModelElement = 
 					parentElement.createNestedPackage(getSimpleName());
-			} else if (
-					(parent instanceof IModelService)
-					&&(parentElement!=null)
-			) {
+				umlModelElement.setVisibility(
+						VisibilityKind.PRIVATE_LITERAL
+				);
+			}
+			else {
 				/*
-				 * Else, if the parent is the model, 
-				 * If we have the primitive types package or the class path
-				 */
-				if(
-						(getSimpleName().equals("Primitive types"))
-						||(getSimpleName().equals("classpath"))
-				) {
-					// Then we create a dedicated package
+				// If the selection is the project, 
+				if(((md==parent)&&(md.isSelectionEmptyProject()))) {
 					umlModelElement = 
 						parentElement.createNestedPackage(getSimpleName());
-					umlModelElement.setVisibility(
-							VisibilityKind.PRIVATE_LITERAL
-					);
 				}
 				else {
-					/*
-					// If the selection is the project, 
-					if(((md==parent)&&(md.isSelectionEmptyProject()))) {
-						umlModelElement = 
-							parentElement.createNestedPackage(getSimpleName());
-					}
-					else {
-					 */
-					/*
-					 * Else if the selection was not the project, we have 
-					 * the root package, the UML element for this package 
-					 * will be the model itself
-					 */
-					umlModelElement = parentElement;
-					// }
-				}
+				 */
+				/*
+				 * Else if the selection was not the project, we have 
+				 * the root package, the UML element for this package 
+				 * will be the model itself
+				 */
+				umlModelElement = parentElement;
+				// }
 			}
 		}
-		for (int i = 0; i < packages.size(); i++) {
-			packages.get(i).setUpUMLModelElement();
+	}
+
+	public void setUpUMLModelElement() {
+		boolean init = false;
+		if(umlModelElement == null) {
+			init = true;
+			loadExistingUmlElement();
 		}
-		for (int i = 0; i < types.size(); i++) {
-			types.get(i).setUpUMLModelElement();
+		if (umlModelElement == null) {
+			createUmlElement();
+		}
+		if(init) {
+			for (int i = 0; i < packages.size(); i++) {
+				packages.get(i).setUpUMLModelElement();
+			}
+			for (int i = 0; i < types.size(); i++) {
+				types.get(i).setUpUMLModelElement();
+			}
 		}
 	}
 
@@ -403,10 +415,10 @@ implements IPackageService {
 				if ((t != null) && (t.getFullName().equals(n))) {
 					return t;
 				}
-				else if((t!=null)&&(t instanceof IClassService<?, ?>)) {
+				else if((t != null) && (t instanceof IClassService<?, ?>)) {
 					IClassService<?, ?> clH = (IClassService<?, ?>)t;
 					t = clH.resolveTypeService(n);
-					if(t!=null) {
+					if(t != null) {
 						return t;
 					}
 				}
@@ -1130,28 +1142,9 @@ implements IPackageService {
 				JavaRenameProcessor p;
 				try {
 					p = new RenamePackageProcessor(javaElement);
-					String qualifiedName = null;
-					IContainerService contH = getContainerService();
-					if(contH!=null) {
-						String parentFullName = contH.getFullName();
-						if(
-								(parentFullName!=null)
-								&&(
-										!parentFullName.equals(
-												ModelService
-												.defaultPackageFileName
-										)
-								)
-						) {
-							qualifiedName = parentFullName + '.' + newName;
-						}
-						else {
-							qualifiedName = newName;
-						}
-					}
-					else {
-						qualifiedName = newName;
-					}
+					String qualifiedName = getQualifiedNewName();
+					RenameSupport support = 
+							RenameSupport.create(javaElement, qualifiedName, -1);
 					p.setNewElementName(qualifiedName);
 					Refactoring r = new RenameRefactoring(p);
 					PerformRefactoringOperation op = 
@@ -1214,6 +1207,32 @@ implements IPackageService {
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		private String getQualifiedNewName() {
+			String qualifiedName = null;
+			IContainerService contH = getContainerService();
+			if(contH!=null) {
+				String parentFullName = contH.getFullName();
+				if(
+						(parentFullName!=null)
+						&&(
+								!parentFullName.equals(
+										ModelService
+										.defaultPackageFileName
+								)
+						)
+				) {
+					qualifiedName = parentFullName + '.' + newName;
+				}
+				else {
+					qualifiedName = newName;
+				}
+			}
+			else {
+				qualifiedName = newName;
+			}
+			return qualifiedName;
 		}
 	}
 

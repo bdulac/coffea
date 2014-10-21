@@ -211,17 +211,6 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			ASTRewrite r, 
 			IOwnerService p
 	) {
-		if(umlModelElement == null) {
-			ITypesContainerService cont = getContainerService();
-			Element contEl = cont.getUMLElement();
-			if(contEl instanceof Package) {
-				Package pack = (Package)contEl;
-				NamedElement el = pack.getMember(getSimpleName());
-				if(el instanceof Class) {
-					umlModelElement = (Class)el;
-				}
-			}
-		}
 		if(p instanceof ITypesContainerService) {
 			ITypesContainerService cont =
 				(ITypesContainerService)p;
@@ -247,7 +236,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 				Object ob = null;
 				Type tp = null;
 				ITypeBinding binding = null;
-				for(int i=0 ; i < interfaces.size() ; i++) {
+				for(int i = 0 ; i < interfaces.size() ; i++) {
 					ob = interfaces.get(i);
 					if((ob != null) && (ob instanceof Type)) {
 						tp = (Type)ob;
@@ -262,13 +251,13 @@ implements IInterfaceService<TypeDeclaration, IType>{
 				}
 			}
 		}
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			try {
 				IMethod[] operations = javaElement.getMethods();
-				if(operations!=null) {
+				if(operations != null) {
 					// We add a handler to the list for each method of the 
 					// class
-					for (int i=0 ; i<operations.length ; i++) {
+					for (int i = 0 ; i < operations.length ; i++) {
 						addOperationService(
 								new OperationService(operations[i], this)
 						);
@@ -276,8 +265,8 @@ implements IInterfaceService<TypeDeclaration, IType>{
 				}
 				String[] superIntNames = 
 					javaElement.getSuperInterfaceNames();
-				if(superIntNames!=null) {
-					for(int i=0 ; i<superIntNames.length ; i++) {
+				if(superIntNames != null) {
+					for(int i = 0 ; i < superIntNames.length ; i++) {
 						String[][] parts = 
 							javaElement.resolveType(superIntNames[i]);
 						String name = nameReconstruction(parts);
@@ -310,25 +299,28 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		completeConstruction(r, p);
 	}
 
+	// @Override
 	public ICompilationUnit getCompilationUnit() {
 		return processedUnit;
 	}
 
+	// @Override
 	public CompilationUnit getParsedUnit() {
 		return parsedUnit;
 	}
 
+	// @Override
 	public String nameReconstruction(String[][] nm) {
 		String name = null;
-		if(nm!=null) {
+		if(nm != null) {
 			String[] nameParts = nm[0];
-			if(nameParts!=null) {
+			if(nameParts != null) {
 				name = new String();
-				for(int i=0 ; i<nameParts.length ; i++) {
-					if(name.length()>0) {
+				for(int i=0 ; i < nameParts.length ; i++) {
+					if(name.length() > 0) {
 						name += '.';
 					}
-					if(nameParts[i]!=null) {
+					if(nameParts[i] != null) {
 						name += nameParts[i];
 					}
 				}
@@ -342,6 +334,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return (ITypesContainerService)container;
 	}
 
+	// @Override
 	public ASTRewrite getRewriter() {
 		return this.rewriter;
 	}
@@ -353,59 +346,77 @@ implements IInterfaceService<TypeDeclaration, IType>{
 	public List<CompositionService> getDependenciesServices() {
 		return this.dependenciesServices;
 	}
-
-	public void setUpUMLModelElement() {
-		if(umlModelElement == null) {
-			IGroupService parent = getContainerService();
-			String name = null;
-			if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {
-				name = syntaxTreeNode.getName().getFullyQualifiedName();
+	
+	private void loadExistingUmlElement() {
+		ITypesContainerService cont = getContainerService();
+		Element contEl = cont.getUMLElement();
+		if(contEl instanceof Package) {
+			Package pack = (Package)contEl;
+			NamedElement el = pack.getMember(getSimpleName());
+			if(el instanceof Class) {
+				umlModelElement = (Class)el;
 			}
-			else if(javaElement!=null) {
-				name = javaElement.getTypeQualifiedName();
-			}
-			else if(defaultSimpleName != null) {
-				name = getSimpleName();
-			}
-			if(name != null) {
-				if(parent instanceof IPackageService) {
-					IPackageService pk = (IPackageService)parent;
-					umlModelElement = 
-						pk.getUMLElement().createOwnedClass(
-								name, 
-								isAbstract()
-						);
-				} 
-				else if(parent instanceof IClassService<?, ?>) {
-					IClassService<?, ?> pk = (IClassService<?, ?>)parent;
-					umlModelElement = 
-						UMLFactory.eINSTANCE.createClass();
-					int indDollar = -1;
-					if((indDollar = name.indexOf('$'))>=0) {
-						name = name.substring(indDollar+1);
-					}
-					umlModelElement.setName(name);
-					pk.getUMLElement().getNestedClassifiers().add(
-							umlModelElement
+		}
+	}
+	
+	private void createUmlElement() {
+		IGroupService parent = getContainerService();
+		String name = null;
+		if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {
+			name = syntaxTreeNode.getName().getFullyQualifiedName();
+		}
+		else if(javaElement!=null) {
+			name = javaElement.getTypeQualifiedName();
+		}
+		else if(defaultSimpleName != null) {
+			name = getSimpleName();
+		}
+		if(name != null) {
+			if(parent instanceof IPackageService) {
+				IPackageService pk = (IPackageService)parent;
+				umlModelElement = 
+					pk.getUMLElement().createOwnedClass(
+							name, 
+							isAbstract()
 					);
+			} 
+			else if(parent instanceof IClassService<?, ?>) {
+				IClassService<?, ?> pk = (IClassService<?, ?>)parent;
+				umlModelElement = 
+					UMLFactory.eINSTANCE.createClass();
+				int indDollar = -1;
+				if((indDollar = name.indexOf('$'))>=0) {
+					name = name.substring(indDollar+1);
 				}
-				else if(parent instanceof IModelService) {
-					IModelService md = (IModelService)parent;
-					umlModelElement = 
-						md.getUMLElement().createOwnedClass(
-								name, 
-								isAbstract()
-						);
-				}
+				umlModelElement.setName(name);
+				pk.getUMLElement().getNestedClassifiers().add(
+						umlModelElement
+				);
 			}
-			if(syntaxTreeNode!=null) {
-				Javadoc doc = syntaxTreeNode.getJavadoc();
-				if(doc!=null) {
-					Comment docComment = 
-						umlModelElement.createOwnedComment();
-					docComment.setBody(doc.toString());				
-				}
+			else if(parent instanceof IModelService) {
+				IModelService md = (IModelService)parent;
+				umlModelElement = 
+					md.getUMLElement().createOwnedClass(
+							name, 
+							isAbstract()
+					);
 			}
+		}
+		if(syntaxTreeNode!=null) {
+			Javadoc doc = syntaxTreeNode.getJavadoc();
+			if(doc!=null) {
+				Comment docComment = 
+					umlModelElement.createOwnedComment();
+				docComment.setBody(doc.toString());				
+			}
+		}
+	}
+
+	// @Override
+	public void setUpUMLModelElement() {
+		if(umlModelElement == null)loadExistingUmlElement();
+		if(umlModelElement == null) {
+			createUmlElement();
 			setupSuperTypeUMLModelElement();
 			for(int i=0 ; i<operationsServices.size() ; i++) {
 				operationsServices.get(i).setUpUMLModelElement();
@@ -467,6 +478,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		}
 	}
 	
+	// @Override
 	public String getSimpleName() {
 		String name = null;
 		if((syntaxTreeNode!=null) &&(syntaxTreeNode.getName()!=null)){
@@ -481,14 +493,17 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return name;
 	}
 
+	// @Override
 	public List<IMethodService> getOperationsServices() {
 		return operationsServices;
 	}
 
+	// @Override
 	public void addOperationService(IMethodService opH) {
 		operationsServices.add(opH);
 	}
 
+	// @Override
 	public IMethodService getOperationService(String n) {
 		if(n!=null) {
 			List<IMethodService> operations = getOperationsServices();
@@ -500,10 +515,12 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return null;
 	}
 
+	// @Override
 	public IElementService getElementService(String n) {
 		return getOperationService(n);
 	}
 
+	// @Override
 	public IElementService getElementHandler(Element el) {
 		IElementService elH = null;
 		if(el!=null) {
@@ -515,6 +532,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return elH;
 	}
 
+	// @Override
 	public List<IElementService> getElementsHandlers() {
 		List<IElementService> ret = new ArrayList<IElementService>();
 		if(operationsServices!=null) {
@@ -529,14 +547,17 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return ret;
 	}
 
+	// @Override
 	public void setContainerService(ITypesContainerService gr) {
 		container = gr;
 	}
 
+	// @Override
 	public IMethodService createOperation(Operation o) {
 		return null;
 	}
 
+	// @Override
 	public void deleteOperation(Operation o) {
 	}
 

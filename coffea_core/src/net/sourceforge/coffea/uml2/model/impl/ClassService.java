@@ -184,11 +184,11 @@ implements IClassService<TypeDeclaration, IType> {
 		this.properties = new ArrayList<IAttributeService>();
 		// We build a list of dependencies tools
 		this.dependenciesServices = new ArrayList<CompositionService>();
-		if(syntaxTreeNode!=null) {
+		if(syntaxTreeNode != null) {
 			// We get all the attribute declarations
 			FieldDeclaration[] fields = syntaxTreeNode.getFields();
 			// For each attribute of the class,
-			for (int i=0 ; i<fields.length ; i++) {
+			for (int i = 0 ; i < fields.length ; i++) {
 				// We add a tool to the list 
 				addPropertyService(new PropertyService(fields[i], this));
 				// And a dependency
@@ -197,27 +197,26 @@ implements IClassService<TypeDeclaration, IType> {
 				);
 			}
 			// If this class has a super class,
-			if(syntaxTreeNode.getSuperclassType()!=null) {
+			if(syntaxTreeNode.getSuperclassType() != null) {
 				// We resolve this super class
 				ITypeBinding binding = 
 					syntaxTreeNode.getSuperclassType().resolveBinding();
 				// And try to get its name
-				if(binding!=null) {
+				if(binding != null) {
 					superClassName = binding.getQualifiedName();
 					int smtIdx = superClassName.indexOf('<');
-					if(smtIdx>=0) {
-						superClassName = 
-							superClassName.substring(0, smtIdx);
+					if(smtIdx >= 0) {
+						superClassName = superClassName.substring(0, smtIdx);
 					}
 				}
 			}
 		}
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			// We get all the fields
 			try {
 				IField[] fields = javaElement.getFields();
 				// For each field of the class,
-				for (int i=0 ; i<fields.length ; i++) {
+				for (int i = 0 ; i < fields.length ; i++) {
 					// We add a tool to the list 
 					addPropertyService(
 							new PropertyService(fields[i], this)
@@ -228,13 +227,13 @@ implements IClassService<TypeDeclaration, IType> {
 					);
 				}
 				// If this class has a super class,
-				if(javaElement.getSuperclassName()!=null) {
+				if(javaElement.getSuperclassName() != null) {
 					// The we note its name
 					String superSimpleName = javaElement.getSuperclassName();
 					String[][] namesParts = 
 						javaElement.resolveType(superSimpleName);
 					String name = nameReconstruction(namesParts);
-					if(name!=null) {
+					if(name != null) {
 						superClassName = name;
 					}
 				}
@@ -289,19 +288,17 @@ implements IClassService<TypeDeclaration, IType> {
 
 	@Override
 	public void setUpUMLModelElement() {
-		if(umlModelElement==null) {
-			// FIXME Problem of double setup : by the class itself and as a 
-			// type
+		if(umlModelElement == null) {
 			super.setUpUMLModelElement();
-			for(int i=0 ; i<types.size() ; i++) {
-				types.get(i).setUpUMLModelElement();
-			}
-			for(int i=0 ; i<properties.size() ; i++) {
-				properties.get(i).setUpUMLModelElement();
-			}
-			for(int i=0 ; i<dependenciesServices.size() ; i++) {
-				dependenciesServices.get(i).setUpUMLModelElement();
-			}
+		}
+		for(int i = 0 ; i < types.size() ; i++) {
+			types.get(i).setUpUMLModelElement();
+		}
+		for(int i = 0 ; i < properties.size() ; i++) {
+			properties.get(i).setUpUMLModelElement();
+		}
+		for(int i = 0 ; i < dependenciesServices.size() ; i++) {
+			dependenciesServices.get(i).setUpUMLModelElement();
 		}
 	}
 
@@ -339,12 +336,11 @@ implements IClassService<TypeDeclaration, IType> {
 	}
 
 	public ITypeService<?, ?> resolveTypeService(String n) {
-		if(n!=null) {
+		if(n != null) {
 			if(n.equals(this.getFullName()))return this;
 			List<ITypeService<?, ?>> cls = getTypesServices();
-			for(int i=0 ; i<cls.size() ; i++) {
-				if(cls.get(i).getFullName().equals(n))
-					return cls.get(i);
+			for(int i = 0 ; i < cls.size() ; i++) {
+				if(cls.get(i).getFullName().equals(n))return cls.get(i);
 			}
 		}
 		return null;
@@ -365,46 +361,46 @@ implements IClassService<TypeDeclaration, IType> {
 	public IElementService getElementService(String n) {
 		IElementService ret = null;
 		if(n!=null) {
-			if((ret==null)&&(types!=null)) {
+			if((ret == null) && (types != null)) {
 				ITypeService<?, ?> cl;
-				for(int i=0 ; i<types.size() ; i++) {
+				for(int i = 0 ; i < types.size() ; i++) {
 					cl = types.get(i);
-					if(cl!=null) {
+					if(cl != null) {
 						if(n.equals(cl.getFullName())) {
 							ret = cl;
 						}
 						else {
 							ret = cl.getElementService(n);
 						}
-						if(ret!=null) {
+						if(ret != null) {
 							break;
 						}
 					}
 				}
 			}
-			if((ret==null)&&(properties!=null)) {
+			if((ret == null) && (properties != null)) {
 				IAttributeService prop;
-				for(int i=0 ; i<properties.size() ; i++) {
+				for(int i = 0 ; i < properties.size() ; i++) {
 					prop = properties.get(i);
-					if(prop!=null) {
+					if(prop != null) {
 						if(n.equals(prop.getFullName())) {
 							ret = prop;
 						}
-						if(ret!=null) {
+						if(ret != null) {
 							break;
 						}
 					}
 				}
 			}
-			if((ret==null)&&(operationsServices!=null)) {
+			if((ret == null) && (operationsServices != null)) {
 				IMethodService op;
-				for(int i=0 ; i<operationsServices.size() ; i++) {
+				for(int i = 0 ; i < operationsServices.size() ; i++) {
 					op = operationsServices.get(i);
-					if(op!=null) {
+					if(op != null) {
 						if(n.equals(op.getFullName())) {
 							ret = op;
 						}
-						if(ret!=null) {
+						if(ret != null) {
 							break;
 						}
 					}

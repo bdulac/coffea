@@ -88,23 +88,8 @@ implements IModelService {
 		classpathTypesPackage = 
 			new PackageService(this, classpathTypesPackageName);
 		packages.remove(classpathTypesPackage);
-		try {
-			// Loading existing model...
-			ResourceSet set = new ResourceSetImpl();
-			URI uri = createEmfUri();
-			emfResource = set.getResource(uri, true);
-			EList<EObject> objs = emfResource.getContents();
-			for(EObject obj : objs) {
-				if(obj instanceof Model) {
-					umlModelElement = (Model)obj;
-					break;
-				}
-			}
-		} catch(Exception e) {
-			// ...
-		}
 	}
-	
+
 	// @Override
 	public IPackageFragment getFirstPackageFragment() {
 		IJavaElement jElement = getJavaElement();
@@ -136,12 +121,14 @@ implements IModelService {
 	
 	// @Override
 	public URI createEmfUri() {
+		/*
 		Model m = getUMLElement();
 		if(m == null) {
 			throw new IllegalStateException("The model should not be null");
 		}
+		*/
 		String dirUri = getJavaElementUriString();
-		String name = m.getName();
+		String name = javaElement.getElementName();
 		URI location = 
 				URI.createURI("file://" + dirUri).appendSegment(name)
 				.appendFileExtension(UMLResource.FILE_EXTENSION);
@@ -201,28 +188,62 @@ implements IModelService {
 			packagesHierarchy = true;
 		}
 	}
+	
+	private void loadExistingUmlElement() {
+		try {
+			// Loading existing model...
+			ResourceSet set = new ResourceSetImpl();
+			URI uri = createEmfUri();
+			emfResource = set.getResource(uri, true);
+			EList<EObject> objs = emfResource.getContents();
+			for(EObject obj : objs) {
+				if(obj instanceof Model) {
+					umlModelElement = (Model)obj;
+					break;
+				}
+			}
+		} catch(Exception e) {
+			// ...
+		}
+	}
+	
+	private void createUmlElement() {
+		umlModelElement = UMLFactory.eINSTANCE.createModel();
+		String name = javaElement.getElementName();
+		if(javaElement == null) {
+			throw new IllegalStateException(
+					"The Java element should not be null"
+			);
+		}
+		if((name == null) || (name.length() == 0)) {
+			name = javaElement.toString();
+		}
+		umlModelElement.setName(name);
+	}
 
 	// @Override
 	public void setUpUMLModelElement() {
+		boolean init = false;
+		// If needed, we try to load an existing model
 		if(umlModelElement == null) {
-			umlModelElement = UMLFactory.eINSTANCE.createModel();
-			String name = javaElement.getElementName();
-			if(javaElement == null) {
-				throw new IllegalStateException(
-						"The Java element should not be null"
-				);
-			}
-			if((name == null) || (name.length() == 0)) {
-				name = javaElement.toString();
-			}
-			umlModelElement.setName(name);
+			init = true;
+			loadExistingUmlElement();
+			
 		}
-		setUpPackageHierarchy();
-		for(int i = 0 ; i < packages.size() ; i++) {
-			packages.get(i).setUpUMLModelElement();
+		// If there is no existing model, 
+		if (umlModelElement == null) {
+			// Then we should create it
+			createUmlElement();
+			
 		}
-		for(int i = 0 ; i < types.size() ; i++) {
-			types.get(i).setUpUMLModelElement();
+		if(init) {
+			setUpPackageHierarchy();
+			for (int i = 0; i < packages.size(); i++) {
+				packages.get(i).setUpUMLModelElement();
+			}
+			for (int i = 0; i < types.size(); i++) {
+				types.get(i).setUpUMLModelElement();
+			}
 		}
 	}
 

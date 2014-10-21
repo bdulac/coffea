@@ -9,6 +9,7 @@ import net.sourceforge.coffea.uml2.model.IClassService;
 import net.sourceforge.coffea.uml2.model.IContainableElementService;
 import net.sourceforge.coffea.uml2.model.IContainerService;
 import net.sourceforge.coffea.uml2.model.IPackageService;
+import net.sourceforge.coffea.uml2.model.IPropertiesOwnerService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.impl.MemberService;
 import net.sourceforge.coffea.uml2.model.impl.PropertyService;
@@ -28,9 +29,11 @@ import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.internal.corext.refactoring.rename.RenameFieldProcessor;
 import org.eclipse.jdt.internal.corext.refactoring.sef.SelfEncapsulateFieldRefactoring;
 import org.eclipse.ltk.core.refactoring.CheckConditionsOperation;
@@ -59,7 +62,7 @@ implements IAttributeService {
 	 */
 	public static String buildFullyQualifiedName(Property prop) {
 		String name = new String();
-		if(prop!=null) {
+		if(prop != null) {
 			Element owner = prop.getOwner();
 			if(owner instanceof Type) {
 				Type cl = (Type)owner;
@@ -80,7 +83,7 @@ implements IAttributeService {
 	 */
 	public static String buildFullyQualifiedName(IField f) {
 		String fullName = null;
-		if(f!=null) {
+		if(f != null) {
 			IJavaElement parent = f.getParent();
 			if(parent instanceof ICompilationUnit) {
 				parent = parent.getParent();
@@ -102,7 +105,7 @@ implements IAttributeService {
 	 */
 	public static String buildSimpleName(IField f) {
 		String simpleName = null;
-		if(f!=null) {
+		if(f != null) {
 			simpleName = f.getElementName();
 		}
 		return simpleName;
@@ -116,11 +119,10 @@ implements IAttributeService {
 	 */
 	public static String buildSimpleName(FieldDeclaration f) {
 		String simpleName = null;
-		if(f!=null) {
+		if(f != null) {
 			// Adjusting the declared name which is, in the AST syntax 
 			// point of view, followed by the '=' character
-			String declaredName = 
-				f.fragments().get(0).toString();
+			String declaredName = f.fragments().get(0).toString();
 			if(declaredName.lastIndexOf('=')!=-1)
 				declaredName = 
 					declaredName.substring(0, declaredName.indexOf('='));
@@ -137,7 +139,7 @@ implements IAttributeService {
 	 */
 	public static String codeSimpleNameExtraction(Property p) {
 		String simpleName = null;
-		if(p!=null) {
+		if(p != null) {
 			simpleName = p.getName();
 
 		}
@@ -146,38 +148,43 @@ implements IAttributeService {
 
 	/**
 	 * Construction of a service for an attribute from an AST node
-	 * @param p
+	 * @param clSrv
 	 * 	Value of {@link #container}
-	 * @param stxNode
+	 * @param fDeclaration
 	 * 	Value of {@link #syntaxTreeNode}
 	 */
 	protected PropertyService(
-			FieldDeclaration stxNode, 
-			IClassService<?, ?> p
+			FieldDeclaration fDeclaration, 
+			IClassService<?, ?> clSrv
 	) {
-		super(stxNode, p);
+		super(fDeclaration, clSrv);
+		completePropertyConstruction(null, clSrv);
 	}
 
 	/**
 	 * Construction of a service for an attribute from a Java element
-	 * @param p
+	 * @param clSrv
 	 * 	Value of {@link #container}
 	 * @param jEl
 	 * 	Value of {@link #javaElement}
 	 */
-	protected PropertyService(
-			IField jEl, 
-			IClassService<?, ?> p
+	protected PropertyService(IField jEl, IClassService<?, ?> clSrv) {
+		super(jEl, clSrv);
+		completePropertyConstruction(null, clSrv);
+	}
+	
+	protected void completePropertyConstruction(
+			ASTRewrite r, 
+			IPropertiesOwnerService p
 	) {
-		super(jEl, p);
 	}
 
 	public String getSimpleName() {
 		String simpleName = null;
-		if(syntaxTreeNode!=null) {
+		if(syntaxTreeNode != null) {
 			simpleName = buildSimpleName(syntaxTreeNode);
 		}
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			simpleName = buildSimpleName(javaElement);
 		}
 		return simpleName;
@@ -192,17 +199,17 @@ implements IAttributeService {
 		String typeName = null;
 		ITypeService<?, ?> tHandler = null;
 		boolean imported = false;
-		if(syntaxTreeNode!=null) {
+		if(syntaxTreeNode != null) {
 			if(syntaxTreeNode.getType() instanceof SimpleType) {
 				SimpleType supplierType = 
-					(SimpleType)syntaxTreeNode.getType();
+						(SimpleType)syntaxTreeNode.getType();
 				ITypeBinding binding = supplierType.resolveBinding();
-				if(binding!=null) {
+				if(binding != null) {
 					typeName = binding.getQualifiedName();
 				}
 			}
 		}
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			try {
 				IImportDeclaration[] imports = null;
 				// Aiming to get the field type fully qualified name, 
@@ -213,15 +220,20 @@ implements IAttributeService {
 						cl.getJavaElement().getCompilationUnit().getImports();
 				}
 				typeName = javaElement.getTypeSignature();
-				if(typeName!=null) {
+				if(typeName != null) {
 					// If we don't have the type fully qualified name, 
 					if(typeName.startsWith("Q")) {
 						// We get the simple name
-						typeName = typeName.substring(1, typeName.length()-1);
+						typeName = Signature.getSignatureSimpleName(typeName);
+						ITypeService<?, ?> cont = getContainerService();
+						String[][] parts = 
+								cont.getJavaElement().resolveType(typeName);
+						typeName = cont.nameReconstruction(parts);
+						/*
 						IImportDeclaration imp = null;
 						// And try to resolve the full name from the imports
-						if(imports!=null) {
-							for(int i=0 ; i<imports.length ; i++) {
+						if(imports != null) {
+							for(int i = 0 ; i < imports.length ; i++) {
 								imp = imports[i];
 								if(imp.getElementName().endsWith(typeName)) {
 									typeName = imp.getElementName();
@@ -229,21 +241,15 @@ implements IAttributeService {
 									break;
 								}
 							}
-							/*
-							if(!resolved) {
-								// If the full name was not resolved, 
-								// then it is the java.lang package
-								typeName = "java.lang." + typeName;
-							}
-							 */
 						}
+						*/
 					}
 				}
 			} catch (JavaModelException e) {
 				e.printStackTrace();
 			}
 		}
-		if(typeName!=null) {
+		if(typeName != null) {
 			// If the type has been imported, 
 			if(imported) {
 				// Then we look for it in the model
@@ -275,26 +281,42 @@ implements IAttributeService {
 		return tHandler;
 	}
 
-	public void setUpUMLModelElement() {
-		if(umlModelElement==null) {
-			//FIXME missing parameters
-			if(getContainerService()!=null) {
-				ITypeService<?, ?> tHandler = resolveTypeService();
-				Type t = null;
-				if(tHandler!=null){
-					t = tHandler.getUMLElement();
-				}
-				umlModelElement = 
-					getContainerService().getUMLElement()
-					.createOwnedAttribute(
-							getSimpleName(), 
-							t
-					);
-				getUMLElement().setVisibility(getVisibility());
+	private void loadExistingUmlElement() {
+		String name = getSimpleName();
+		Class umlClass = getContainerService().getUMLElement();
+		ITypeService<?, ?> typeSrv = resolveTypeService();
+		Type umlType = null;
+		if(typeSrv != null){
+			umlType = typeSrv.getUMLElement();
+		}
+		umlModelElement = umlClass.getOwnedAttribute(name, umlType);
+	}
+
+	private void createUmlElement() {
+		//FIXME missing parameters
+		if(getContainerService() != null) {
+			ITypeService<?, ?> typeSrv = resolveTypeService();
+			Type umltype = null;
+			if(typeSrv!=null){
+				umltype = typeSrv.getUMLElement();
 			}
+			umlModelElement = 
+				getContainerService().getUMLElement()
+				.createOwnedAttribute(
+						getSimpleName(), 
+						umltype
+				);
+			getUMLElement().setVisibility(getVisibility());
 		}
 	}
 	
+	public void setUpUMLModelElement() {
+		if(umlModelElement == null)loadExistingUmlElement();
+		if(umlModelElement == null) {
+			createUmlElement();
+		}
+	}
+
 	@Override
 	public void rename(String nm) {
 		FieldRenamingRunnable runnable = new FieldRenamingRunnable(nm);

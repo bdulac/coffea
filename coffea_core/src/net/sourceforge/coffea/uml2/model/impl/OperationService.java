@@ -3,7 +3,11 @@ package net.sourceforge.coffea.uml2.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
+import net.sourceforge.coffea.uml2.model.IInterfaceService;
 import net.sourceforge.coffea.uml2.model.IMethodService;
+import net.sourceforge.coffea.uml2.model.IOperationsOwnerService;
+import net.sourceforge.coffea.uml2.model.IPropertiesOwnerService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesOwnerContainableService;
 import net.sourceforge.coffea.uml2.model.impl.MemberService;
@@ -20,9 +24,12 @@ import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
+import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Type;
@@ -63,9 +70,10 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			MethodDeclaration stxNode, 
-			ITypeService<?, ?> p
+			IInterfaceService<?, ?> p
 	) {
 		super(stxNode, p);
+		completeOperationConstruction(null, p);
 	}
 
 	/**
@@ -79,10 +87,11 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			MethodDeclaration stxNode, 
-			ITypesOwnerContainableService own, 
+			IInterfaceService<?, ?> own, 
 			Operation ume
 	) {
 		super(stxNode, own, ume);
+		completeOperationConstruction(null, own);
 	}
 
 	/**
@@ -93,8 +102,9 @@ implements IMethodService {
 	 * Value of {@link #container}, <code>null</code> if {@link #javaElement} 
 	 * is a root
 	 */
-	protected OperationService(IMethod jEl, ITypeService<?, ?> p) {
+	protected OperationService(IMethod jEl, IInterfaceService<?, ?> p) {
 		super(jEl, p);
+		completeOperationConstruction(null, p);
 	}
 
 	/**
@@ -108,10 +118,17 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			IMethod jEl, 
-			ITypesOwnerContainableService own, 
+			IInterfaceService<?, ?> own, 
 			Operation ume
 	) {
 		super(jEl, own, ume);
+		completeOperationConstruction(null, own);
+	}
+	
+	protected void completeOperationConstruction(
+			ASTRewrite r, 
+			IOperationsOwnerService p
+	) {
 	}
 
 	@Override
@@ -121,37 +138,38 @@ implements IMethodService {
 
 	public ITypeService<?, ?> resolveReturnTypeService() {
 		ITypeService<?, ?> rType = null;
-		String typeName = null;
-		if(syntaxTreeNode!=null) {
+		String typeFullName = null;
+		if(syntaxTreeNode != null) {
 			//If we don't have a tool for manipulating the supplier,
 			if(syntaxTreeNode.getReturnType2() instanceof SimpleType) {
 				//Then we try to find it in the model
 				SimpleType supplierType = 
 					(SimpleType)syntaxTreeNode.getReturnType2();
 				ITypeBinding binding = supplierType.resolveBinding();
-				if(binding!=null) {
-					typeName = binding.getQualifiedName();
+				if(binding != null) {
+					typeFullName = binding.getQualifiedName();
 				}
 			}
 		}
 		// If this operation has a return type,
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			try {
-				if(javaElement.getReturnType()!=null) {
+				if(javaElement.getReturnType() != null) {
 					// The we note its name
 					String simpleName = javaElement.getReturnType();
-					typeName = rebuildFullNameFromSimple(simpleName);
+					simpleName = Signature.getSignatureSimpleName(simpleName);
+					typeFullName = rebuildFullNameFromSimple(simpleName);
 				}
 			} catch(JavaModelException e) {
 				e.printStackTrace();
 			}
 		}
-		rType = getModelService().resolveTypeService(typeName);
+		rType = getModelService().resolveTypeService(typeFullName);
 		return rType;
 	}
 
 	public ITypeService<?, ?> getReturnTypeHandler() {
-		if(returnTypeHandler==null) {
+		if(returnTypeHandler == null) {
 			returnTypeHandler = resolveReturnTypeService();
 		}
 		return returnTypeHandler;
@@ -159,11 +177,11 @@ implements IMethodService {
 
 	public List<String> resolveParametersNames() {
 		List<String> parametersNms = null;
-		if(javaElement!=null) {
+		if(javaElement != null) {
 			parametersNms = new ArrayList<String>();
 			try {
 				String[] names = javaElement.getParameterNames();
-				for(int i=0 ; i<names.length ; i++) {
+				for(int i = 0 ; i < names.length ; i++) {
 					parametersNms.add(names[i]);
 				}
 			} catch (JavaModelException e) {
@@ -183,7 +201,7 @@ implements IMethodService {
 
 	public List<ITypeService<?, ?>> resolveParametersTypesServices() {
 		List<ITypeService<?, ?>> parametersTpsHs = null;
-		if(javaElement!=null) {
+		if(javaElement != null) {
 			parametersTpsHs = new ArrayList<ITypeService<?, ?>>();
 			String[] typesSimpleNames = javaElement.getParameterTypes();
 			/*
@@ -218,8 +236,10 @@ implements IMethodService {
 				}
 			}
 			*/
-			for(int i=0 ; i<typesSimpleNames.length ; i++) {
+			for(int i = 0 ; i < typesSimpleNames.length ; i++) {
 				String simpleName = typesSimpleNames[i];
+				// TODO org.eclipse.jdt.core.Signature
+				simpleName = Signature.getSignatureSimpleName(simpleName);
 				String fullName = rebuildFullNameFromSimple(simpleName);
 				ITypeService<?, ?> paramType = 
 					getModelService().resolveTypeService(fullName);
@@ -231,80 +251,120 @@ implements IMethodService {
 	}
 
 	public List<ITypeService<?, ?>> getParametersTypesServices() {
-		if(parametersTypesHandlers==null) {
+		if(parametersTypesHandlers == null) {
 			parametersTypesHandlers = resolveParametersTypesServices();
 		}
 		return parametersTypesHandlers;
 	}
 
-	public void setUpUMLModelElement() {
-		if(umlModelElement==null) {
-			if(
-					(getContainerService()!=null)
-					&&(getContainerService() instanceof InterfaceService)
-			) {
-				InterfaceService clParent = 
+	private void createUmlElement() {
+		if(
+				(getContainerService() != null)
+				&&(getContainerService() instanceof InterfaceService)
+		) {
+			InterfaceService clParent = 
 					(InterfaceService)getContainerService();
-				ITypeService<?, ?> rType = getReturnTypeHandler();
-				Type rTypeElement = null;
-				if(rType!=null) {
-					rTypeElement = rType.getUMLElement();
-				}
-				EList<String> paramsNames = new BasicEList<String>();
-				EList<Type> paramsTypes = new BasicEList<Type>();
-				paramsNames.addAll(getParametersNames());
-				List<ITypeService<?, ?>> tpsH = getParametersTypesServices();
-				if(tpsH!=null) {
-					ITypeService<?, ?> tpH = null;
-					for(int i=0 ; i<tpsH.size() ; i++) {
-						tpH = tpsH.get(i);
-						if(tpH!=null) {
-							Type t = tpH.getUMLElement();
-							if(t!=null) {
-								paramsTypes.add(t);
-							}
-						}
-					}
-				}
-				String justName = null;
-				if(javaElement!=null) {
-					justName = javaElement.getElementName();
-					try {
-						IJavaElement[] children = javaElement.getChildren();
-						IJavaElement child = null;
-						for(int i=0 ; i<children.length ; i++) {
-							child = children[i];
-							if(child!=null) {
-								switch (child.getElementType()) {
-								case IJavaElement.METHOD:									
-									break;
-								default:
-									break;
-								}
-							}
-						}
-					} catch (JavaModelException e) {
-						e.printStackTrace();
-					}
-				}
-				else if(syntaxTreeNode!=null) {
-					justName = syntaxTreeNode.getName().toString();
-				}
-				else {
-					justName = getSimpleName();
-				}
-				umlModelElement = 
-					clParent.getUMLElement().createOwnedOperation(
-							justName, 
-							paramsNames,  
-							paramsTypes, 
-							rTypeElement
-					);
-				umlModelElement.setVisibility(getVisibility());
+			ITypeService<?, ?> returnTypeSrv = getReturnTypeHandler();
+			Type rTypeElement = null;
+			if(returnTypeSrv != null) {
+				rTypeElement = returnTypeSrv.getUMLElement();
 			}
+			EList<String> paramsNames = new BasicEList<String>();
+			EList<Type> paramsTypes = new BasicEList<Type>();
+			paramsNames.addAll(getParametersNames());
+			List<ITypeService<?, ?>> tSrvs = getParametersTypesServices();
+			if(tSrvs != null) {
+				ITypeService<?, ?> tpH = null;
+				for(int i=0 ; i<tSrvs.size() ; i++) {
+					tpH = tSrvs.get(i);
+					if(tpH!=null) {
+						Type t = tpH.getUMLElement();
+						if(t!=null) {
+							paramsTypes.add(t);
+						}
+					}
+				}
+			}
+			String justName = null;
+			if(javaElement != null) {
+				justName = javaElement.getElementName();
+				try {
+					IJavaElement[] children = javaElement.getChildren();
+					IJavaElement child = null;
+					for(int i=0 ; i<children.length ; i++) {
+						child = children[i];
+						if(child!=null) {
+							switch (child.getElementType()) {
+							case IJavaElement.METHOD:									
+								break;
+							default:
+								break;
+							}
+						}
+					}
+				} catch (JavaModelException e) {
+					e.printStackTrace();
+				}
+			}
+			else if(syntaxTreeNode!=null) {
+				justName = syntaxTreeNode.getName().toString();
+			}
+			else {
+				justName = getSimpleName();
+			}
+			umlModelElement = 
+				clParent.getUMLElement().createOwnedOperation(
+						justName, 
+						paramsNames,  
+						paramsTypes, 
+						rTypeElement
+				);
+			umlModelElement.setVisibility(getVisibility());
+		}
+	}
+	
+	private void loadExistingUmlElement() {
+		String name = getSimpleName();
+		Element parentElement = getContainerService().getUMLElement();
+		/*
+		ITypeService<?, ?> returnTypeSrv = resolveReturnTypeService();
+		Type umlReturnType = null;
+		if(returnTypeSrv != null){
+			umlReturnType = returnTypeSrv.getUMLElement();
+		}
+		*/
+		if(parentElement instanceof Class) {
+			Class umlClass = (Class)parentElement;
+			EList<String> paramsNames = new BasicEList<String>();
+			paramsNames.addAll(getParametersNames());
+			EList<Type> paramsTypes = new BasicEList<Type>();
+			List<ITypeService<?, ?>> tSrvs = getParametersTypesServices();
+			for(ITypeService<?, ?> tSrv : tSrvs) {
+				if(tSrv != null)paramsTypes.add(tSrv.getUMLElement());
+				else {
+					// TODO Quid of primitive types ?
+					/*
+					CoffeaUML2Plugin.getInstance().logError(
+							"Null type service for parameter of method "
+							+ javaElement, 
+							new NullPointerException()
+					);
+					*/
+				}
+			}
+			umlModelElement = 
+					umlClass.getOperation(name, paramsNames, paramsTypes);
+		}
+	}
+	
+	public void setUpUMLModelElement() {
+		if(umlModelElement == null)loadExistingUmlElement();
+		if(umlModelElement == null) {
+			createUmlElement();
 		}
 	}
 
+	// @Override
 	public String getSimpleName() {
 		String name = null;
 		// {@link CodeProcessor#readJavaFile(java.io.File, java.io.File)}
@@ -371,7 +431,7 @@ implements IMethodService {
 			try {
 				namesParts = cont.getJavaElement().resolveType(simpleName);
 				String name = cont.nameReconstruction(namesParts);
-				if(name!=null) {
+				if(name != null) {
 					typeName = name;
 				}
 			} catch (JavaModelException e) {
