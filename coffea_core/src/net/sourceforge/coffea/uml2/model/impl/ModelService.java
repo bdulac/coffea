@@ -28,6 +28,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
+import org.eclipse.emf.transaction.Transaction;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.impl.EditingDomainManager;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.uml2.uml.Element;
@@ -129,6 +133,9 @@ implements IModelService {
 		*/
 		String dirUri = getJavaElementUriString();
 		String name = javaElement.getElementName();
+		if((name == null) || (name.length() == 0)) {
+			name = javaElement.toString();
+		}
 		URI location = 
 				URI.createURI("file://" + dirUri).appendSegment(name)
 				.appendFileExtension(UMLResource.FILE_EXTENSION);
@@ -192,9 +199,9 @@ implements IModelService {
 	private void loadExistingUmlElement() {
 		try {
 			// Loading existing model...
-			ResourceSet set = new ResourceSetImpl();
+			ResourceSet rSet = new ResourceSetImpl();
 			URI uri = createEmfUri();
-			emfResource = set.getResource(uri, true);
+			emfResource = rSet.getResource(uri, true);
 			EList<EObject> objs = emfResource.getContents();
 			for(EObject obj : objs) {
 				if(obj instanceof Model) {
@@ -202,11 +209,49 @@ implements IModelService {
 					break;
 				}
 			}
+			registerListener(rSet);
 		} catch(Exception e) {
 			// ...
 		}
 	}
 	
+	/**
+	 * TODO Work in progress: find all available 
+	 * {@link TransactionalEditingDomain}
+	 * @param rSet
+	 * FIXME ?? really needed ?
+	 */
+	private void registerListener(ResourceSet rSet) {
+		TransactionalEditingDomain domain = 
+				TransactionUtil.getEditingDomain(umlModelElement);
+		if(domain == null) {
+			domain = TransactionUtil.getEditingDomain(emfResource);
+		}
+		if(domain == null) {
+			domain = TransactionUtil.getEditingDomain(rSet);
+		}
+		if(domain == null) {
+			domain = 	
+					TransactionUtil.getEditingDomain(
+							"org.eclipse.papyrus.SharedEditingDomainID"
+					);
+		}
+		if(domain == null) {
+			EditingDomainManager instance = 
+					EditingDomainManager.getInstance();
+			boolean isInManager = 
+					instance.isStaticallyRegistered(
+							"org.eclipse.papyrus.SharedEditingDomainID"
+					);
+			if(!isInManager) {
+				domain = 
+						TransactionalEditingDomain.Registry.INSTANCE.getEditingDomain("org.eclipse.papyrus.SharedEditingDomainID");
+			}
+		}
+		if(domain != null)domain.addResourceSetListener(this);
+		TransactionalEditingDomain.Registry.INSTANCE.getEditingDomain("toto");
+	}
+
 	private void createUmlElement() {
 		umlModelElement = UMLFactory.eINSTANCE.createModel();
 		String name = javaElement.getElementName();
@@ -237,6 +282,7 @@ implements IModelService {
 			
 		}
 		if(init) {
+			// umlModelElement.eAdapters().add(new ModelAdapter());
 			setUpPackageHierarchy();
 			for (int i = 0; i < packages.size(); i++) {
 				packages.get(i).setUpUMLModelElement();
@@ -347,13 +393,12 @@ implements IModelService {
 	// @Override
 	public List<IPackageService> fetchSubPackagesFromHierarchy() {
 		// Looping on the packages list, 
-		List<IPackageService> rootPackages = 
-			new ArrayList<IPackageService>();
+		List<IPackageService> rootPackages = new ArrayList<IPackageService>();
 		IPackageService p = null;
-		for(int i=0 ; i<packages.size() ; i++) {
+		for(int i = 0 ; i < packages.size() ; i++) {
 			// We identify which have directly the model for container
 			p = packages.get(i);
-			if((p!=null) &&(p.getContainerService().equals(this))) {
+			if((p != null) && (p.getContainerService().equals(this))) {
 				// The package, which are "root packages", will be the 
 				// basement for a recursive retrieving of sub packages
 				p.fetchSubPackagesFromHierarchy();
@@ -494,6 +539,30 @@ implements IModelService {
 	// @Override
 	public void resourceSetChanged(ResourceSetChangeEvent event) {
 		// TODO Auto-generated method stub
-		
+		Transaction tr = event.getTransaction();
+		System.out.println("TRANSACTION " + tr);
 	}
+	
+	/*
+	class ModelAdapter extends EContentAdapter {
+		
+		@Override
+		public void notifyChanged(Notification notification) {
+			super.notifyChanged(notification);
+			int type = notification.getEventType();
+			switch (type) {
+			case Notification.ADD:
+				System.out.println("Add notification: " + notification);
+				break;
+			case Notification.REMOVE:
+				System.out.println("Remove notification: " + notification);
+				break;
+			default:
+				System.out.println("Other notification: " + notification);
+				break;
+			}
+
+		}
+	}
+	*/
 }
