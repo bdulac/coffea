@@ -199,6 +199,7 @@ implements IModelService {
 	private void loadExistingUmlElement() {
 		try {
 			// Loading existing model...
+			// TODO Trying to get external ResourceSet (Papyrus, uml2, etc.) ?
 			ResourceSet rSet = new ResourceSetImpl();
 			URI uri = createEmfUri();
 			emfResource = rSet.getResource(uri, true);
@@ -222,6 +223,11 @@ implements IModelService {
 	 * FIXME ?? really needed ?
 	 */
 	private void registerListener(ResourceSet rSet) {
+		// Listener notified by Papyrus: 
+		// org.eclipse.gmf.runtime.diagram.ui.DiagramEventBrokerThreadSafe@6672c206
+		// TransactionalEditDomain triggering: 
+		// org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl$1@7f1d537c
+		// How does papyrues has retrieved ???
 		TransactionalEditingDomain domain = 
 				TransactionUtil.getEditingDomain(umlModelElement);
 		if(domain == null) {
