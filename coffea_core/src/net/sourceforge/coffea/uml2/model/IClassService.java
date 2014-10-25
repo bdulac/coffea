@@ -33,7 +33,7 @@ IMemberService<S, J> {
 	 * Returns the class handled by the service
 	 * @return Class handled by the service
 	 */
-	public Class getUMLElement();
+	// public Class getUMLElement();
 	
 	/**
 	 * In the code creates a class nested in the class handled by the service

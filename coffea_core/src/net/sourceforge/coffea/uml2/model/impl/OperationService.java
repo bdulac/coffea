@@ -30,6 +30,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Type;
@@ -312,13 +313,26 @@ implements IMethodService {
 			else {
 				justName = getSimpleName();
 			}
-			umlModelElement = 
-				clParent.getUMLElement().createOwnedOperation(
+			Element parentElm = clParent.getUMLElement();
+			if(parentElm instanceof DataType) {
+				DataType dt = (DataType)parentElm;
+				dt.createOwnedOperation(
 						justName, 
 						paramsNames,  
 						paramsTypes, 
 						rTypeElement
 				);
+			}
+			else if(parentElm instanceof Class) {
+				Class cl = (Class)parentElm;
+				umlModelElement = 
+					cl.createOwnedOperation(
+						justName, 
+						paramsNames,  
+						paramsTypes, 
+						rTypeElement
+					);
+			}
 			umlModelElement.setVisibility(getVisibility());
 		}
 	}

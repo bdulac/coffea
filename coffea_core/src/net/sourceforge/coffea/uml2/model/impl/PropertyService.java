@@ -41,7 +41,9 @@ import org.eclipse.ltk.core.refactoring.PerformRefactoringOperation;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.VisibilityKind;
@@ -283,13 +285,20 @@ implements IAttributeService {
 
 	private void loadExistingUmlElement() {
 		String name = getSimpleName();
-		Class umlClass = getContainerService().getUMLElement();
+		Classifier classif = getContainerService().getUMLElement();
 		ITypeService<?, ?> typeSrv = resolveTypeService();
 		Type umlType = null;
 		if(typeSrv != null){
 			umlType = typeSrv.getUMLElement();
 		}
-		umlModelElement = umlClass.getOwnedAttribute(name, umlType);
+		if(classif instanceof Class) {
+			Class cla = (Class)classif;
+			umlModelElement = cla.getOwnedAttribute(name, umlType);
+		}
+		else if(classif instanceof Enumeration) {
+			Enumeration en = (Enumeration)classif;
+			en.getAttribute(name, umlType);
+		}
 	}
 
 	private void createUmlElement() {
@@ -300,13 +309,18 @@ implements IAttributeService {
 			if(typeSrv!=null){
 				umltype = typeSrv.getUMLElement();
 			}
-			umlModelElement = 
-				getContainerService().getUMLElement()
-				.createOwnedAttribute(
-						getSimpleName(), 
-						umltype
-				);
-			getUMLElement().setVisibility(getVisibility());
+			Classifier classif = getContainerService().getUMLElement();
+			if (classif instanceof Class) {
+				Class cla = (Class) classif;
+				umlModelElement = 
+						cla.createOwnedAttribute(getSimpleName(),umltype);
+			}
+			else if(classif instanceof Enumeration) {
+				Enumeration en = (Enumeration)classif;
+				umlModelElement = 
+						en.createOwnedAttribute(getSimpleName(), umltype);
+			}
+			umlModelElement.setVisibility(getVisibility());
 		}
 	}
 	

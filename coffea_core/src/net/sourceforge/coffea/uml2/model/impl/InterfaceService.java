@@ -44,10 +44,10 @@ import org.eclipse.ltk.core.refactoring.CheckConditionsOperation;
 import org.eclipse.ltk.core.refactoring.PerformRefactoringOperation;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
-import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.NamedElement;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Realization;
@@ -56,8 +56,8 @@ import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
 
 /** Service for an interface */
-public class InterfaceService 
-extends ClassifierService<Class, TypeDeclaration, IType>
+public class InterfaceService<C extends Classifier> 
+extends ClassifierService<C, TypeDeclaration, IType>
 implements IInterfaceService<TypeDeclaration, IType>{
 
 	/** @see java.io.Serializable */
@@ -114,7 +114,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 	 * @param c
 	 * Value of {@link #umlModelElement}
 	 */
-	public InterfaceService(ITypesContainerService p, String nm, Class c) {
+	public InterfaceService(ITypesContainerService p, String nm, C c) {
 		super(p, nm, c);
 		completeConstruction(null, p);
 	}
@@ -156,7 +156,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			TypeDeclaration stxNode, 
 			ITypesContainerService p, 
 			CompilationUnit u, 
-			Class c
+			C c
 	) {
 		super(stxNode, p, c);
 		completeConstruction(null, p, u);
@@ -199,7 +199,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			ITypesContainerService p,
 			ASTRewrite r, 
 			ICompilationUnit u, 
-			Class c
+			C c
 	) {
 		super(jEl, p, c);
 		completeConstruction(r, p, u);
@@ -347,64 +347,114 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return this.dependenciesServices;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void loadExistingUmlElement() {
 		ITypesContainerService cont = getContainerService();
 		Element contEl = cont.getUMLElement();
 		if(contEl instanceof Package) {
 			Package pack = (Package)contEl;
 			NamedElement el = pack.getMember(getSimpleName());
-			if(el instanceof Class) {
-				umlModelElement = (Class)el;
+			if(el instanceof Classifier) {
+				umlModelElement = (C)el;
 			}
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void createUmlElement() {
 		IGroupService parent = getContainerService();
 		String name = null;
 		if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {
 			name = syntaxTreeNode.getName().getFullyQualifiedName();
 		}
-		else if(javaElement!=null) {
+		else if(javaElement != null) {
 			name = javaElement.getTypeQualifiedName();
 		}
 		else if(defaultSimpleName != null) {
 			name = getSimpleName();
 		}
 		if(name != null) {
-			if(parent instanceof IPackageService) {
-				IPackageService pk = (IPackageService)parent;
-				umlModelElement = 
-					pk.getUMLElement().createOwnedClass(
-							name, 
-							isAbstract()
-					);
-			} 
-			else if(parent instanceof IClassService<?, ?>) {
-				IClassService<?, ?> pk = (IClassService<?, ?>)parent;
-				umlModelElement = 
-					UMLFactory.eINSTANCE.createClass();
-				int indDollar = -1;
-				if((indDollar = name.indexOf('$'))>=0) {
-					name = name.substring(indDollar+1);
+			try {
+				if(parent instanceof IPackageService) {
+					IPackageService pack = (IPackageService)parent;
+					if((javaElement != null) && (javaElement.isEnum())) {
+						umlModelElement = 
+								(C)UMLFactory.eINSTANCE.createEnumeration();
+						umlModelElement.setName(name);
+						pack.getUMLElement().getOwnedMembers()
+						.add(umlModelElement);
+					}
+					else {
+						umlModelElement = 
+								(C) pack.getUMLElement().createOwnedClass(
+										name, 
+										isAbstract()
+								);
+					}
+				} 
+				else if(parent instanceof IClassService<?, ?>) {
+					IClassService<?, ?> nestingClass = 
+							(IClassService<?, ?>)parent;
+					if((javaElement != null) && (javaElement.isEnum())) {
+						umlModelElement = 
+								(C)UMLFactory.eINSTANCE.createEnumeration();
+						umlModelElement.setName(name);
+						Classifier cl = nestingClass.getUMLElement();
+						if(cl instanceof org.eclipse.uml2.uml.Class) {
+							org.eclipse.uml2.uml.Class cla = 
+									(org.eclipse.uml2.uml.Class)cl;
+							cla.getNestedClassifiers()
+							.add(umlModelElement);
+						}
+						else if(cl instanceof Enumeration) {
+							Enumeration en = (Enumeration)cl;
+							en.getMembers().add(umlModelElement);
+						}
+					}
+					else {
+						umlModelElement = 
+								(C) UMLFactory.eINSTANCE.createClass();
+						int indDollar = -1;
+						if ((indDollar = name.indexOf('$')) >= 0) {
+							name = name.substring(indDollar + 1);
+						}
+						umlModelElement.setName(name);
+						Classifier cl = nestingClass.getUMLElement();
+						if(cl instanceof org.eclipse.uml2.uml.Class) {
+							org.eclipse.uml2.uml.Class cla = 
+									(org.eclipse.uml2.uml.Class)cl;
+							cla.getNestedClassifiers()
+							.add(umlModelElement);
+						}
+						else if(cl instanceof Enumeration) {
+							Enumeration en = (Enumeration)cl;
+							en.getMembers().add(umlModelElement);
+						}
+					}
 				}
-				umlModelElement.setName(name);
-				pk.getUMLElement().getNestedClassifiers().add(
-						umlModelElement
-				);
-			}
-			else if(parent instanceof IModelService) {
-				IModelService md = (IModelService)parent;
-				umlModelElement = 
-					md.getUMLElement().createOwnedClass(
-							name, 
-							isAbstract()
-					);
+				else if(parent instanceof IModelService) {
+					IModelService md = (IModelService)parent;
+					if((javaElement != null) && (javaElement.isEnum())) {
+						umlModelElement = 
+								(C)UMLFactory.eINSTANCE.createEnumeration();
+						umlModelElement.setName(name);
+						md.getUMLElement().getOwnedMembers()
+						.add(umlModelElement);
+					}
+					else {
+						umlModelElement = 
+								(C)md.getUMLElement().createOwnedClass(
+										name, 
+										isAbstract()
+								);
+					}
+				}
+			} catch(JavaModelException e) {
 			}
 		}
-		if(syntaxTreeNode!=null) {
+		if(syntaxTreeNode != null) {
 			Javadoc doc = syntaxTreeNode.getJavadoc();
-			if(doc!=null) {
+			if(doc != null) {
 				Comment docComment = 
 					umlModelElement.createOwnedComment();
 				docComment.setBody(doc.toString());				

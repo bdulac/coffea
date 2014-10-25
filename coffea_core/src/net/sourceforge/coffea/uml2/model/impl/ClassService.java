@@ -35,7 +35,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 /** Service for a class */
 public class ClassService 
-extends InterfaceService 
+extends InterfaceService<Class> 
 implements IClassService<TypeDeclaration, IType> {	
 
 	/** @see java.io.Serializable */
