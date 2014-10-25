@@ -49,6 +49,7 @@ import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Namespace;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Package;
@@ -351,9 +352,9 @@ implements IInterfaceService<TypeDeclaration, IType>{
 	private void loadExistingUmlElement() {
 		ITypesContainerService cont = getContainerService();
 		Element contEl = cont.getUMLElement();
-		if(contEl instanceof Package) {
-			Package pack = (Package)contEl;
-			NamedElement el = pack.getMember(getSimpleName());
+		if(contEl instanceof Namespace) {
+			Namespace ns = (Namespace)contEl;
+			NamedElement el = ns.getMember(getSimpleName());
 			if(el instanceof Classifier) {
 				umlModelElement = (C)el;
 			}
@@ -368,7 +369,8 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			name = syntaxTreeNode.getName().getFullyQualifiedName();
 		}
 		else if(javaElement != null) {
-			name = javaElement.getTypeQualifiedName();
+			// name = javaElement.getTypeQualifiedName();
+			name = javaElement.getElementName();
 		}
 		else if(defaultSimpleName != null) {
 			name = getSimpleName();
@@ -449,6 +451,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 								);
 					}
 				}
+				umlModelElement.setVisibility(getVisibility());
 			} catch(JavaModelException e) {
 			}
 		}
