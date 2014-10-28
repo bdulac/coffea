@@ -124,7 +124,7 @@ implements IClassifierService<S, J> {
 			}
 			else if(parent instanceof IType) {
 				fullName = buildFullyQualifiedName((IType)parent);
-				fullName += '$';
+				fullName += '.';
 			}
 			fullName += element.getElementName();
 		}
