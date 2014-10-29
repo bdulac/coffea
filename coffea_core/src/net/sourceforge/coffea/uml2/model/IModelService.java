@@ -5,6 +5,7 @@ import net.sourceforge.coffea.uml2.Resources;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.uml2.uml.Model;
@@ -76,4 +77,10 @@ ITypesContainerService {
 	 * model ({@code false} if all packages are considered equal) 
 	 */
 	public boolean arePackageInHierarchy();
+	
+	/** Disposal of all resources managed by the service */
+	public void dispose();
+
+	/** @return EMF resource to which the model belongs */
+	public Resource getEmfResource();
 }

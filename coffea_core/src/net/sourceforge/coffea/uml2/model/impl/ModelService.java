@@ -521,6 +521,11 @@ implements IModelService {
 		}
 		return ret;	
 	}
+	
+	// @Override
+	public Resource getEmfResource() {
+		return emfResource;
+	}
 
 	// @Override
 	public Element findEditorUMLElement() {
