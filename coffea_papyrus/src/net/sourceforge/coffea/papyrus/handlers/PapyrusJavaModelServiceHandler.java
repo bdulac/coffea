@@ -3,26 +3,20 @@ package net.sourceforge.coffea.papyrus.handlers;
 import net.sourceforge.coffea.java.handlers.ASTServiceHandler;
 import net.sourceforge.coffea.java.handlers.JavaModelServiceHandler;
 import net.sourceforge.coffea.papyrus.JavaElementsEditionReceiver;
-import net.sourceforge.coffea.papyrus.commands.OpenClassDiagramCommand;
 import net.sourceforge.coffea.uml2.model.IModelService;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.IOperationHistory;
-import org.eclipse.core.commands.operations.OperationHistoryFactory;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-import org.eclipse.emf.workspace.AbstractEMFOperation;
-import org.eclipse.gmf.runtime.notation.HintedDiagramLinkStyle;
-import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.papyrus.infra.core.services.ServiceException;
-import org.eclipse.papyrus.infra.emf.utils.ServiceUtilsForHandlers;
+import org.eclipse.papyrus.infra.core.services.ServicesRegistry;
+import org.eclipse.papyrus.infra.core.utils.ServiceUtils;
+import org.eclipse.papyrus.infra.emf.utils.ServiceUtilsForResource;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.uml2.uml.Model;
 
 /**
  * Handler for an UML model service in coordination with Papyrus editors : uses the Java Model 
@@ -55,8 +49,6 @@ public class PapyrusJavaModelServiceHandler extends JavaModelServiceHandler {
 		IModelService service = getPapyrusServiceLocator().editSelectedJavaElements(
 				workbenchWindow
 		);
-		Model m = service.getUMLElement();
-		IOperationHistory history = OperationHistoryFactory.getOperationHistory();
 		try {
 			// EditPart targetEditPart = getTargetEditPart(request);
 
@@ -70,6 +62,8 @@ public class PapyrusJavaModelServiceHandler extends JavaModelServiceHandler {
 				TransactionalEditingDomain domain = 
 						TransactionUtil.getEditingDomain(m);
 						*/
+				/* ATTEMPT WITH HANDLERS
+				IOperationHistory history = OperationHistoryFactory.getOperationHistory();
 				ServiceUtilsForHandlers handlerUtils = ServiceUtilsForHandlers.getInstance();
 				TransactionalEditingDomain domain = null;
 				try {
@@ -87,10 +81,19 @@ public class PapyrusJavaModelServiceHandler extends JavaModelServiceHandler {
 				AbstractEMFOperation command = 
 						new OpenClassDiagramCommand(domain, event, m, linkStyle);
 				history.execute(command, new NullProgressMonitor(), null);
+				*/
 			}
 			// return new ICommandProxy(new OpenDiagramCommand((HintedDiagramLinkStyle) link));
-			
-		} catch (ExecutionException e) {
+			ServiceUtilsForResource utils = 
+					ServiceUtilsForResource.getInstance();
+			ServicesRegistry registry = 
+					utils.getServiceRegistry(service.getEmfResource());
+			TransactionalEditingDomain editingDomain = 
+					ServiceUtils.getInstance().getTransactionalEditingDomain(
+							registry
+					);
+			editingDomain.addResourceSetListener(service);
+		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
 		return service;
