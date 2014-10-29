@@ -37,11 +37,13 @@ public class JavaModelServiceHandler extends AbstractHandler {
 		super();
 	}
 	
+	// @Override
 	public IModelService execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchWindow workbenchWindow = 
 			HandlerUtil.getActiveWorkbenchWindowChecked(event);
-		return getServiceLocator().getModelService(
-				workbenchWindow
-		);
+		IModelService modelSrv = 
+				getServiceLocator().getModelService(workbenchWindow);
+		modelSrv.dispose();
+		return modelSrv;
 	}
 }
