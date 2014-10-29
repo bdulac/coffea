@@ -58,7 +58,8 @@ implements IAssociationService<FieldDeclaration, IField> {
 		super(jEl, p);
 	}
 	
-	private void loadExistingUmlElement() {
+	@Override
+	protected void loadExistingUmlElement() {
 		ITypeService<?, ?> sp = resolveSupplierService();
 		if(sp != null) {
 			if(supplier != null) {
@@ -79,7 +80,8 @@ implements IAssociationService<FieldDeclaration, IField> {
 		}
 	}
 	
-	private void createUmlElement() {
+	@Override
+	protected void createUmlElement() {
 		ITypeService<?, ?> sp = resolveSupplierService();
 		if(sp != null) {
 			Type endType = supplier.getUMLElement();
@@ -120,13 +122,6 @@ implements IAssociationService<FieldDeclaration, IField> {
 				}
 				umlModelElement.setName(doc);
 			}
-		}
-	}
-	
-	public void setUpUMLModelElement() {
-		if(umlModelElement == null)loadExistingUmlElement();
-		if(umlModelElement == null) {
-			createUmlElement();
 		}
 	}
 

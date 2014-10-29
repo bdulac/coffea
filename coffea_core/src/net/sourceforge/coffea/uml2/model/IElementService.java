@@ -28,7 +28,11 @@ public interface IElementService extends Serializable, ResourceSetListener {
 	 */
 	public IModelService getModelService();
 	
-	/** Sets up the UML model element */
+	/** 
+	 * Sets up the UML element: loads it if is already registered in the 
+	 * model, creates it otherwise
+	 * @see #getModelService() 
+	 */
 	public void setUpUMLModelElement();
 
 	/**

@@ -295,7 +295,8 @@ implements IPackageService {
 		}
 	}
 	
-	private void loadExistingUmlElement() {
+	@Override
+	protected void loadExistingUmlElement() {
 		// TODO Auto-generated method stub
 		IGroupService parent = getContainerService();
 		Package parentElement = null;
@@ -313,7 +314,8 @@ implements IPackageService {
 		}
 	}
 	
-	private void createUmlElement() {
+	@Override
+	protected void createUmlElement() {
 		
 		IGroupService parent = getContainerService();
 		Package parentElement = null;
@@ -372,6 +374,7 @@ implements IPackageService {
 		}
 	}
 
+	@Override
 	public void setUpUMLModelElement() {
 		boolean init = false;
 		if(umlModelElement == null) {

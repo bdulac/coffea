@@ -63,6 +63,24 @@ implements IElementService {
 		}
 		return umlModelElement;
 	}
+	
+	/** Loading an exiting UML element */
+	protected abstract void loadExistingUmlElement();
+	
+	/** Creation of a new UML element */
+	protected abstract void createUmlElement();
+	
+	/**
+	 * This default implementation can be specialized if the element has 
+	 * children or parameters
+	 * @see IElementService#setUpUMLModelElement()
+	 */
+	public void setUpUMLModelElement() {
+		if(umlModelElement == null)loadExistingUmlElement();
+		if(umlModelElement == null) {
+			createUmlElement();
+		}
+	}
 
 	public IModelServiceBuilding getServiceBuilder() {
 		IModelServiceBuilding r = null;
@@ -73,8 +91,12 @@ implements IElementService {
 		return r;
 	}
 
+	@Override
 	public String toString() {
-		return super.toString() + '#' + getFullName();
+		return 
+				getFullName() 
+				+ '#' + super.getClass().getSimpleName() 
+				+ "@" + hashCode();
 	}
 
 	public boolean isAggregatePrecommitListener() {

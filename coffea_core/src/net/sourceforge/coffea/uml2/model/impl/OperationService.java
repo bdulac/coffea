@@ -34,6 +34,7 @@ import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Type;
+import org.eclipse.uml2.uml.VisibilityKind;
 
 
 /** Service for a method */
@@ -258,7 +259,8 @@ implements IMethodService {
 		return parametersTypesHandlers;
 	}
 
-	private void createUmlElement() {
+	@Override
+	protected void createUmlElement() {
 		if(
 				(getContainerService() != null)
 				&&(getContainerService() instanceof InterfaceService)
@@ -337,7 +339,8 @@ implements IMethodService {
 		}
 	}
 	
-	private void loadExistingUmlElement() {
+	@Override
+	protected void loadExistingUmlElement() {
 		String name = getSimpleName();
 		Element parentElement = getContainerService().getUMLElement();
 		/*
@@ -368,13 +371,12 @@ implements IMethodService {
 			}
 			umlModelElement = 
 					umlClass.getOperation(name, paramsNames, paramsTypes);
-		}
-	}
-	
-	public void setUpUMLModelElement() {
-		if(umlModelElement == null)loadExistingUmlElement();
-		if(umlModelElement == null) {
-			createUmlElement();
+			if(umlModelElement != null) {
+				VisibilityKind vis = getVisibility();
+				if(!(umlModelElement.getVisibility() == vis)) {
+					umlModelElement.setVisibility(vis);
+				}
+			}
 		}
 	}
 

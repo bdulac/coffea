@@ -196,7 +196,8 @@ implements IModelService {
 		}
 	}
 	
-	private void loadExistingUmlElement() {
+	@Override
+	protected void loadExistingUmlElement() {
 		try {
 			// Loading existing model...
 			// TODO Trying to get external ResourceSet (Papyrus, uml2, etc.) ?
@@ -216,6 +217,21 @@ implements IModelService {
 		}
 	}
 	
+	@Override
+	protected void createUmlElement() {
+		umlModelElement = UMLFactory.eINSTANCE.createModel();
+		String name = javaElement.getElementName();
+		if(javaElement == null) {
+			throw new IllegalStateException(
+					"The Java element should not be null"
+			);
+		}
+		if((name == null) || (name.length() == 0)) {
+			name = javaElement.toString();
+		}
+		umlModelElement.setName(name);
+	}
+	
 	/**
 	 * TODO Work in progress: find all available 
 	 * {@link TransactionalEditingDomain}
@@ -227,12 +243,13 @@ implements IModelService {
 		// org.eclipse.gmf.runtime.diagram.ui.DiagramEventBrokerThreadSafe@6672c206
 		// TransactionalEditDomain triggering: 
 		// org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl$1@7f1d537c
-		// How does papyrues has retrieved ???
+		// How does Papyrus has retrieved the domain ???
 		TransactionalEditingDomain domain = 
 				TransactionUtil.getEditingDomain(umlModelElement);
 		if(domain == null) {
 			domain = TransactionUtil.getEditingDomain(emfResource);
 		}
+		
 		if(domain == null) {
 			domain = TransactionUtil.getEditingDomain(rSet);
 		}
@@ -258,20 +275,6 @@ implements IModelService {
 		TransactionalEditingDomain.Registry.INSTANCE.getEditingDomain("toto");
 	}
 
-	private void createUmlElement() {
-		umlModelElement = UMLFactory.eINSTANCE.createModel();
-		String name = javaElement.getElementName();
-		if(javaElement == null) {
-			throw new IllegalStateException(
-					"The Java element should not be null"
-			);
-		}
-		if((name == null) || (name.length() == 0)) {
-			name = javaElement.toString();
-		}
-		umlModelElement.setName(name);
-	}
-
 	// @Override
 	public void setUpUMLModelElement() {
 		boolean init = false;
@@ -279,6 +282,7 @@ implements IModelService {
 		if(umlModelElement == null) {
 			init = true;
 			loadExistingUmlElement();
+			
 			
 		}
 		// If there is no existing model, 

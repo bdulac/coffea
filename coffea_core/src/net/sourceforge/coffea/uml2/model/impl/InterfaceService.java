@@ -55,6 +55,7 @@ import org.eclipse.uml2.uml.Realization;
 import org.eclipse.uml2.uml.Package;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.uml2.uml.UMLPackage;
+import org.eclipse.uml2.uml.VisibilityKind;
 
 /** Service for an interface */
 public class InterfaceService<C extends Classifier> 
@@ -348,8 +349,9 @@ implements IInterfaceService<TypeDeclaration, IType>{
 		return this.dependenciesServices;
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private void loadExistingUmlElement() {
+	protected void loadExistingUmlElement() {
 		ITypesContainerService cont = getContainerService();
 		Element contEl = cont.getUMLElement();
 		if(contEl instanceof Namespace) {
@@ -357,12 +359,17 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			NamedElement el = ns.getMember(getSimpleName());
 			if(el instanceof Classifier) {
 				umlModelElement = (C)el;
+				VisibilityKind vis = getVisibility();
+				if(!(umlModelElement.getVisibility() == vis)) {
+					umlModelElement.setVisibility(vis);
+				}
 			}
 		}
 	}
 	
+	@Override
 	@SuppressWarnings("unchecked")
-	private void createUmlElement() {
+	protected void createUmlElement() {
 		IGroupService parent = getContainerService();
 		String name = null;
 		if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {

@@ -283,7 +283,8 @@ implements IAttributeService {
 		return tHandler;
 	}
 
-	private void loadExistingUmlElement() {
+	@Override
+	protected void loadExistingUmlElement() {
 		String name = getSimpleName();
 		Classifier classif = getContainerService().getUMLElement();
 		ITypeService<?, ?> typeSrv = resolveTypeService();
@@ -299,9 +300,16 @@ implements IAttributeService {
 			Enumeration en = (Enumeration)classif;
 			en.getAttribute(name, umlType);
 		}
+		if(umlModelElement != null) {
+			VisibilityKind vis = getVisibility();
+			if(!(umlModelElement.getVisibility() == vis)) {
+				umlModelElement.setVisibility(vis);
+			}
+		}
 	}
 
-	private void createUmlElement() {
+	@Override
+	protected void createUmlElement() {
 		//FIXME missing parameters
 		if(getContainerService() != null) {
 			ITypeService<?, ?> typeSrv = resolveTypeService();
@@ -321,13 +329,6 @@ implements IAttributeService {
 						en.createOwnedAttribute(getSimpleName(), umltype);
 			}
 			umlModelElement.setVisibility(getVisibility());
-		}
-	}
-	
-	public void setUpUMLModelElement() {
-		if(umlModelElement == null)loadExistingUmlElement();
-		if(umlModelElement == null) {
-			createUmlElement();
 		}
 	}
 

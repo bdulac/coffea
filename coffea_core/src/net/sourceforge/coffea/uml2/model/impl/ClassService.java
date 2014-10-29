@@ -297,6 +297,9 @@ implements IClassService<TypeDeclaration, IType> {
 		for(int i = 0 ; i < properties.size() ; i++) {
 			properties.get(i).setUpUMLModelElement();
 		}
+		for(int i = 0 ; i < operationsServices.size() ; i++) {
+			operationsServices.get(i).setUpUMLModelElement();
+		}
 		for(int i = 0 ; i < dependenciesServices.size() ; i++) {
 			dependenciesServices.get(i).setUpUMLModelElement();
 		}
