@@ -237,6 +237,18 @@ implements IClassService<TypeDeclaration, IType> {
 						superClassName = name;
 					}
 				}
+				String[] superIntNames = 
+						javaElement.getSuperInterfaceNames();
+				if(superIntNames != null) {
+					for(int i = 0 ; i < superIntNames.length ; i++) {
+						String[][] parts = 
+							javaElement.resolveType(superIntNames[i]);
+						String name = nameReconstruction(parts);
+						if(name != null) {
+							superInterfacesNames.add(name);
+						}
+					}
+				}
 			} catch (JavaModelException e) {
 				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
 			}

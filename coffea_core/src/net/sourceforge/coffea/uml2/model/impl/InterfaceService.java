@@ -272,7 +272,7 @@ implements IInterfaceService<TypeDeclaration, IType>{
 						String[][] parts = 
 							javaElement.resolveType(superIntNames[i]);
 						String name = nameReconstruction(parts);
-						if(name!=null) {
+						if(name != null) {
 							superInterfacesNames.add(name);
 						}
 					}
@@ -506,7 +506,10 @@ implements IInterfaceService<TypeDeclaration, IType>{
 			}
 		}
 		 */
-		if((superInterfacesNames!=null)&&(superInterfacesNames.size()>0)) {
+		if(
+				(superInterfacesNames != null) 
+				&& (superInterfacesNames.size() > 0)
+		) {
 			String superInterfaceName;
 			for(int i=0 ; i<superInterfacesNames.size() ; i++) {
 				superInterfaceName = superInterfacesNames.get(i);
@@ -529,8 +532,8 @@ implements IInterfaceService<TypeDeclaration, IType>{
 							);
 						if(pEl instanceof Realization) {
 							Realization real = (Realization)pEl;
-							real.getClients().add(elGeneral);
-							real.getSuppliers().add(this.getUMLElement());
+							real.getClients().add(this.getUMLElement());
+							real.getSuppliers().add(elGeneral);
 						}
 					}
 				}
