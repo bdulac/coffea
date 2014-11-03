@@ -17,9 +17,6 @@ import org.eclipse.uml2.uml.Class;
  */
 public interface IClassService<S extends TypeDeclaration, J extends IType> 
 extends 
-ITypesOwnerContainableService, 
-IPropertiesOwnerService,
-ITypesContainerService, 
 IInterfaceService<S, J>, 
 IMemberService<S, J> {
 	/*

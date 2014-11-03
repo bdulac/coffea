@@ -71,10 +71,11 @@ implements IElementService {
 	protected abstract void createUmlElement();
 	
 	/**
-	 * This default implementation can be specialized if the element has 
+	 * This default implementation might be specialized if the element has 
 	 * children or parameters
 	 * @see IElementService#setUpUMLModelElement()
 	 */
+	// @Override
 	public void setUpUMLModelElement() {
 		if(umlModelElement == null)loadExistingUmlElement();
 		if(umlModelElement == null) {
@@ -82,6 +83,7 @@ implements IElementService {
 		}
 	}
 
+	// @Override
 	public IModelServiceBuilding getServiceBuilder() {
 		IModelServiceBuilding r = null;
 		IModelService m = getModelService();

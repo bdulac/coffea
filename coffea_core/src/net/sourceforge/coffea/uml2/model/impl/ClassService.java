@@ -1,57 +1,33 @@
 package net.sourceforge.coffea.uml2.model.impl;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
 import net.sourceforge.coffea.uml2.Resources;
-import net.sourceforge.coffea.uml2.model.IAttributeService;
 import net.sourceforge.coffea.uml2.model.IClassService;
-import net.sourceforge.coffea.uml2.model.IElementService;
-import net.sourceforge.coffea.uml2.model.IInterfaceService;
-import net.sourceforge.coffea.uml2.model.IMethodService;
+import net.sourceforge.coffea.uml2.model.IGroupService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesContainerService;
-import net.sourceforge.coffea.uml2.model.impl.CompositionService;
-import net.sourceforge.coffea.uml2.model.impl.PropertyService;
 
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Classifier;
-import org.eclipse.uml2.uml.Property;
-import org.eclipse.uml2.uml.Type;
-import org.eclipse.uml2.uml.VisibilityKind;
+import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.FieldDeclaration;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 
 /** Service for a class */
 public class ClassService 
-extends InterfaceService<Class> 
+extends ClassifierService<Class, TypeDeclaration, IType> 
 implements IClassService<TypeDeclaration, IType> {	
 
 	/** @see java.io.Serializable */
 	private static final long serialVersionUID = -7998749245698223200L;
-
-	/** Super class name */
-	protected String superClassName;
-
-	/** Super type handler */
-	protected ITypeService<?, ?> superType;
-
-	/** List of properties belonging to the handled class */
-	protected List<IAttributeService> properties;
-
-	/** List of nested classes belonging to the handled class */
-	protected List<ITypeService<?, ?>> types;
 
 	/**
 	 * Class service construction without any declaration
@@ -62,26 +38,6 @@ implements IClassService<TypeDeclaration, IType> {
 	 */
 	public ClassService(ITypesContainerService p, String nm) {
 		super(p, nm);
-		this.completeClassConstruction(null, p);
-	}
-
-	/**
-	 * Class service construction without any declaration but with an existing 
-	 * UML element
-	 * @param p
-	 * Value of {@link #container}
-	 * @param nm
-	 * Value of {@link #defaultSimpleName}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	public ClassService(
-			ITypesContainerService p, 
-			String nm, 
-			Class c
-	) {
-		super(p, nm, c);
-		this.completeClassConstruction(null, p);
 	}
 
 	/**
@@ -101,29 +57,7 @@ implements IClassService<TypeDeclaration, IType> {
 			ASTRewrite r, 
 			CompilationUnit u
 	) {
-		super(stxNode, p, r, u);
-		this.completeClassConstruction(r, p, u);
-	}
-
-	/**
-	 * Class service construction from an AST node and an existing UML element
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param u
-	 * Value of {@link #parsedUnit}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	public ClassService(
-			TypeDeclaration stxNode, 
-			ITypesContainerService p, 
-			CompilationUnit u, 
-			Class c
-	) {
-		super(stxNode, p, u, c);
-		this.completeClassConstruction(null, p, u);
+		super(stxNode, r, p, u);
 	}
 
 	/**
@@ -142,135 +76,6 @@ implements IClassService<TypeDeclaration, IType> {
 	) {
 		super(jEl, p, u);
 		this.completeClassConstruction(null, p, u);
-	}
-
-	/**
-	 * Class service construction from a Java element and an existing UML 
-	 * element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param r
-	 * Value of {@link #rewriter}
-	 * @param u
-	 * Value of {@link #processedUnit}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	public ClassService(
-			IType jEl, 
-			ITypesContainerService p, 
-			ASTRewrite r, 
-			ICompilationUnit u, 
-			Class c
-	) {
-		super(jEl, p, r, u, c);
-		this.completeClassConstruction(r, p, u);
-	}
-
-	//Completes the constructors, factorization of the specialized part
-	protected void completeClassConstruction(
-			ASTRewrite r, 
-			ITypesContainerService p
-	) {
-		superInterfaces = new ArrayList<IInterfaceService<?, ?>>();
-		superInterfacesNames = new ArrayList<String>();
-		//super.completeConstruction(r, p);
-		//p.addClassHandler(this);
-		this.rewriter = r;
-		this.types = new ArrayList<ITypeService<?, ?>>();
-		//We build a list of properties tools
-		this.properties = new ArrayList<IAttributeService>();
-		// We build a list of dependencies tools
-		this.dependenciesServices = new ArrayList<CompositionService>();
-		if(syntaxTreeNode != null) {
-			// We get all the attribute declarations
-			FieldDeclaration[] fields = syntaxTreeNode.getFields();
-			// For each attribute of the class,
-			for (int i = 0 ; i < fields.length ; i++) {
-				// We add a tool to the list 
-				addPropertyService(new PropertyService(fields[i], this));
-				// And a dependency
-				dependenciesServices.add(
-						new CompositionService(fields[i], this)
-				);
-			}
-			// If this class has a super class,
-			if(syntaxTreeNode.getSuperclassType() != null) {
-				// We resolve this super class
-				ITypeBinding binding = 
-					syntaxTreeNode.getSuperclassType().resolveBinding();
-				// And try to get its name
-				if(binding != null) {
-					superClassName = binding.getQualifiedName();
-					int smtIdx = superClassName.indexOf('<');
-					if(smtIdx >= 0) {
-						superClassName = superClassName.substring(0, smtIdx);
-					}
-				}
-			}
-		}
-		else if(javaElement != null) {
-			// We get all the fields
-			try {
-				IField[] fields = javaElement.getFields();
-				// For each field of the class,
-				for (int i = 0 ; i < fields.length ; i++) {
-					// We add a tool to the list 
-					addPropertyService(
-							new PropertyService(fields[i], this)
-					);
-					// And a dependency
-					dependenciesServices.add(
-							new CompositionService(fields[i], this)
-					);
-				}
-				// If this class has a super class,
-				if(javaElement.getSuperclassName() != null) {
-					// The we note its name
-					String superSimpleName = javaElement.getSuperclassName();
-					String[][] namesParts = 
-						javaElement.resolveType(superSimpleName);
-					String name = nameReconstruction(namesParts);
-					if(name != null) {
-						superClassName = name;
-					}
-				}
-				String[] superIntNames = 
-						javaElement.getSuperInterfaceNames();
-				if(superIntNames != null) {
-					for(int i = 0 ; i < superIntNames.length ; i++) {
-						String[][] parts = 
-							javaElement.resolveType(superIntNames[i]);
-						String name = nameReconstruction(parts);
-						if(name != null) {
-							superInterfacesNames.add(name);
-						}
-					}
-				}
-			} catch (JavaModelException e) {
-				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
-			}
-		}
-	}
-
-	protected void completeClassConstruction(
-			ASTRewrite r, 
-			ITypesContainerService p, 
-			ICompilationUnit c
-	) {
-		processedUnit = c;
-		this.completeClassConstruction(r, p);
-	}
-
-	protected void completeClassConstruction(
-			ASTRewrite r, 
-			ITypesContainerService p, 
-			CompilationUnit c
-	) {
-		parsedUnit = c;
-		this.completeClassConstruction(r, p);
 	}
 
 	/*
@@ -299,83 +104,45 @@ implements IClassService<TypeDeclaration, IType> {
 	 */
 
 	@Override
-	public void setUpUMLModelElement() {
-		if(umlModelElement == null) {
-			super.setUpUMLModelElement();
+	public void createUmlElement() {
+		String name = null;
+		if((syntaxTreeNode != null)&&(syntaxTreeNode.getName() != null)) {
+			name = syntaxTreeNode.getName().getFullyQualifiedName();
 		}
-		for(int i = 0 ; i < types.size() ; i++) {
-			types.get(i).setUpUMLModelElement();
+		else if(javaElement != null) {
+			// name = javaElement.getTypeQualifiedName();
+			name = javaElement.getElementName();
 		}
-		for(int i = 0 ; i < properties.size() ; i++) {
-			properties.get(i).setUpUMLModelElement();
+		else if(defaultSimpleName != null) {
+			name = getSimpleName();
 		}
-		for(int i = 0 ; i < operationsServices.size() ; i++) {
-			operationsServices.get(i).setUpUMLModelElement();
+		IGroupService parent = getContainerService();
+		Element parentEl = parent.getUMLElement();
+		if(parentEl instanceof org.eclipse.uml2.uml.Package) {
+			org.eclipse.uml2.uml.Package pack = 
+					(org.eclipse.uml2.uml.Package)parentEl;
+			umlModelElement = pack.createOwnedClass(name, isAbstract());
 		}
-		for(int i = 0 ; i < dependenciesServices.size() ; i++) {
-			dependenciesServices.get(i).setUpUMLModelElement();
-		}
-	}
-
-	@Override
-	protected void setupSuperTypeUMLModelElement() {
-		super.setupSuperTypeUMLModelElement();
-		if(superClassName!=null) {
-			superType = getModelService().resolveTypeService(superClassName);
-			if(
-					(superType!=null)
-					&&(superType.getUMLElement() instanceof Classifier)
-			) {
-				Classifier elGeneral = (Classifier)superType.getUMLElement();
-				getUMLElement().createGeneralization(
-						elGeneral
-				);
-			}	
-		}
-	}
-
-	public void addPropertyService(IAttributeService prH) {
-		properties.add(prH);
-	}
-
-	public List<IAttributeService> getPropertiesServices() {
-		return properties;
-	}
-
-	public List<ITypeService<?, ?>> getTypesServices() {
-		return types;
-	}
-
-	public void addTypeService(ITypeService<?, ?> clH) {
-		types.add(clH);	
-	}
-
-	public ITypeService<?, ?> resolveTypeService(String n) {
-		if(n != null) {
-			if(n.equals(this.getFullName()))return this;
-			List<ITypeService<?, ?>> cls = getTypesServices();
-			for(int i = 0 ; i < cls.size() ; i++) {
-				if(cls.get(i).getFullName().equals(n))return cls.get(i);
+		else if(parentEl instanceof Class) {
+			Class nestingClassEl = (Class)parentEl;
+			umlModelElement = UMLFactory.eINSTANCE.createClass();
+			int indDollar = -1;
+			if ((indDollar = name.indexOf('$')) >= 0) {
+				name = name.substring(indDollar + 1);
 			}
+			umlModelElement.setIsAbstract(isAbstract());
+			umlModelElement.setName(name);
+			nestingClassEl.getNestedClassifiers().add(umlModelElement);
 		}
-		return null;
+		umlModelElement.setVisibility(getVisibility());
 	}
 
-	public IAttributeService getPropertyService(String n) {
-		if(n!=null) {
-			List<IAttributeService> props = getPropertiesServices();
-			for(int i=0 ; i<props.size() ; i++) {
-				if(props.get(i).getFullName().equals(n))
-					return props.get(i);
-			}
-		}
-		return null;
-	}
-
+	/*
 	@Override
 	public IElementService getElementService(String n) {
-		IElementService ret = null;
-		if(n!=null) {
+		IElementService ret = super.getElementService(n);
+		if(ret != null)return ret;
+		else if(n!=null) {
 			if((ret == null) && (types != null)) {
 				ITypeService<?, ?> cl;
 				for(int i = 0 ; i < types.size() ; i++) {
@@ -393,38 +160,12 @@ implements IClassService<TypeDeclaration, IType> {
 					}
 				}
 			}
-			if((ret == null) && (properties != null)) {
-				IAttributeService prop;
-				for(int i = 0 ; i < properties.size() ; i++) {
-					prop = properties.get(i);
-					if(prop != null) {
-						if(n.equals(prop.getFullName())) {
-							ret = prop;
-						}
-						if(ret != null) {
-							break;
-						}
-					}
-				}
-			}
-			if((ret == null) && (operationsServices != null)) {
-				IMethodService op;
-				for(int i = 0 ; i < operationsServices.size() ; i++) {
-					op = operationsServices.get(i);
-					if(op != null) {
-						if(n.equals(op.getFullName())) {
-							ret = op;
-						}
-						if(ret != null) {
-							break;
-						}
-					}
-				}
-			}
 		}
 		return ret;
 	}
+	*/
 
+	/*
 	@Override
 	public List<IElementService> getElementsHandlers() {
 		List<IElementService> ret = super.getElementsHandlers();
@@ -448,6 +189,7 @@ implements IClassService<TypeDeclaration, IType> {
 		}
 		return ret;
 	}
+	*/
 
 	/*
 	@Override
@@ -532,23 +274,6 @@ implements IClassService<TypeDeclaration, IType> {
 		}
 	}
 
-	public IAttributeService createProperty(Property p) {
-		IAttributeService a = null;
-		if(p!=null) {
-			PropertyCreation runnable = new PropertyCreation(p, this);
-			CoffeaUML2Plugin.getInstance().execute(runnable);
-			a  = runnable.getResult();
-		}
-		return a;
-	}
-
-	public void deleteProperty(Property p) {
-		if(p!=null) {
-			PropertyRemoval runnable = new PropertyRemoval(p);
-			CoffeaUML2Plugin.getInstance().execute(runnable);
-		}
-	}
-
 	/** Nested class creation runnable */
 	public class ClassCreation 
 	extends AbstractUMLToCodeModificationRunnable
@@ -620,7 +345,8 @@ implements IClassService<TypeDeclaration, IType> {
 									nestingClassHandler, 
 									null
 							);
-						types.add(result);
+						addTypeService(result);
+						// types.add(result);
 					} catch (JavaModelException e) {
 						e.printStackTrace();
 					}
@@ -673,164 +399,6 @@ implements IClassService<TypeDeclaration, IType> {
 									new NullProgressMonitor()
 							);
 							nestingClassHandler.getTypesServices().remove(tpH);
-						} catch (JavaModelException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/** Property creation runnable */
-	public class PropertyCreation 
-	extends AbstractUMLToCodeModificationRunnable
-	<Property, IAttributeService> {
-
-		/** Property owner handler */
-		private IClassService<?, ?> ownerHandler;
-
-		/** Uninitialized property creation */
-		public PropertyCreation() {
-		}
-
-		/**
-		 * Property creation
-		 * @param p
-		 * Value of {@link #objective}
-		 * @param o
-		 * Value of {@link #ownerHandler}
-		 */
-		public PropertyCreation(Property p, IClassService<?, ?> o) {
-			this();
-			objective = p;
-			ownerHandler = o;
-		}
-
-		public void run(IProgressMonitor monitor)
-		throws InvocationTargetException, InterruptedException {
-			if (monitor == null) {
-				monitor = new NullProgressMonitor();
-			}
-			IAttributeService prop = null;
-			if(objective!=null) {
-				String simpleName = objective.getName();
-				if(
-						(simpleName!=null)
-						&&(simpleName.length()>0)
-				) {
-					try {
-						String content = new String();
-						String typeName = new String();
-						Type t = objective.getType();
-						if(t!=null) {
-							typeName += t.getName();
-						}
-						else {
-							typeName += 
-								Resources.getCodeConstant(
-										"constants.defaultType"
-								);
-						}
-						String visibility = new String();
-						VisibilityKind v = objective.getVisibility();
-						if(v!=null) {
-							switch (v.getValue()) {
-							case VisibilityKind.PRIVATE:
-								visibility = 
-									Resources.getCodeConstant(
-											"constants.privateVisibility"
-									);
-								break;
-							case VisibilityKind.PACKAGE:
-								visibility = 
-									Resources.getCodeConstant(
-											"constants.packageVisibility"
-									);
-								break;
-							case VisibilityKind.PROTECTED:
-								visibility = 
-									Resources.getCodeConstant(
-											"constants.protectedVisibility"
-									);
-								break;
-							case VisibilityKind.PUBLIC:
-								visibility = 
-									Resources.getCodeConstant(
-											"constants.publicVisibility"
-									);
-								break;
-							default:
-								break;
-							};
-						}
-						content += 
-							Resources.getCodeConstant("constants.newLine");
-						if(visibility!=null) {
-							content += visibility + ' ';
-						}
-						content += 
-							typeName 
-							+ ' '
-							+ simpleName 
-							+ Resources.getCodeConstant(
-									"constants.endStatement"
-							);
-						IField f = 
-							javaElement.createField(
-									content, 
-									null, 
-									false, 
-									new NullProgressMonitor()
-							);
-						prop = new PropertyService(f, ownerHandler);
-						properties.add(prop);
-					} catch (JavaModelException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			result = prop;
-		}
-	}
-
-	/** Property removal runnable */
-	public class PropertyRemoval 
-	extends AbstractUMLToCodeModificationRunnable
-	<Property, IAttributeService> {
-
-		/** Uninitialized property removal construction */
-		public PropertyRemoval() {
-		}
-
-		/**
-		 * Property removal construction
-		 * @param p
-		 * Value of {@link #objective}
-		 */
-		public PropertyRemoval(Property p) {
-			this();
-			objective = p;
-		}
-
-		public void run(IProgressMonitor monitor)
-		throws InvocationTargetException, InterruptedException {
-			if (objective != null) {
-				String simpleName = 
-					PropertyService.codeSimpleNameExtraction(objective);
-				String containerName = getFullName();
-				String qualifiedName = containerName + '#' + simpleName;
-				/*
-				String qualifiedName = 
-					PropertyHandler.resolveFullyQualifiedName(oldProperty);
-				 */
-				IAttributeService tp = getPropertyService(qualifiedName);
-				if (tp != null) {
-					IField jEl = tp.getJavaElement();
-					if (jEl != null) {
-						try {
-							jEl.delete(false, new NullProgressMonitor());
-							properties.remove(tp);
 						} catch (JavaModelException e) {
 							e.printStackTrace();
 						}

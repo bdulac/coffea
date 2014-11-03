@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
 import net.sourceforge.coffea.uml2.IUML2RunnableWithProgress;
 import net.sourceforge.coffea.uml2.model.IAttributeService;
-import net.sourceforge.coffea.uml2.model.IClassService;
+import net.sourceforge.coffea.uml2.model.IClassifierService;
 import net.sourceforge.coffea.uml2.model.IContainableElementService;
 import net.sourceforge.coffea.uml2.model.IContainerService;
 import net.sourceforge.coffea.uml2.model.IPackageService;
@@ -42,8 +42,10 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.Classifier;
+import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.Enumeration;
+import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.VisibilityKind;
@@ -157,7 +159,7 @@ implements IAttributeService {
 	 */
 	protected PropertyService(
 			FieldDeclaration fDeclaration, 
-			IClassService<?, ?> clSrv
+			IClassifierService<?, ?> clSrv
 	) {
 		super(fDeclaration, clSrv);
 		completePropertyConstruction(null, clSrv);
@@ -170,7 +172,7 @@ implements IAttributeService {
 	 * @param jEl
 	 * 	Value of {@link #javaElement}
 	 */
-	protected PropertyService(IField jEl, IClassService<?, ?> clSrv) {
+	protected PropertyService(IField jEl, IClassifierService<?, ?> clSrv) {
 		super(jEl, clSrv);
 		completePropertyConstruction(null, clSrv);
 	}
@@ -193,8 +195,8 @@ implements IAttributeService {
 	}
 	
 	@Override
-	public IClassService<?, ?> getContainerService() {
-		return (IClassService<?, ?>)super.getContainerService();
+	public IClassifierService<?, ?> getContainerService() {
+		return (IClassifierService<?, ?>)super.getContainerService();
 	}
 
 	public ITypeService<?, ?> resolveTypeService() {
@@ -215,9 +217,9 @@ implements IAttributeService {
 			try {
 				IImportDeclaration[] imports = null;
 				// Aiming to get the field type fully qualified name, 
-				if(container instanceof IClassService<?, ?>) {
+				if(container instanceof IClassifierService<?, ?>) {
 					// We try to get the containing class imports
-					IClassService<?, ?> cl = (IClassService<?, ?>)container;
+					IClassifierService<?, ?> cl = (IClassifierService<?, ?>)container;
 					imports = 
 						cl.getJavaElement().getCompilationUnit().getImports();
 				}
@@ -323,10 +325,15 @@ implements IAttributeService {
 				umlModelElement = 
 						cla.createOwnedAttribute(getSimpleName(),umltype);
 			}
-			else if(classif instanceof Enumeration) {
-				Enumeration en = (Enumeration)classif;
+			else if (classif instanceof Interface) {
+				Interface inter = (Interface) classif;
 				umlModelElement = 
-						en.createOwnedAttribute(getSimpleName(), umltype);
+						inter.createOwnedAttribute(getSimpleName(),umltype);
+			}
+			else if(classif instanceof DataType) {
+				DataType dt = (DataType)classif;
+				umlModelElement = 
+						dt.createOwnedAttribute(getSimpleName(), umltype);
 			}
 			umlModelElement.setVisibility(getVisibility());
 		}

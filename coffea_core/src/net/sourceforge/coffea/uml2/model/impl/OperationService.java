@@ -3,13 +3,10 @@ package net.sourceforge.coffea.uml2.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sourceforge.coffea.uml2.CoffeaUML2Plugin;
-import net.sourceforge.coffea.uml2.model.IInterfaceService;
+import net.sourceforge.coffea.uml2.model.IClassifierService;
 import net.sourceforge.coffea.uml2.model.IMethodService;
 import net.sourceforge.coffea.uml2.model.IOperationsOwnerService;
-import net.sourceforge.coffea.uml2.model.IPropertiesOwnerService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
-import net.sourceforge.coffea.uml2.model.ITypesOwnerContainableService;
 import net.sourceforge.coffea.uml2.model.impl.MemberService;
 import net.sourceforge.coffea.uml2.model.impl.OperationService;
 
@@ -32,6 +29,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
+import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.Operation;
 import org.eclipse.uml2.uml.Type;
 import org.eclipse.uml2.uml.VisibilityKind;
@@ -72,7 +70,7 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			MethodDeclaration stxNode, 
-			IInterfaceService<?, ?> p
+			IClassifierService<?, ?> p
 	) {
 		super(stxNode, p);
 		completeOperationConstruction(null, p);
@@ -89,7 +87,7 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			MethodDeclaration stxNode, 
-			IInterfaceService<?, ?> own, 
+			IClassifierService<?, ?> own, 
 			Operation ume
 	) {
 		super(stxNode, own, ume);
@@ -104,7 +102,7 @@ implements IMethodService {
 	 * Value of {@link #container}, <code>null</code> if {@link #javaElement} 
 	 * is a root
 	 */
-	protected OperationService(IMethod jEl, IInterfaceService<?, ?> p) {
+	protected OperationService(IMethod jEl, IClassifierService<?, ?> p) {
 		super(jEl, p);
 		completeOperationConstruction(null, p);
 	}
@@ -120,7 +118,7 @@ implements IMethodService {
 	 */
 	protected OperationService(
 			IMethod jEl, 
-			IInterfaceService<?, ?> own, 
+			IClassifierService<?, ?> own, 
 			Operation ume
 	) {
 		super(jEl, own, ume);
@@ -294,7 +292,7 @@ implements IMethodService {
 				try {
 					IJavaElement[] children = javaElement.getChildren();
 					IJavaElement child = null;
-					for(int i=0 ; i<children.length ; i++) {
+					for(int i = 0 ; i < children.length ; i++) {
 						child = children[i];
 						if(child!=null) {
 							switch (child.getElementType()) {
@@ -309,7 +307,7 @@ implements IMethodService {
 					e.printStackTrace();
 				}
 			}
-			else if(syntaxTreeNode!=null) {
+			else if(syntaxTreeNode != null) {
 				justName = syntaxTreeNode.getName().toString();
 			}
 			else {
@@ -324,6 +322,16 @@ implements IMethodService {
 						paramsTypes, 
 						rTypeElement
 				);
+			}
+			else if(parentElm instanceof Interface) {
+				Interface inter = (Interface)parentElm;
+				umlModelElement = 
+					inter.createOwnedOperation(
+						justName, 
+						paramsNames,  
+						paramsTypes, 
+						rTypeElement
+					);
 			}
 			else if(parentElm instanceof Class) {
 				Class cl = (Class)parentElm;
@@ -341,7 +349,8 @@ implements IMethodService {
 	
 	@Override
 	protected void loadExistingUmlElement() {
-		String name = getSimpleName();
+		// String name = getSimpleName();
+		String name = javaElement.getElementName();
 		Element parentElement = getContainerService().getUMLElement();
 		/*
 		ITypeService<?, ?> returnTypeSrv = resolveReturnTypeService();
@@ -368,6 +377,11 @@ implements IMethodService {
 					);
 					*/
 				}
+			}
+			ITypeService<?, ?> rTypeSrv = getReturnTypeHandler();
+			if(rTypeSrv != null) {
+				Type rType = rTypeSrv.getUMLElement();
+				if(rType != null)paramsTypes.add(rType);
 			}
 			umlModelElement = 
 					umlClass.getOperation(name, paramsNames, paramsTypes);

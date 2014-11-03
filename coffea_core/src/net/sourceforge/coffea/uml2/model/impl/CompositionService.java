@@ -1,7 +1,7 @@
 package net.sourceforge.coffea.uml2.model.impl;
 
 import net.sourceforge.coffea.uml2.model.IAssociationService;
-import net.sourceforge.coffea.uml2.model.IClassService;
+import net.sourceforge.coffea.uml2.model.IClassifierService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.impl.CompositionService;
 
@@ -39,7 +39,7 @@ implements IAssociationService<FieldDeclaration, IField> {
 	 */
 	protected CompositionService(
 			FieldDeclaration stxNode, 
-			IClassService<?, ?> p
+			IClassifierService<?, ?> p
 	) {
 		super(stxNode, p);
 	}
@@ -53,7 +53,7 @@ implements IAssociationService<FieldDeclaration, IField> {
 	 */
 	protected CompositionService(
 			IField jEl, 
-			IClassService<?, ?> p
+			IClassifierService<?, ?> p
 	) {
 		super(jEl, p);
 	}

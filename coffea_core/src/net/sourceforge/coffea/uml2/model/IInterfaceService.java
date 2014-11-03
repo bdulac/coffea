@@ -15,7 +15,7 @@ import org.eclipse.uml2.uml.Classifier;
  */
 public interface IInterfaceService
 <S extends TypeDeclaration, J extends IType>
-extends IOperationsOwnerService, IClassifierService<S, J> {
+extends IClassifierService<S, J> {
 	
 	/**
 	 * Returns the interface handled by the service

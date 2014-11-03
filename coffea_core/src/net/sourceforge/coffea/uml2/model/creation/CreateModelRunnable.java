@@ -15,6 +15,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.emf.transaction.util.TransactionUtil;
 import org.eclipse.uml2.uml.Model;
 
 /** Runnable creating an UML model from a handled model */
@@ -37,9 +39,12 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 		monitor.beginTask("labels.buildingModelResources", 10);	
 		// Setting up the model location
 		URI location = modelService.createEmfUri();
-		ResourceSet set = new ResourceSetImpl();
+		ResourceSet rSet = new ResourceSetImpl();
+		TransactionalEditingDomain domain = 
+				TransactionUtil.getEditingDomain(rSet);
+		if(domain != null)domain.addResourceSetListener(modelService);
 		// Saving the model resource
-		Resource emfResource = set.createResource(location);
+		Resource emfResource = rSet.createResource(location);
 		monitor.worked(2);
 		// Getting the model element
 		Model model = modelService.getUMLElement();
@@ -72,7 +77,7 @@ public class CreateModelRunnable implements IUML2RunnableWithProgress {
 					monitor
 			);
 			modelService.setEmfRefource(emfResource);
-			modelService.dispose();
+			// modelService.dispose();
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package net.sourceforge.coffea.uml2.model.impl;
 
 import net.sourceforge.coffea.uml2.model.IClassService;
+import net.sourceforge.coffea.uml2.model.IClassifierService;
 import net.sourceforge.coffea.uml2.model.IContainableElementService;
 import net.sourceforge.coffea.uml2.model.IContainerService;
 import net.sourceforge.coffea.uml2.model.IPackageService;
@@ -38,7 +39,7 @@ public abstract class AssociationService extends
 	 */
 	protected AssociationService(
 			FieldDeclaration stxNode, 
-			IClassService<?, ?> p
+			IClassifierService<?, ?> p
 	) {
 		super(stxNode, p);
 	}
@@ -52,7 +53,7 @@ public abstract class AssociationService extends
 	 */
 	protected AssociationService(
 			IField jEl, 
-			IClassService<?, ?> p
+			IClassifierService<?, ?> p
 	) {
 		super(jEl, p);
 	}
@@ -87,8 +88,8 @@ public abstract class AssociationService extends
 	}
 	
 	@Override
-	public IClassService<?, ?> getContainerService() {
-		return (IClassService<?, ?>)container;
+	public IClassifierService<?, ?> getContainerService() {
+		return (IClassifierService<?, ?>)container;
 	}
 
 	public ITypeService<?, ?> resolveSupplierService() {
@@ -186,8 +187,8 @@ public abstract class AssociationService extends
 	 * Returns the client class handler
 	 * @return Client class handler
 	 */
-	public IClassService<?, ?> getClient() {
-		return (IClassService<?, ?>)this.container;
+	public IClassifierService<?, ?> getClient() {
+		return (IClassifierService<?, ?>)this.container;
 	}
 
 }

@@ -18,6 +18,7 @@ import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesContainerService;
 import net.sourceforge.coffea.uml2.model.impl.ClassService;
 import net.sourceforge.coffea.uml2.model.impl.ClassifierService;
+import net.sourceforge.coffea.uml2.model.impl.EnumerationService;
 import net.sourceforge.coffea.uml2.model.impl.InterfaceService;
 import net.sourceforge.coffea.uml2.model.impl.ModelService;
 import net.sourceforge.coffea.uml2.model.impl.PackageService;
@@ -573,7 +574,15 @@ implements IModelServiceBuilding {
 									group.resolveTypeService(t.getElementName());
 							if(service == null) {
 								try {
-									if(t.isInterface()) {
+									if(t.isEnum()) {
+										service = 
+												new EnumerationService(
+														t, 
+														group, 
+														c
+												);
+									}
+									else if(t.isInterface()) {
 										service = 
 												new InterfaceService(
 														t, 

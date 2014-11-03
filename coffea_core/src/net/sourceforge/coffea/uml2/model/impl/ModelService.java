@@ -282,8 +282,6 @@ implements IModelService {
 		if(umlModelElement == null) {
 			init = true;
 			loadExistingUmlElement();
-			
-			
 		}
 		// If there is no existing model, 
 		if (umlModelElement == null) {
