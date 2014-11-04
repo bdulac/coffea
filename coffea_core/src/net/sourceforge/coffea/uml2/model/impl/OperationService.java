@@ -261,10 +261,10 @@ implements IMethodService {
 	protected void createUmlElement() {
 		if(
 				(getContainerService() != null)
-				&&(getContainerService() instanceof InterfaceService)
+				&&(getContainerService() instanceof IClassifierService)
 		) {
-			InterfaceService clParent = 
-					(InterfaceService)getContainerService();
+			IClassifierService<?, ?> clParent = 
+					(IClassifierService<?, ?>)getContainerService();
 			ITypeService<?, ?> returnTypeSrv = getReturnTypeHandler();
 			Type rTypeElement = null;
 			if(returnTypeSrv != null) {
