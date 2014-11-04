@@ -377,13 +377,15 @@ implements IClassifierService<S, J> {
 			cont.addTypeService(this);
 		}
 		this.rewriter = r;
-		superInterfaces = new ArrayList<IInterfaceService<?, ?>>();
-		superInterfacesNames = new ArrayList<String>();
 		List<?> interfaces = null;
 		operationsServices = new ArrayList<IMethodService>();
 		properties = new ArrayList<IAttributeService>();
 		this.rewriter = r;
 		this.types = new ArrayList<ITypeService<?, ?>>();
+		// Super interfaces
+		superInterfaces = new ArrayList<IInterfaceService<?, ?>>();
+		superInterfacesNames = new ArrayList<String>();
+		// AST Node
 		if (syntaxTreeNode != null) {
 			// We get all the methods declarations
 			MethodDeclaration[] operations = syntaxTreeNode.getMethods();
@@ -412,6 +414,7 @@ implements IClassifierService<S, J> {
 					}
 				}
 			}
+		// Java element
 		} else if (javaElement != null) {
 			try {
 				IMethod[] operations = javaElement.getMethods();
@@ -438,8 +441,9 @@ implements IClassifierService<S, J> {
 				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
 			}
 		}
-		// We build a list of dependencies tools
+		// Dependencies tools
 		this.dependenciesServices = new ArrayList<IAssociationService<?, ?>>();
+		// AST Node
 		if (syntaxTreeNode != null) {
 			// We get all the attribute declarations
 			FieldDeclaration[] fields = syntaxTreeNode.getFields();
@@ -465,6 +469,7 @@ implements IClassifierService<S, J> {
 					}
 				}
 			}
+			// Java element
 		} else if (javaElement != null) {
 			// We get all the fields
 			try {
@@ -488,6 +493,7 @@ implements IClassifierService<S, J> {
 						superClassName = name;
 					}
 				}
+				/*
 				String[] superIntNames = javaElement.getSuperInterfaceNames();
 				if (superIntNames != null) {
 					for (int i = 0; i < superIntNames.length; i++) {
@@ -499,6 +505,7 @@ implements IClassifierService<S, J> {
 						}
 					}
 				}
+				*/
 			} catch (JavaModelException e) {
 				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
 			}
@@ -763,31 +770,29 @@ implements IClassifierService<S, J> {
 	}
 	
 	// @Override
-		public String getSimpleName() {
-			String name = null;
-			if((syntaxTreeNode!=null) &&(syntaxTreeNode.getName()!=null)){
-				name = syntaxTreeNode.getName().toString();
-			}
-			else if(javaElement!=null){
-				name =  javaElement.getElementName();
-			}
-			else if(defaultSimpleName!=null) {
-				name = defaultSimpleName;
-			}
-			return name;
+	public String getSimpleName() {
+		String name = null;
+		if ((syntaxTreeNode != null) && (syntaxTreeNode.getName() != null)) {
+			name = syntaxTreeNode.getName().toString();
+		} else if (javaElement != null) {
+			name = javaElement.getElementName();
+		} else if (defaultSimpleName != null) {
+			name = defaultSimpleName;
 		}
+		return name;
+	}
 
-		// @Override
-		public IMethodService getOperationService(String n) {
-			if(n!=null) {
-				List<IMethodService> operations = getOperationsServices();
-				for(int i=0 ; i<operations.size() ; i++) {
-					if(operations.get(i).getFullName().equals(n))
-						return operations.get(i);
-				}
+	// @Override
+	public IMethodService getOperationService(String n) {
+		if (n != null) {
+			List<IMethodService> operations = getOperationsServices();
+			for (int i = 0; i < operations.size(); i++) {
+				if (operations.get(i).getFullName().equals(n))
+					return operations.get(i);
 			}
-			return null;
 		}
+		return null;
+	}
 
 		// @Override
 		public IElementService getElementHandler(Element el) {
