@@ -909,17 +909,17 @@ implements IClassifierService<S, J> {
 			createUmlElement();
 			setupSuperTypeUMLModelElement();	
 		}
-		for(int i = 0 ; i < properties.size() ; i++) {
-			properties.get(i).setUpUMLModelElement();
+		for(IAttributeService propSrv : properties) {
+			propSrv.setUpUMLModelElement();
 		}
 		for(IMethodService opSrv : operationsServices) {
 			if(opSrv != null)opSrv.setUpUMLModelElement();
 		}
-		for(int i = 0 ; i < dependenciesServices.size() ; i++) {
-			dependenciesServices.get(i).setUpUMLModelElement();
+		for(IAssociationService<?, ?> assSrv : dependenciesServices) {
+			assSrv.setUpUMLModelElement();
 		}
-		for(int i = 0 ; i < types.size() ; i++) {
-			types.get(i).setUpUMLModelElement();
+		for(ITypeService<?, ?> typeSrv : types) {
+			typeSrv.setUpUMLModelElement();
 		}
 	}
 	
