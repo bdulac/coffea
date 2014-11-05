@@ -299,6 +299,7 @@ implements IModelService {
 				types.get(i).setUpUMLModelElement();
 			}
 		}
+		if(noteService != null)noteService.setUpUMLModelElement();
 	}
 
 	// @Override

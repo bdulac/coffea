@@ -392,6 +392,7 @@ implements IPackageService {
 				types.get(i).setUpUMLModelElement();
 			}
 		}
+		if(noteService != null)noteService.setUpUMLModelElement();
 	}
 
 	public IPackageService resolvePackageService(String n) {

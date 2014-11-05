@@ -926,6 +926,7 @@ implements IClassifierService<S, J> {
 		for(ITypeService<?, ?> typeSrv : types) {
 			typeSrv.setUpUMLModelElement();
 		}
+		if(noteService != null)noteService.setUpUMLModelElement();
 	}
 	
 	// @Override

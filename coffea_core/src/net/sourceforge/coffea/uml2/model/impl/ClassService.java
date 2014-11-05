@@ -10,6 +10,7 @@ import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesContainerService;
 
 import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.core.runtime.IProgressMonitor;

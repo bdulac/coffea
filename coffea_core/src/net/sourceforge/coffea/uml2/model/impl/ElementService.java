@@ -2,6 +2,7 @@ package net.sourceforge.coffea.uml2.model.impl;
 
 import net.sourceforge.coffea.uml2.model.IElementService;
 import net.sourceforge.coffea.uml2.model.IModelService;
+import net.sourceforge.coffea.uml2.model.INoteService;
 import net.sourceforge.coffea.uml2.model.creation.IModelServiceBuilding;
 
 import org.eclipse.uml2.uml.Element;
@@ -42,6 +43,9 @@ implements IElementService {
 
 	/** UML element corresponding to the element handled by the service */
 	protected E umlModelElement;
+	
+	/** Service for the documentation note attached to the UML element */
+	protected INoteService noteService;
 
 	/** Construction of a service for an unspecified element */
 	public ElementService() {
@@ -56,7 +60,13 @@ implements IElementService {
 		this();
 		umlModelElement = ume;
 	}
+	
+	// @Override
+	public INoteService getNoteService() {
+		return noteService;
+	}
 
+	// @Override
 	public E getUMLElement() {
 		if(umlModelElement==null) {
 			setUpUMLModelElement();
@@ -80,6 +90,9 @@ implements IElementService {
 		if(umlModelElement == null)loadExistingUmlElement();
 		if(umlModelElement == null) {
 			createUmlElement();
+		}
+		if(noteService != null) {
+			noteService.setUpUMLModelElement();
 		}
 	}
 
