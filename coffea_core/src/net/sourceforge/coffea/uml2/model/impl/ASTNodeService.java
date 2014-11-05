@@ -139,6 +139,9 @@ implements IASTNodeService<S, J> {
 	
 	private void completeConstruction(J jEl) {
 		javaElement = jEl;
+		if(javaElement != null) {
+			noteService = new JavadocService<ASTNodeService<E, S, J>>(this);
+		}
 	}
 	
 	public S getSyntaxNode() {

@@ -13,10 +13,7 @@ IMemberService<MethodDeclaration, IMethod>,
 IBehavioralFeatureService, 
 IOwnableElementService<MethodDeclaration, IMethod> {
 	
-	/**
-	 * Returns the method handled by the service
-	 * @return Method handled by the service
-	 */
+	/** @return Method handled by the service */
 	public Operation getUMLElement();
 	
 	/**
