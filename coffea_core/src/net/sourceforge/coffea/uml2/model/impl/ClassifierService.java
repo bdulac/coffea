@@ -210,23 +210,16 @@ implements IClassifierService<S, J> {
 			simpleName = t.getName();
 		}
 		return simpleName;
-	}
-	
+	}	
 	
 	/** Rewriter for the compilation unit the classifier belongs to */
 	protected ASTRewrite rewriter;
-	
-	/** List of super interfaces names */ 
-	private List<String> superInterfacesNames;
 
 	/** List of super interfaces handlers */
-	private List<IInterfaceService<?, ?>> superInterfaces;
-	
-	/** Super class name */
-	private String superClassName;
+	private List<IInterfaceService<?, ?>> superInterfacesServices;
 
 	/** Super type handler */
-	private ITypeService<?, ?> superType;
+	private ITypeService<?, ?> superTypeService;
 
 	/**
 	 * List of services for the dependencies from which the type is 
@@ -270,24 +263,6 @@ implements IClassifierService<S, J> {
 	}
 	
 	/**
-	 * Classifier service construction without any declaration but from an 
-	 * existing UML element
-	 * @param p
-	 * Value of {@link #container}
-	 * @param nm
-	 * Value of {@link #defaultSimpleName}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	/*
-	protected ClassifierService(ITypesContainerService p, String nm, E c) {
-		super(p, nm, c);
-		completeConstruction(null, p);
-		completeClassConstruction(null, p);
-	}
-	*/
-	
-	/**
 	 * Classifier service construction from an AST node
 	 * @param stxNode
 	 * Value of {@link #syntaxTreeNode}
@@ -306,26 +281,6 @@ implements IClassifierService<S, J> {
 	}
 	
 	/**
-	 * Classifier service construction from an AST node and an existing UML 
-	 * element
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	/*
-	protected ClassifierService(
-			S stxNode,
-			ITypesContainerService p, 
-			E c
-	) {
-		super(stxNode, p, c);
-	}
-	*/
-	
-	/**
 	 * Classifier service construction from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}
@@ -341,23 +296,6 @@ implements IClassifierService<S, J> {
 		completeConstruction(null, p, u);
 		completeClassConstruction(null, p, u);
 	}
-	
-	/**
-	 * Classifier service construction from a Java element and and existing 
-	 * UML element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param c
-	 * Value of {@link #umlModelElement}
-	 */
-	/*
-	protected ClassifierService(J jEl, ITypesContainerService p, E c) {
-		super(jEl, p, c);
-		completeConstruction(jEl, p, c);
-	}
-	*/
 
 	protected void completeClassConstruction(ASTRewrite r,
 			ITypesContainerService p, ICompilationUnit c) {
@@ -376,75 +314,16 @@ implements IClassifierService<S, J> {
 			ITypesContainerService cont = (ITypesContainerService) p;
 			cont.addTypeService(this);
 		}
-		this.rewriter = r;
-		List<?> interfaces = null;
+		rewriter = r;
 		operationsServices = new ArrayList<IMethodService>();
+		types = new ArrayList<ITypeService<?, ?>>();
+		getSuperInterfaceServices();
+		getSuperTypeService();
+		// Properties and dependencies
+		dependenciesServices = new ArrayList<IAssociationService<?, ?>>();
 		properties = new ArrayList<IAttributeService>();
-		this.rewriter = r;
-		this.types = new ArrayList<ITypeService<?, ?>>();
-		// Super interfaces
-		superInterfaces = new ArrayList<IInterfaceService<?, ?>>();
-		superInterfacesNames = new ArrayList<String>();
 		// AST Node
-		if (syntaxTreeNode != null) {
-			// We get all the methods declarations
-			MethodDeclaration[] operations = syntaxTreeNode.getMethods();
-			// We add a handler to the list for each method of the class
-			for (int i = 0; i < operations.length; i++) {
-				addOperationService(new OperationService(operations[i], this));
-			}
-			interfaces = syntaxTreeNode.superInterfaceTypes();
-			// If this class has super interfaces,
-			if (interfaces != null) {
-				// Then we try to resolves the binding for each interface,
-				Object ob = null;
-				org.eclipse.jdt.core.dom.Type tp = null;
-				ITypeBinding binding = null;
-				for (int i = 0; i < interfaces.size(); i++) {
-					ob = interfaces.get(i);
-					if ((ob != null)
-							&& (ob instanceof org.eclipse.jdt.core.dom.Type)) {
-						tp = (org.eclipse.jdt.core.dom.Type) ob;
-						binding = tp.resolveBinding();
-						if (binding != null) {
-							// Aiming to get a qualified name
-							superInterfacesNames
-									.add(binding.getQualifiedName());
-						}
-					}
-				}
-			}
-		// Java element
-		} else if (javaElement != null) {
-			try {
-				IMethod[] operations = javaElement.getMethods();
-				if (operations != null) {
-					// We add a handler to the list for each method of the
-					// class
-					for (int i = 0; i < operations.length; i++) {
-						addOperationService(new OperationService(operations[i],
-								this));
-					}
-				}
-				String[] superIntNames = javaElement.getSuperInterfaceNames();
-				if (superIntNames != null) {
-					for (int i = 0; i < superIntNames.length; i++) {
-						String[][] parts = javaElement
-								.resolveType(superIntNames[i]);
-						String name = nameReconstruction(parts);
-						if (name != null) {
-							superInterfacesNames.add(name);
-						}
-					}
-				}
-			} catch (JavaModelException e) {
-				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
-			}
-		}
-		// Dependencies tools
-		this.dependenciesServices = new ArrayList<IAssociationService<?, ?>>();
-		// AST Node
-		if (syntaxTreeNode != null) {
+		if(syntaxTreeNode != null) {
 			// We get all the attribute declarations
 			FieldDeclaration[] fields = syntaxTreeNode.getFields();
 			// For each attribute of the class,
@@ -455,21 +334,6 @@ implements IClassifierService<S, J> {
 				dependenciesServices
 						.add(new CompositionService(fields[i], this));
 			}
-			// If this class has a super class,
-			if (syntaxTreeNode.getSuperclassType() != null) {
-				// We resolve this super class
-				ITypeBinding binding = syntaxTreeNode.getSuperclassType()
-						.resolveBinding();
-				// And try to get its name
-				if (binding != null) {
-					superClassName = binding.getQualifiedName();
-					int smtIdx = superClassName.indexOf('<');
-					if (smtIdx >= 0) {
-						superClassName = superClassName.substring(0, smtIdx);
-					}
-				}
-			}
-			// Java element
 		} else if (javaElement != null) {
 			// We get all the fields
 			try {
@@ -482,36 +346,68 @@ implements IClassifierService<S, J> {
 					dependenciesServices.add(new CompositionService(fields[i],
 							this));
 				}
-				// If this class has a super class,
-				if (javaElement.getSuperclassName() != null) {
-					// The we note its name
-					String superSimpleName = javaElement.getSuperclassName();
-					String[][] namesParts = javaElement
-							.resolveType(superSimpleName);
-					String name = nameReconstruction(namesParts);
-					if (name != null) {
-						superClassName = name;
-					}
-				}
-				/*
-				String[] superIntNames = javaElement.getSuperInterfaceNames();
-				if (superIntNames != null) {
-					for (int i = 0; i < superIntNames.length; i++) {
-						String[][] parts = javaElement
-								.resolveType(superIntNames[i]);
-						String name = nameReconstruction(parts);
-						if (name != null) {
-							superInterfacesNames.add(name);
-						}
-					}
-				}
-				*/
 			} catch (JavaModelException e) {
-				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
 	
+	private ITypeService<?, ?> getSuperTypeService() {
+		if(superTypeService == null) {
+			String superClassName = null;
+			// AST Node
+			if (syntaxTreeNode != null) {
+
+				// If this class has a super class,
+				if (syntaxTreeNode.getSuperclassType() != null) {
+					// We resolve this super class
+					ITypeBinding binding = syntaxTreeNode.getSuperclassType()
+							.resolveBinding();
+					// And try to get its name
+					if (binding != null) {
+						superClassName = binding.getQualifiedName();
+						int smtIdx = superClassName.indexOf('<');
+						if (smtIdx >= 0) {
+							superClassName = superClassName.substring(0, smtIdx);
+						}
+					}
+				}
+				// Java element
+			} else if (javaElement != null) {
+				try {
+					// If this class has a super class,
+					if (javaElement.getSuperclassName() != null) {
+						// The we note its name
+						String superSimpleName = javaElement.getSuperclassName();
+						String[][] namesParts = 
+								javaElement.resolveType(superSimpleName);
+						String name = nameReconstruction(namesParts);
+						if (name != null) {
+							superClassName = name;
+						}
+					}
+					/*
+					 * String[] superIntNames =
+					 * javaElement.getSuperInterfaceNames(); if (superIntNames !=
+					 * null) { for (int i = 0; i < superIntNames.length; i++) {
+					 * String[][] parts = javaElement
+					 * .resolveType(superIntNames[i]); String name =
+					 * nameReconstruction(parts); if (name != null) {
+					 * superInterfacesNames.add(name); } } }
+					 */
+				} catch (JavaModelException e) {
+					CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
+				}
+			}
+			if(superClassName != null) {
+				superTypeService = 
+						getModelService().resolveTypeService(superClassName);
+			}
+		}
+		return superTypeService;
+	}
+
 	protected void completeConstruction(
 			ASTRewrite r, 
 			IOwnerService p, 
@@ -540,7 +436,12 @@ implements IClassifierService<S, J> {
 		return parsedUnit;
 	}
 	
-	// @Override
+	/**
+	 * Adds an service to the list of services handling the properties 
+	 * belonging to the handled owner
+	 * @param prH
+	 * New service to add to the list
+	 */
 	public void addPropertyService(IAttributeService prH) {
 		properties.add(prH);
 	}
@@ -665,7 +566,12 @@ implements IClassifierService<S, J> {
 		return operationsServices;
 	}
 
-	// @Override
+	/**
+	 * Adds a service to the list of services handling the operations 
+	 * belonging to the handled owner
+	 * @param methodService
+	 * New service to add to the list
+	 */
 	public void addOperationService(IMethodService opH) {
 		operationsServices.add(opH);
 	}
@@ -700,69 +606,33 @@ implements IClassifierService<S, J> {
 	}
 	
 	protected void setupSuperTypeUMLModelElement() {
-		/*
-		String superInter = null;
-		IInterfaceHandling interH = null;
-		superInterfaces = new ArrayList<IInterfaceHandling>();
-		for(int i=0 ; i<superInterfacesNames.size() ; i++) {
-			superInter = superInterfacesNames.get(i);
-			if(superInter!=null) {
-				interH = 
-					CoffeeWorker.getWorker().getModelHandler()
-					.getInterfaceHandler(
-						superInter
-					);
-				if(interH!=null) {
-					superInterfaces.add(interH);
-					getUMLElement().createGeneralization(
-							interH.getUMLElement()
-					);
-				}
+		ITypeService<?, ?> superTpeSrv = getSuperTypeService();
+		if(superTpeSrv != null) {
+			Element superTypeEl = superTpeSrv.getUMLElement();
+			if ((superTypeEl instanceof Classifier)) {
+				Classifier elGeneral = (Classifier) superTypeEl;
+				getUMLElement().createGeneralization(elGeneral);
 			}
 		}
-		 */
-		if(superClassName!=null) {
-			superType = getModelService().resolveTypeService(superClassName);
-			if(
-					(superType!=null)
-					&&(superType.getUMLElement() instanceof Classifier)
-			) {
-				// TODO FIXME Issue  4 ?
-				// https://github.com/bdulac/coffea/issues/4
-				Classifier elGeneral = (Classifier)superType.getUMLElement();
-				getUMLElement().createGeneralization(
-						elGeneral
-				);
-			}	
-		}
+		List<IInterfaceService<?, ?>> superIntServices = 
+				getSuperInterfaceServices();
 		if(
-				(superInterfacesNames != null) 
-				&& (superInterfacesNames.size() > 0)
+				(superIntServices != null) 
+				&& (superIntServices.size() > 0)
 		) {
-			for(String superInterfaceName : superInterfacesNames) {
-				ITypeService<?, ?> general = 
-					getContainerService().resolveTypeService(
-							superInterfaceName
-					);
-				if(
-						(general != null)
-						&&(general.getUMLElement() instanceof Classifier)
-				) {
-					Classifier parentEl = (Classifier)general.getUMLElement();
-					Element cont = getContainerService().getUMLElement();
-					if(cont instanceof Package) {
-						Package pack = (Package)cont;
-						Element realize = 
-							pack.createPackagedElement(
-									null, 
-									UMLPackage.eINSTANCE.getRealization()
-							);
-						if(realize instanceof Realization) {
-							Realization real = (Realization)realize;
-							NamedElement childEl = getUMLElement();
-							real.getClients().add(childEl);
-							real.getSuppliers().add(parentEl);
-						}
+			for (IInterfaceService<?, ?> superInterface : superIntServices) {
+				Classifier interEl = superInterface.getUMLElement();
+				Element contEl = getContainerService().getUMLElement();
+				if (contEl instanceof Package) {
+					Package pack = (Package) contEl;
+					Element realize = 
+							pack.createPackagedElement(null,
+							UMLPackage.eINSTANCE.getRealization());
+					if (realize instanceof Realization) {
+						Realization real = (Realization) realize;
+						NamedElement childEl = getUMLElement();
+						real.getClients().add(childEl);
+						real.getSuppliers().add(interEl);
 					}
 				}
 			}
@@ -895,11 +765,11 @@ implements IClassifierService<S, J> {
 				}
 			}
 		}
-		if(types!=null) {
+		if(types != null) {
 			ITypeService<?, ?> cl = null;
-			for(int i=0 ; i<types.size() ; i++) {
+			for(int i = 0 ; i < types.size() ; i++) {
 				cl = types.get(i);
-				if(cl!=null) {
+				if(cl != null) {
 					ret.add(cl);
 				}
 			}
@@ -907,6 +777,84 @@ implements IClassifierService<S, J> {
 		return ret;
 	}
 	
+	// @Override
+	public List<IInterfaceService<?, ?>> getSuperInterfaceServices() {
+		if(superInterfacesServices == null) {
+			resolveInterfaces();
+		}
+		return superInterfacesServices;
+	}
+	
+	private void resolveInterfaces() {
+		// Super interfaces
+		superInterfacesServices = new ArrayList<IInterfaceService<?, ?>>();
+		List<String> superInterfacesNames = new ArrayList<String>();
+		// AST Node
+		if (syntaxTreeNode != null) {
+			// We get all the methods declarations
+			MethodDeclaration[] operations = syntaxTreeNode.getMethods();
+			// We add a handler to the list for each method of the class
+			for (MethodDeclaration operation : operations) {
+				addOperationService(new OperationService(operation, this));
+			}
+			List<?> interfaces = syntaxTreeNode.superInterfaceTypes();
+			// If this class has super interfaces,
+			if (interfaces != null) {
+				// Then we try to resolves the binding for each interface,
+				Object ob = null;
+				org.eclipse.jdt.core.dom.Type tp = null;
+				ITypeBinding binding = null;
+				for (int i = 0; i < interfaces.size(); i++) {
+					ob = interfaces.get(i);
+					if ((ob != null)
+							&& (ob instanceof org.eclipse.jdt.core.dom.Type)) {
+						tp = (org.eclipse.jdt.core.dom.Type) ob;
+						binding = tp.resolveBinding();
+						if (binding != null) {
+							// Aiming to get a qualified name
+							superInterfacesNames
+									.add(binding.getQualifiedName());
+						}
+					}
+				}
+			}
+			// Java element
+		} else if (javaElement != null) {
+			try {
+				IMethod[] operations = javaElement.getMethods();
+				if (operations != null) {
+					// We add a handler to the list for each method of the
+					// class
+					for (int i = 0; i < operations.length; i++) {
+						addOperationService(new OperationService(operations[i],
+								this));
+					}
+				}
+				String[] superIntNames = javaElement.getSuperInterfaceNames();
+				if (superIntNames != null) {
+					for (int i = 0; i < superIntNames.length; i++) {
+						String[][] parts = javaElement
+								.resolveType(superIntNames[i]);
+						String name = nameReconstruction(parts);
+						if (name != null) {
+							superInterfacesNames.add(name);
+						}
+					}
+				}
+				for (String intName : superInterfacesNames) {
+					ITypeService<?, ?> tSrv = getModelService()
+							.resolveTypeService(intName);
+					if (tSrv instanceof IInterfaceService) {
+						IInterfaceService<?, ?> srv = (IInterfaceService<?, ?>) tSrv;
+						superInterfacesServices.add(srv);
+					}
+				}
+			} catch (JavaModelException e) {
+				CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
+			}
+		}
+	}
+
 	@Override
 	public void setUpUMLModelElement() {
 		if(umlModelElement == null)loadExistingUmlElement();
