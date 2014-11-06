@@ -353,7 +353,7 @@ implements IClassifierService<S, J> {
 		}
 	}
 	
-	private ITypeService<?, ?> getSuperTypeService() {
+	public ITypeService<?, ?> getSuperTypeService() {
 		if(superTypeService == null) {
 			String superClassName = null;
 			// AST Node

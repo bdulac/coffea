@@ -1,5 +1,7 @@
 package net.sourceforge.coffea.uml2.model;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.uml2.uml.Type;
@@ -16,8 +18,7 @@ public interface ITypeService
 extends IPackageableElementService<S, J>, ITypesOwnerContainableService {
 
 	/**
-	 * Sets the service for the element containing the type handled by the 
-	 * local service
+	 * Sets the service for the element containing the type service
 	 * @param typesCtrSrv
 	 * Service for the element 
 	 */
@@ -31,6 +32,11 @@ extends IPackageableElementService<S, J>, ITypesOwnerContainableService {
 	 */
 	public String nameReconstruction(String[][] nm);
 	
+	/** @return Service for the type super type */
+	public ITypeService<?, ?> getSuperTypeService();
+	
+	/** @return List of services for the type super interfaces */
+	public List<IInterfaceService<?, ?>> getSuperInterfaceServices();
+	
 	public Type getUMLElement();
-
 }
