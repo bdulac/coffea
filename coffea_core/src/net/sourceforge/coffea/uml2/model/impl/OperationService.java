@@ -204,38 +204,6 @@ implements IMethodService {
 		if(javaElement != null) {
 			parametersTpsHs = new ArrayList<ITypeService<?, ?>>();
 			String[] typesSimpleNames = javaElement.getParameterTypes();
-			/*
-			String returnTypeName = null;
-			try {
-				returnTypeName = javaElement.getReturnType();
-			} catch (JavaModelException e) {
-				e.printStackTrace();
-			}
-			String methodTest = null;
-			String paramTpName = null;
-			if(typesSimpleNames!=null) {
-				IJavaProject prj = javaElement.getJavaProject();
-				if(prj!=null) {
-					// char[][] tpsSimplesNames = new char[typesSimpleNames.length][];
-					IType tp = null;
-					IClasspathEntry cpE = null;
-					for(int i=0 ; i<typesSimpleNames.length ; i++) {
-						try {
-							tp = prj.findType(typesSimpleNames[i]);
-							if(tp!=null) {
-								tp = tp;
-							}
-						} catch (JavaModelException e) {
-							e.printStackTrace();
-						}
-						// methodTest = 
-							// Signature.getSignatureQualifier(
-								// typesSimpleNames[i]
-						// );
-					}
-				}
-			}
-			*/
 			for(int i = 0 ; i < typesSimpleNames.length ; i++) {
 				String simpleName = typesSimpleNames[i];
 				// TODO org.eclipse.jdt.core.Signature
@@ -316,12 +284,13 @@ implements IMethodService {
 			Element parentElm = clParent.getUMLElement();
 			if(parentElm instanceof DataType) {
 				DataType dt = (DataType)parentElm;
-				dt.createOwnedOperation(
-						justName, 
-						paramsNames,  
-						paramsTypes, 
-						rTypeElement
-				);
+				umlModelElement = 
+						dt.createOwnedOperation(
+								justName,
+								paramsNames, 
+								paramsTypes, 
+								rTypeElement
+						);
 			}
 			else if(parentElm instanceof Interface) {
 				Interface inter = (Interface)parentElm;
