@@ -35,7 +35,9 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -276,8 +278,8 @@ implements IClassifierService<S, J> {
 			CompilationUnit u
 	) {
 		super(stxNode, p);
+		completeTypeConstruction(r, p, u);
 		completeConstruction(r, p, u);
-		completeClassConstruction(r, p, u);
 	}
 	
 	/**
@@ -293,16 +295,27 @@ implements IClassifierService<S, J> {
 			ICompilationUnit u
 	) {
 		super(jEl, p);
+		completeTypeConstruction(null, p, u);
 		completeConstruction(null, p, u);
-		completeClassConstruction(null, p, u);
 	}
 
-	protected void completeClassConstruction(ASTRewrite r,
-			ITypesContainerService p, ICompilationUnit c) {
+	protected void completeTypeConstruction(
+			ASTRewrite r,
+			ITypesContainerService p, 
+			ICompilationUnit c
+	) {
 		processedUnit = c;
+		@SuppressWarnings("deprecation")
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setSource(processedUnit);
+		parser.setResolveBindings(true);
+		ASTNode n = parser.createAST(new NullProgressMonitor());
+		if(n instanceof CompilationUnit) {
+			parsedUnit = (CompilationUnit)n;
+		}
 	}
 
-	protected void completeClassConstruction(ASTRewrite r,
+	protected void completeTypeConstruction(ASTRewrite r,
 			ITypesContainerService p, CompilationUnit c) {
 		parsedUnit = c;
 	}
@@ -353,6 +366,7 @@ implements IClassifierService<S, J> {
 		}
 	}
 	
+	// @Override
 	public ITypeService<?, ?> getSuperTypeService() {
 		if(superTypeService == null) {
 			String superClassName = null;
@@ -918,6 +932,7 @@ implements IClassifierService<S, J> {
 			objective = p;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (objective != null) {
@@ -970,6 +985,7 @@ implements IClassifierService<S, J> {
 			ownerHandler = o;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (monitor == null) {
@@ -986,7 +1002,7 @@ implements IClassifierService<S, J> {
 						String content = new String();
 						String typeName = new String();
 						Type t = objective.getType();
-						if(t!=null) {
+						if(t != null) {
 							typeName += t.getName();
 						}
 						else {
@@ -997,7 +1013,7 @@ implements IClassifierService<S, J> {
 						}
 						String visibility = new String();
 						VisibilityKind v = objective.getVisibility();
-						if(v!=null) {
+						if(v != null) {
 							switch (v.getValue()) {
 							case VisibilityKind.PRIVATE:
 								visibility = 
@@ -1072,6 +1088,7 @@ implements IClassifierService<S, J> {
 			newName = nm;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if((javaElement!=null)&&(newName!=null)) {
