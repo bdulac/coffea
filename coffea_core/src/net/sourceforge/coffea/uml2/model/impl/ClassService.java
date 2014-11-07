@@ -10,7 +10,6 @@ import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.ITypesContainerService;
 
 import org.eclipse.uml2.uml.Class;
-import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
 import org.eclipse.uml2.uml.UMLFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -76,33 +75,8 @@ implements IClassService<TypeDeclaration, IType> {
 			ICompilationUnit u
 	) {
 		super(jEl, p, u);
-		this.completeClassConstruction(null, p, u);
+		// completeTypeConstruction(null, p, u);
 	}
-
-	/*
-	@Override
-	public String getFullName() {
-		String name = new String();
-		buildFullyQualifiedName(javaElement);
-		if(getContainerHandler() instanceof IClassHandling<?, ?>) {	
-			name += getContainerHandler().getFullName() + '$';
-			String simpleName = getSimpleName();
-			//Removing  anything before any point in the simple name for 
-			//the hierarchy transition case
-			int ind = -1;
-			if(
-					((ind = simpleName.indexOf('.'))!=-1)
-					&&(ind<simpleName.length())
-			) {
-				simpleName = simpleName.substring(ind +1);
-			}
-			name += simpleName;
-
-		}
-		else name = super.getFullName();
-		return name;
-	}
-	 */
 
 	@Override
 	public void createUmlElement() {
@@ -137,60 +111,6 @@ implements IClassService<TypeDeclaration, IType> {
 		}
 		umlModelElement.setVisibility(getVisibility());
 	}
-
-	/*
-	@Override
-	public IElementService getElementService(String n) {
-		IElementService ret = super.getElementService(n);
-		if(ret != null)return ret;
-		else if(n!=null) {
-			if((ret == null) && (types != null)) {
-				ITypeService<?, ?> cl;
-				for(int i = 0 ; i < types.size() ; i++) {
-					cl = types.get(i);
-					if(cl != null) {
-						if(n.equals(cl.getFullName())) {
-							ret = cl;
-						}
-						else {
-							ret = cl.getElementService(n);
-						}
-						if(ret != null) {
-							break;
-						}
-					}
-				}
-			}
-		}
-		return ret;
-	}
-	*/
-
-	/*
-	@Override
-	public List<IElementService> getElementsHandlers() {
-		List<IElementService> ret = super.getElementsHandlers();
-		if(properties!=null) {
-			IAttributeService prop = null;
-			for(int i=0 ; i<properties.size() ; i++) {
-				prop = properties.get(i);
-				if(prop!=null) {
-					ret.add(prop);
-				}
-			}
-		}
-		if(types!=null) {
-			ITypeService<?, ?> cl = null;
-			for(int i=0 ; i<types.size() ; i++) {
-				cl = types.get(i);
-				if(cl!=null) {
-					ret.add(cl);
-				}
-			}
-		}
-		return ret;
-	}
-	*/
 
 	/*
 	@Override
@@ -258,6 +178,7 @@ implements IClassService<TypeDeclaration, IType> {
 	}
 	 */
 
+	// @Override
 	public IClassService<?, ?> createNestedClass(Class newClass) {
 		IClassService<?, ?> cl = null;
 		if(newClass!=null) {
@@ -268,6 +189,7 @@ implements IClassService<TypeDeclaration, IType> {
 		return cl;
 	}
 
+	// @Override
 	public void deleteNestedClass(Class oldClass) {
 		if(oldClass!=null) {
 			ClassRemoval runnable = new ClassRemoval(oldClass, this);
@@ -300,6 +222,7 @@ implements IClassService<TypeDeclaration, IType> {
 			nestingClassHandler = n;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (monitor == null) {
@@ -381,25 +304,26 @@ implements IClassService<TypeDeclaration, IType> {
 			nestingClassHandler = n;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (monitor == null) {
 				monitor = new NullProgressMonitor();
 			}
-			if(objective!=null) {
+			if(objective != null) {
 				String simpleName = 
 					ClassService.simpleNameExtraction(objective);
 				String qualifiedName = getFullName() + '$' + simpleName;
-				ITypeService<?, ?> tpH = resolveTypeService(qualifiedName);
-				if(tpH!=null) {
-					IType jEl = tpH.getJavaElement();
-					if(jEl!=null) {
+				ITypeService<?, ?> tSrv = resolveTypeService(qualifiedName);
+				if(tSrv != null) {
+					IType jEl = tSrv.getJavaElement();
+					if(jEl != null) {
 						try {
 							jEl.delete(
 									false, 
 									new NullProgressMonitor()
 							);
-							nestingClassHandler.getTypesServices().remove(tpH);
+							nestingClassHandler.getTypesServices().remove(tSrv);
 						} catch (JavaModelException e) {
 							e.printStackTrace();
 						}
