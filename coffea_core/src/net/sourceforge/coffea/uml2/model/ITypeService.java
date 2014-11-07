@@ -6,7 +6,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.uml2.uml.Type;
 
-/** 
+/**
  * Service for a type
  * @param <S>
  * Type of the element handled by the service as AST node
