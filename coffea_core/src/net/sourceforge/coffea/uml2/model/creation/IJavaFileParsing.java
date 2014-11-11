@@ -16,9 +16,11 @@ public interface IJavaFileParsing {
 	 * 	Compilation unit the type belongs to
 	 * @return Processed type handler
 	 */
+	/*
 	public ITypeService<?, ?> processParsedType(
 			TypeDeclaration t, 
 			CompilationUnit c
 	);
+	*/
 	
 }

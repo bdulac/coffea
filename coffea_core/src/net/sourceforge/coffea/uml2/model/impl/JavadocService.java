@@ -11,8 +11,15 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.transaction.NotificationFilter;
 import org.eclipse.emf.transaction.ResourceSetChangeEvent;
 import org.eclipse.emf.transaction.RollbackException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Element;
 
@@ -23,11 +30,12 @@ extends ElementService<Comment> implements INoteService {
 	private static final long serialVersionUID = -9190763359101571574L;
 
 	/** AST node to which the Javadoc is attached */
-	private IContainableElementService<?, ?> subject;
+	private IASTNodeService<?, ?> subject;
 	
 	public JavadocService(A p) {
 		if(p == null)throw new NullPointerException();
 		subject = p;
+		subject.getSyntaxNode();
 		
 		// TODO Auto-generated constructor stub
 	}
@@ -56,9 +64,11 @@ extends ElementService<Comment> implements INoteService {
 	protected void createUmlElement() {
 		String text = getText();
 		if(text != null) {
+			/*
 			Element subjectEl = subject.getUMLElement();
 			umlModelElement = subjectEl.createOwnedComment();
 			umlModelElement.setBody(text);
+			*/
 		}
 	}
 

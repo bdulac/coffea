@@ -53,56 +53,6 @@ implements IMemberService<S, J> {
 	}
 
 	/**
-	 * Member service construction without any declaration but with an 
-	 * existing UML element
-	 * @param own
-	 * Value of {@link #container}
-	 * @param nm
-	 * Value of {@link #defaultSimpleName}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected MemberService(
-			ITypesOwnerContainableService own, 
-			String nm, 
-			E ume
-	) {
-		super(own, nm, ume);
-	}
-
-	/**
-	 * Member service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 */
-	protected MemberService(
-			S stxNode,
-			ITypesOwnerContainableService p
-	) {
-		super(stxNode, p);
-	}
-
-	/**
-	 * Member service construction from an AST node and an existing 
-	 * UML element
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected MemberService(
-			S stxNode, 
-			ITypesOwnerContainableService own, 
-			E ume
-	) {
-		super(stxNode, own, ume);
-	}
-
-	/**
 	 * Member service from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}
@@ -114,24 +64,6 @@ implements IMemberService<S, J> {
 			ITypesOwnerContainableService p
 	) {
 		super(jEl, p);
-	}
-
-	/**
-	 * Member service construction from a Java element and an existing UML 
-	 * element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected MemberService(
-			J jEl, 
-			ITypesOwnerContainableService own, 
-			E ume
-	) {
-		super(jEl, own, ume);
 	}
 
 	public IModelService getModelService() {

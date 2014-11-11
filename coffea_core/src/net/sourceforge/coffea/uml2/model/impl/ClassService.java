@@ -41,26 +41,6 @@ implements IClassService<TypeDeclaration, IType> {
 	}
 
 	/**
-	 * Class service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param r
-	 * Value of {@link #rewriter}
-	 * @param u
-	 * Value of {@link #parsedUnit}
-	 */
-	public ClassService(
-			TypeDeclaration stxNode, 
-			ITypesContainerService p, 
-			ASTRewrite r, 
-			CompilationUnit u
-	) {
-		super(stxNode, r, p, u);
-	}
-
-	/**
 	 * Class service construction from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}

@@ -31,20 +31,6 @@ implements IAssociationService<FieldDeclaration, IField> {
 	private static final long serialVersionUID = 8377039626908942363L;
 
 	/**
-	 * Composition service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}, composition supplier declaration
-	 * @param p
-	 * Value of {@link #container}, composition client handler
-	 */
-	protected CompositionService(
-			FieldDeclaration stxNode, 
-			IClassifierService<?, ?> p
-	) {
-		super(stxNode, p);
-	}
-
-	/**
 	 * Construction service construction from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}, composition supplier declaration
@@ -56,6 +42,14 @@ implements IAssociationService<FieldDeclaration, IField> {
 			IClassifierService<?, ?> p
 	) {
 		super(jEl, p);
+	}
+	
+	@Override
+	protected void completeConstruction(
+			IField jEl
+	) {
+		if(jEl == null)throw new NullPointerException();
+		javaElement = jEl;
 	}
 	
 	@Override

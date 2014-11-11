@@ -151,21 +151,6 @@ implements IAttributeService {
 	}
 
 	/**
-	 * Construction of a service for an attribute from an AST node
-	 * @param clSrv
-	 * 	Value of {@link #container}
-	 * @param fDeclaration
-	 * 	Value of {@link #syntaxTreeNode}
-	 */
-	protected PropertyService(
-			FieldDeclaration fDeclaration, 
-			IClassifierService<?, ?> clSrv
-	) {
-		super(fDeclaration, clSrv);
-		completePropertyConstruction(null, clSrv);
-	}
-
-	/**
 	 * Construction of a service for an attribute from a Java element
 	 * @param clSrv
 	 * 	Value of {@link #container}
@@ -174,13 +159,19 @@ implements IAttributeService {
 	 */
 	protected PropertyService(IField jEl, IClassifierService<?, ?> clSrv) {
 		super(jEl, clSrv);
-		completePropertyConstruction(null, clSrv);
 	}
 	
-	protected void completePropertyConstruction(
-			ASTRewrite r, 
-			IPropertiesOwnerService p
+	@Override
+	protected void completeConstruction(
+			IField jEl
 	) {
+		if(jEl == null)throw new NullPointerException();
+		javaElement = jEl;
+		ITypeService<?, ?> contSrv = getContainerService();
+		if(contSrv != null) {
+			syntaxTreeNode = 
+					contSrv.getFieldDeclaration(javaElement.getElementName());
+		}
 	}
 
 	public String getSimpleName() {

@@ -41,13 +41,6 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.ui.IWorkbenchWindow;
 
 /**
@@ -632,6 +625,7 @@ implements IModelServiceBuilding {
 		}
 	}
 
+	/*
 	public synchronized ITypeService<?, ?> processParsedType(
 			TypeDeclaration tDeclaration, 
 			CompilationUnit cUnit
@@ -668,6 +662,7 @@ implements IModelServiceBuilding {
 		}
 		return result;
 	}
+	*/
 
 	/**
 	 * Process an element of the file system (file or directory
@@ -831,6 +826,7 @@ implements IModelServiceBuilding {
 							e2.printStackTrace();
 						}
 						monitor.worked(3);
+						/*
 						// If we have found the processed project, 
 						if (javaProject != null) {
 							// Then we parse the processed code section
@@ -851,13 +847,11 @@ implements IModelServiceBuilding {
 								if(node instanceof TypeDeclaration) {
 									TypeDeclaration type = 
 										(TypeDeclaration)node;
-									/*
-									 * We now know a type contained inside the 
-									 * compilation unit
-									 * Then the following manufacturing 
-									 * operation will consist in adding this 
-									 * type to the model
-									 */
+									// We now know a type contained inside the 
+									// compilation unit
+									// Then the following manufacturing 
+									// operation will consist in adding this 
+									// type to the model
 									processParsedType(
 											type, 
 											result
@@ -866,6 +860,7 @@ implements IModelServiceBuilding {
 							}
 							monitor.worked(6);
 						}
+						*/
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					}

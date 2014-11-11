@@ -49,55 +49,6 @@ implements IASTNodeService<S, J> {
 	}
 	
 	/**
-	 * AST node service construction without any declaration but with an 
-	 * existing UML element
-	 * @param own
-	 * Value of {@link #container}
-	 * @param nm
-	 * Value of {@link #defaultSimpleName}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected ASTNodeService(IContainerService own, String nm, E ume) {
-		super(own, ume);
-		defaultSimpleName = nm;
-	}
-	
-	/**
-	 * AST node service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param own
-	 * Value of {@link #container}
-	 */
-	protected ASTNodeService(
-			S stxNode, 
-			IContainerService own
-	) {
-		super(own);
-		completeConstruction(stxNode);
-	}
-
-	/**
-	 * AST node service construction from an AST node and an existing UML 
-	 * element
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected ASTNodeService(
-			S stxNode,
-			IContainerService own, 
-			E ume
-	) {
-		super(own, ume);
-		completeConstruction(stxNode);
-	}
-	
-	/**
 	 * AST node service construction from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}
@@ -137,12 +88,7 @@ implements IASTNodeService<S, J> {
 		syntaxTreeNode = stxNode;
 	}
 	
-	private void completeConstruction(J jEl) {
-		javaElement = jEl;
-		if(javaElement != null) {
-			noteService = new JavadocService<ASTNodeService<E, S, J>>(this);
-		}
-	}
+	protected abstract void completeConstruction(J jEl);
 	
 	public S getSyntaxNode() {
 		return syntaxTreeNode;
@@ -151,5 +97,4 @@ implements IASTNodeService<S, J> {
 	public J getJavaElement() {
 		return javaElement;
 	}
-
 }

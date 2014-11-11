@@ -43,6 +43,7 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.internal.corext.refactoring.rename.JavaRenameProcessor;
@@ -261,25 +262,7 @@ implements IClassifierService<S, J> {
 	 */
 	protected ClassifierService(ITypesContainerService p, String nm) {
 		super(p, nm);
-		completeConstruction(null, p);
-	}
-	
-	/**
-	 * Classifier service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 */
-	protected ClassifierService(
-			S stxNode,
-			ASTRewrite r, 
-			ITypesContainerService p, 
-			CompilationUnit u
-	) {
-		super(stxNode, p);
-		completeTypeConstruction(r, p, u);
-		completeConstruction(r, p, u);
+		init(p);
 	}
 	
 	/**
@@ -295,10 +278,12 @@ implements IClassifierService<S, J> {
 			ICompilationUnit u
 	) {
 		super(jEl, p);
-		completeTypeConstruction(null, p, u);
-		completeConstruction(null, p, u);
+		// completeTypeConstruction(null, p, u);
+		init(p);
+		completeConstruction(p, u);
 	}
 
+	/*
 	protected void completeTypeConstruction(
 			ASTRewrite r,
 			ITypesContainerService p, 
@@ -314,20 +299,55 @@ implements IClassifierService<S, J> {
 			parsedUnit = (CompilationUnit)n;
 		}
 	}
-
-	protected void completeTypeConstruction(ASTRewrite r,
-			ITypesContainerService p, CompilationUnit c) {
-		parsedUnit = c;
+	*/
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void completeConstruction(J jEl) {
+		if(jEl == null)throw new NullPointerException();
+		javaElement = jEl;
+		getContainerService();
+		processedUnit = javaElement.getCompilationUnit();
+		if (processedUnit != null) {
+			// Note the simple name of the java element in the compilation
+			// unit
+			String simpleName = javaElement.getElementName();
+			// Parse the source
+			@SuppressWarnings("deprecation")
+			ASTParser parser = ASTParser.newParser(AST.JLS3);
+			parser.setKind(ASTParser.K_COMPILATION_UNIT);
+			parser.setSource(processedUnit);
+			parser.setResolveBindings(true);
+			// Fetch the AST node for the compilation unit
+			ASTNode unitNode = parser.createAST(new NullProgressMonitor());
+			// It should be an AST compilation unit
+			if (unitNode instanceof CompilationUnit) {
+				CompilationUnit sourceUnit = (CompilationUnit) unitNode;
+				parsedUnit = sourceUnit;
+				AST ast = parsedUnit.getAST();
+				rewriter = ASTRewrite.create(ast);
+				List<?> types = parsedUnit.types();
+				for(Object t : types) {
+					if(t instanceof TypeDeclaration) {
+						TypeDeclaration type = (TypeDeclaration)t;
+						SimpleName typeName = type.getName();
+						if(simpleName.equals(typeName.toString())) {
+							syntaxTreeNode = (S) type;
+						}
+					}
+				}
+			}
+			noteService = new JavadocService<ASTNodeService<E, S, J>>(this);
+		}
 	}
-
+	
 	// Completes the constructors, factorization of the specialized part for
 	// use in every constructor
-	protected void completeConstruction(ASTRewrite r, IOwnerService p) {
+	protected void init(IOwnerService p) {
 		if (p instanceof ITypesContainerService) {
 			ITypesContainerService cont = (ITypesContainerService) p;
 			cont.addTypeService(this);
 		}
-		rewriter = r;
 		operationsServices = new ArrayList<IMethodService>();
 		types = new ArrayList<ITypeService<?, ?>>();
 		getSuperInterfaceServices();
@@ -335,19 +355,7 @@ implements IClassifierService<S, J> {
 		// Properties and dependencies
 		dependenciesServices = new ArrayList<IAssociationService<?, ?>>();
 		properties = new ArrayList<IAttributeService>();
-		// AST Node
-		if(syntaxTreeNode != null) {
-			// We get all the attribute declarations
-			FieldDeclaration[] fields = syntaxTreeNode.getFields();
-			// For each attribute of the class,
-			for (int i = 0; i < fields.length; i++) {
-				// We add a tool to the list
-				addPropertyService(new PropertyService(fields[i], this));
-				// And a dependency
-				dependenciesServices
-						.add(new CompositionService(fields[i], this));
-			}
-		} else if (javaElement != null) {
+		if (javaElement != null) {
 			// We get all the fields
 			try {
 				IField[] fields = javaElement.getFields();
@@ -370,25 +378,7 @@ implements IClassifierService<S, J> {
 	public ITypeService<?, ?> getSuperTypeService() {
 		if(superTypeService == null) {
 			String superClassName = null;
-			// AST Node
-			if (syntaxTreeNode != null) {
-
-				// If this class has a super class,
-				if (syntaxTreeNode.getSuperclassType() != null) {
-					// We resolve this super class
-					ITypeBinding binding = syntaxTreeNode.getSuperclassType()
-							.resolveBinding();
-					// And try to get its name
-					if (binding != null) {
-						superClassName = binding.getQualifiedName();
-						int smtIdx = superClassName.indexOf('<');
-						if (smtIdx >= 0) {
-							superClassName = superClassName.substring(0, smtIdx);
-						}
-					}
-				}
-				// Java element
-			} else if (javaElement != null) {
+			if (javaElement != null) {
 				try {
 					// If this class has a super class,
 					if (javaElement.getSuperclassName() != null) {
@@ -414,6 +404,26 @@ implements IClassifierService<S, J> {
 					CoffeaUML2Plugin.getInstance().logError(e.getMessage(), e);
 				}
 			}
+			// AST Node
+			else if (syntaxTreeNode != null) {
+
+				// If this class has a super class,
+				if (syntaxTreeNode.getSuperclassType() != null) {
+					// We resolve this super class
+					ITypeBinding binding = syntaxTreeNode.getSuperclassType()
+							.resolveBinding();
+					// And try to get its name
+					if (binding != null) {
+						superClassName = binding.getQualifiedName();
+						int smtIdx = superClassName.indexOf('<');
+						if (smtIdx >= 0) {
+							superClassName = superClassName
+									.substring(0, smtIdx);
+						}
+					}
+				}
+				// Java element
+			}
 			if(superClassName != null) {
 				superTypeService = 
 						getModelService().resolveTypeService(superClassName);
@@ -423,21 +433,33 @@ implements IClassifierService<S, J> {
 	}
 
 	protected void completeConstruction(
-			ASTRewrite r, 
 			IOwnerService p, 
 			ICompilationUnit c
 	) {
 		processedUnit = c;
-		completeConstruction(r, p);
 	}
-
-	protected void completeConstruction(
-			ASTRewrite r, 
-			IOwnerService p, 
-			CompilationUnit c
-	) {
-		parsedUnit = c;
-		completeConstruction(r, p);
+	
+	// @Override
+	public FieldDeclaration getFieldDeclaration(String elementName) {
+		if((syntaxTreeNode != null) && (elementName != null)) {
+			FieldDeclaration[] fields = syntaxTreeNode.getFields();
+			for(FieldDeclaration field : fields) {
+				// TODO
+			}
+		}
+		return null;
+	}
+	
+	// @Override
+	public MethodDeclaration getMethodDeclaration(String elementName) {
+		if((syntaxTreeNode != null) && (elementName != null)) {
+			MethodDeclaration[] methods = syntaxTreeNode.getMethods();
+			for(MethodDeclaration method : methods) {
+				SimpleName name = method.getName();
+				// TODO
+			}
+		}
+		return null;
 	}
 
 	// @Override
@@ -488,9 +510,9 @@ implements IClassifierService<S, J> {
 	public ITypeService<?, ?> resolveTypeService(String n) {
 		if(n != null) {
 			if(n.equals(this.getFullName()))return this;
-			List<ITypeService<?, ?>> cls = getTypesServices();
-			for(int i = 0 ; i < cls.size() ; i++) {
-				if(cls.get(i).getFullName().equals(n))return cls.get(i);
+			List<ITypeService<?, ?>> tSrvs = getTypesServices();
+			for(ITypeService<?, ?> tSrv : tSrvs) {
+				if(tSrv.getFullName().equals(n))return tSrv;
 			}
 		}
 		return null;
@@ -755,7 +777,7 @@ implements IClassifierService<S, J> {
 
 		// @Override
 		public ASTRewrite getRewriter() {
-			return this.rewriter;
+			return rewriter;
 		}
 		
 	// @Override
@@ -803,37 +825,8 @@ implements IClassifierService<S, J> {
 		// Super interfaces
 		superInterfacesServices = new ArrayList<IInterfaceService<?, ?>>();
 		List<String> superInterfacesNames = new ArrayList<String>();
-		// AST Node
-		if (syntaxTreeNode != null) {
-			// We get all the methods declarations
-			MethodDeclaration[] operations = syntaxTreeNode.getMethods();
-			// We add a handler to the list for each method of the class
-			for (MethodDeclaration operation : operations) {
-				addOperationService(new OperationService(operation, this));
-			}
-			List<?> interfaces = syntaxTreeNode.superInterfaceTypes();
-			// If this class has super interfaces,
-			if (interfaces != null) {
-				// Then we try to resolves the binding for each interface,
-				Object ob = null;
-				org.eclipse.jdt.core.dom.Type tp = null;
-				ITypeBinding binding = null;
-				for (int i = 0; i < interfaces.size(); i++) {
-					ob = interfaces.get(i);
-					if ((ob != null)
-							&& (ob instanceof org.eclipse.jdt.core.dom.Type)) {
-						tp = (org.eclipse.jdt.core.dom.Type) ob;
-						binding = tp.resolveBinding();
-						if (binding != null) {
-							// Aiming to get a qualified name
-							superInterfacesNames
-									.add(binding.getQualifiedName());
-						}
-					}
-				}
-			}
-			// Java element
-		} else if (javaElement != null) {
+		// Java element
+		if (javaElement != null) {
 			try {
 				IMethod[] operations = javaElement.getMethods();
 				if (operations != null) {
@@ -1112,12 +1105,12 @@ implements IClassifierService<S, J> {
 									CheckConditionsOperation.FINAL_CONDITIONS
 							);
 						op.run(monitor);
-						ITypesContainerService contH = getContainerService();
-						if(contH!=null) {
-							String newFullName = contH.getFullName();
+						ITypesContainerService ctSrv = getContainerService();
+						if(ctSrv != null) {
+							String newFullName = ctSrv.getFullName();
 							newFullName += '.' + newName;
 							IType tp = null;
-							if(processedUnit!=null) {
+							if(processedUnit != null) {
 								tp =
 									processedUnit.getJavaProject().findType(
 											newFullName
@@ -1129,19 +1122,20 @@ implements IClassifierService<S, J> {
 											newFullName
 									);
 							}
-							if(tp!=null) {
+							if(tp != null) {
 								ICompilationUnit newUnit = 
 									tp.getCompilationUnit();
-								if(newUnit!=null) {
-									ITypeService<?, ?> tpH = 
+								if(newUnit != null) {
+									ITypeService<?, ?> tpSrv = 
 										getModelService().getServiceBuilder()
 										.processTypeService(
 												newUnit, 
 												new NullProgressMonitor()
 										);
-									if(tpH!=null) { 
-										contH.addTypeService(tpH);
-										contH.getTypesServices().remove(this);
+									if(tpSrv != null) { 
+										ctSrv.addTypeService(tpSrv);
+										ctSrv.getTypesServices()
+										.remove(this);
 									}
 								}
 							}

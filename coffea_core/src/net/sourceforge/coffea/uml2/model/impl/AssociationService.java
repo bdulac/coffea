@@ -29,20 +29,6 @@ public abstract class AssociationService extends
 	public AssociationService(ITypesOwnerContainableService p, String nm) {
 		super(p, nm);
 	}
-	
-	/**
-	 * Construction
-	 * @param stxNode
-	 * 	Value of {@link #syntaxTreeNode}, association supplier declaration
-	 * @param p
-	 * 	Value of {@link #container}, service for the association client
-	 */
-	protected AssociationService(
-			FieldDeclaration stxNode, 
-			IClassifierService<?, ?> p
-	) {
-		super(stxNode, p);
-	}
 
 	/**
 	 * Construction

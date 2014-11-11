@@ -25,6 +25,7 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.DataType;
@@ -59,41 +60,7 @@ implements IMethodService {
 	 * @see #resolveParametersTypesServices()
 	 */
 	protected List<ITypeService<?, ?>> parametersTypesHandlers;
-
-	/**
-	 * Operation service construction
-	 * @param p
-	 * Value of {@link #container}, <code>null</code> if 
-	 * {@link #syntaxTreeNode} is a root
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 */
-	protected OperationService(
-			MethodDeclaration stxNode, 
-			IClassifierService<?, ?> p
-	) {
-		super(stxNode, p);
-		completeOperationConstruction(null, p);
-	}
-
-	/**
-	 * Operation service construction given an existing <em>UML</em> element
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected OperationService(
-			MethodDeclaration stxNode, 
-			IClassifierService<?, ?> own, 
-			Operation ume
-	) {
-		super(stxNode, own, ume);
-		completeOperationConstruction(null, own);
-	}
-
+	
 	/**
 	 * Operation service construction
 	 * @param jEl
@@ -104,31 +71,17 @@ implements IMethodService {
 	 */
 	protected OperationService(IMethod jEl, IClassifierService<?, ?> p) {
 		super(jEl, p);
-		completeOperationConstruction(null, p);
-	}
-
-	/**
-	 * Operation service construction given an existing <em>UML</em> element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected OperationService(
-			IMethod jEl, 
-			IClassifierService<?, ?> own, 
-			Operation ume
-	) {
-		super(jEl, own, ume);
-		completeOperationConstruction(null, own);
 	}
 	
-	protected void completeOperationConstruction(
-			ASTRewrite r, 
-			IOperationsOwnerService p
-	) {
+	@Override
+	protected void completeConstruction(IMethod jEl) {
+		if(jEl == null)throw new NullPointerException();
+		javaElement = jEl;
+		ITypeService<?, ?> contSrv = getContainerService();
+		if(contSrv != null) {
+			syntaxTreeNode = 
+					contSrv.getMethodDeclaration(javaElement.getElementName());
+		}
 	}
 
 	@Override

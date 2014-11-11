@@ -160,36 +160,6 @@ implements IPackageService {
 	}
 
 	/**
-	 * Construction of a package handler without an existing declaration but 
-	 * with an existing UML element
-	 * @param p
-	 * Value of {@link #container}
-	 * @param nm
-	 * Value of {@link #defaultSimpleName}
-	 * @param pk
-	 * Value of {@link #umlModelElement}
-	 */
-	public PackageService(IPackagesGroupService p, String nm, Package pk) {
-		super(p, nm, pk);
-		completeConstruction(p);
-	}
-
-	/**
-	 * Construction of a package handler
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 */
-	public PackageService(
-			PackageDeclaration stxNode, 
-			IPackagesGroupService p
-	) {
-		super(stxNode, p);
-		completeConstruction(p);
-	}
-
-	/**
 	 * Construction of a package service from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}
@@ -296,6 +266,14 @@ implements IPackageService {
 	}
 	
 	@Override
+	protected void completeConstruction(
+			IPackageFragment jEl
+	) {
+		if(jEl == null)throw new NullPointerException();
+		javaElement = jEl;
+	}
+	
+	@Override
 	protected void loadExistingUmlElement() {
 		// TODO Auto-generated method stub
 		IGroupService parent = getContainerService();
@@ -385,11 +363,11 @@ implements IPackageService {
 			createUmlElement();
 		}
 		if(init) {
-			for (int i = 0; i < packages.size(); i++) {
-				packages.get(i).setUpUMLModelElement();
+			for (IPackageService packSrv : packages) {
+				packSrv.setUpUMLModelElement();
 			}
-			for (int i = 0; i < types.size(); i++) {
-				types.get(i).setUpUMLModelElement();
+			for (ITypeService<?, ?> typeSrv : types) {
+				typeSrv.setUpUMLModelElement();
 			}
 		}
 		if(noteService != null)noteService.setUpUMLModelElement();

@@ -39,26 +39,6 @@ implements IInterfaceService<TypeDeclaration, IType>{
 	}
 
 	/**
-	 * Interface service construction from an AST node
-	 * @param stxNode
-	 * Value of {@link #syntaxTreeNode}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param r
-	 * Value of {@link #rewriter}
-	 * @param u
-	 * Value of {@link #parsedUnit}
-	 */
-	public InterfaceService(
-			TypeDeclaration stxNode, 
-			ITypesContainerService p, 
-			ASTRewrite r, 
-			CompilationUnit u
-	) {
-		super(stxNode, r, p, u);
-	}
-
-	/**
 	 * Interface service construction from a Java element
 	 * @param jEl
 	 * Value of {@link #javaElement}

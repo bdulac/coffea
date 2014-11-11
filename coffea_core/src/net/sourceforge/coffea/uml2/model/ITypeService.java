@@ -3,6 +3,8 @@ package net.sourceforge.coffea.uml2.model;
 import java.util.List;
 
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.uml2.uml.Type;
 
@@ -39,4 +41,19 @@ extends IPackageableElementService<S, J>, ITypesOwnerContainableService {
 	public List<IInterfaceService<?, ?>> getSuperInterfaceServices();
 	
 	public Type getUMLElement();
+
+	/**
+	 * @param elementName
+	 * Field simple name
+	 * @return Field AST node it the AST is parsed, <em>null</em> otherwise
+	 */
+	public FieldDeclaration getFieldDeclaration(String elementName);
+	
+	/**
+	 * 
+	 * @param elementName
+	 * Method simple name
+	 * @return Method AST node if the AST is parsed, <em>null<em> otherwise
+	 */
+	public MethodDeclaration getMethodDeclaration(String elementName);
 }
