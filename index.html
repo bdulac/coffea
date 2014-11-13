@@ -15,8 +15,8 @@ title: Home page
           <p>
             Consequently, the <span class="latine">Coffea</span> 
             plug-in needs refactoring. The first objective is to separate 
-            the UML2 Tools dependencies from the rest of the software. As a 
-            result:
+            the UML2 Tools dependencies from the rest of the software. 
+            Here is the state of the code:
           </p>
           <ul>
             <li>
@@ -27,37 +27,37 @@ title: Home page
               XMI</a> compliant document)
             </li>
             <li>
-              Another plug-in provides the code edition: 
-              <ul>
-                <li>
-                  A first (legacy) plug-in proposes the historical code edition
-                 with the UML2 Tools
-                </li>
-                <li>
-                In the future, code edition will be triggered with 
-                <a href="http://download.eclipse.org/modeling/emf/transaction/javadoc/workspace/1.4.0/org/eclipse/emf/transaction/ResourceSetListener.html">
-                EMF ResourceSetListeners</a>
-               	</li>
-              </ul>
+              Another plug-in provides the code edition feature
             </li>
           </ul>
           <p>  
-            To use the UML2 Tools plug-in, you need an eclipse <a href="http://www.eclipse.org/galileo/">Galileo</a> 
+          	Not to reproduce the UML2Tools situation, 
+          	here is the plan for the code edition feature: 
+          	in the future, code edition will be triggered with 
+              <a href="http://download.eclipse.org/modeling/emf/transaction/javadoc/workspace/1.4.0/org/eclipse/emf/transaction/ResourceSetListener.html">
+              EMF ResourceSetListeners</a>.
+          </p>
+          <ul>
+            <li>
+              
+            </li>
+          </ul>
+          <p>
+          	To use the (legacy) UML2 Tools plug-in, you need an eclipse <a href="http://www.eclipse.org/galileo/">Galileo</a> 
             distribution including the Java development tools and the UML2 
             tools : just 
             <span>
               <a 
               href="http://sourceforge.net/project/showfiles.php?group_id=249590">
-              download the jar file </a>
+              download the jar file (from sourceforge)</a>
             </span> and deploy it in the eclipse <em>plug-ins</em> directory.
-          </p>
-          <p>
-            The plug-in allows to reverse java packages 
+            This plug-in allows to reverse java packages 
             code to UML diagrams ; selected classes and attributes are 
             <a href="http://sourceforge.net/dbimage.php?id=200578">displayed
             </a> in the class diagram editor in the workbench navigators views. 
             Classes, properties and packages creation, renaming and removal 
-            performed using the editor are propagated to the code. 
+            performed using the editor are propagated to the code. The tutorial 
+            is still an example of such an operation.
           </p>
         </div>
         <!--
