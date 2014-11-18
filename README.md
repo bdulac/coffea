@@ -1,7 +1,6 @@
-![](https://raw.githubusercontent.com/bdulac/coffea/gh-pages/img/img.png)
-
 Coffea
 ======
+![](https://raw.githubusercontent.com/bdulac/coffea/gh-pages/img/img.png)
 
 <p>
 Coffea is an Eclipse plug-in trying to link the <a href="http://www.eclipse.org/jdt/">Java Development Tools (JDT)</a> to UML editors. A previous version has been implemented with the <a href="http://wiki.eclipse.org/MDT-UML2Tools">UML2tools</a> which have not evolved since <a href="https://www.eclipse.org/galileo/">Eclipse Galileo</a> (2009).
