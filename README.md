@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/bdulac/coffea/gh-pages/img/img.png)
+
 Coffea
 ======
 
