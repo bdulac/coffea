@@ -62,31 +62,6 @@ implements IASTNodeService<S, J> {
 		super(own);
 		completeConstruction(jEl);
 	}
-
-	/**
-	 * AST node service construction from a Java element and an existing UML
-	 * element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param own
-	 * Value of {@link #container}
-	 * @param ume
-	 * Value of {@link #umlModelElement}
-	 */
-	protected ASTNodeService(
-			J jEl,
-			IContainerService own, 
-			E ume
-	) {
-		super(own, ume);
-		completeConstruction(jEl);
-	}
-	
-	//Completes the constructors, factorization of the specialized part for 
-	//use in every constructor
-	private void completeConstruction(S stxNode) {
-		syntaxTreeNode = stxNode;
-	}
 	
 	protected abstract void completeConstruction(J jEl);
 	

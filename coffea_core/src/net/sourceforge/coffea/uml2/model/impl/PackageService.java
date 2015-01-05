@@ -171,23 +171,6 @@ implements IPackageService {
 		completeConstruction(p);
 	}
 
-	/**
-	 * Construction of a package service from a Java element
-	 * @param jEl
-	 * Value of {@link #javaElement}
-	 * @param p
-	 * Value of {@link #container}
-	 * @param pk
-	 * Value of {@link #umlModelElement}
-	 */
-	public PackageService(
-			IPackageFragment jEl, 
-			IPackagesGroupService p,
-			Package pk) {
-		super(jEl, p, pk);
-		completeConstruction(p);
-	}
-
 	public void retrieveContainerFromHierarchy() {
 		IModelService m = getModelService();
 		IPackagesGroupService parent = null;
@@ -935,6 +918,7 @@ implements IPackageService {
 			nestingPackageHandler = nestP;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (monitor == null) {
@@ -962,9 +946,9 @@ implements IPackageService {
 						IPackageFragmentRoot fragRoot = 
 							(IPackageFragmentRoot)parent;
 						String qualifiedName = new String();
-						IContainerService contH = getContainerService();
-						if(contH != null) {
-							String parentFullName = contH.getFullName();
+						IContainerService contSrv = getContainerService();
+						if(contSrv != null) {
+							String parentFullName = contSrv.getFullName();
 							if(
 									(parentFullName!=null)
 									&&(
@@ -991,13 +975,15 @@ implements IPackageService {
 										true, 
 										monitor
 								);
-							if(fragment!=null) {
-								result = 
-									new PackageService(
+							if(fragment != null) {
+								PackageService
+									res = 
+										new PackageService(
 											fragment, 
-											nestingPackageHandler, 
-											objective
-									);
+											nestingPackageHandler 
+										);
+								res.umlModelElement = objective;
+								result = res;
 							}
 						} catch (JavaModelException e) {
 							e.printStackTrace();
@@ -1027,6 +1013,7 @@ implements IPackageService {
 			objective = c;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (objective != null) {
@@ -1070,6 +1057,7 @@ implements IPackageService {
 			objective = p;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if (objective != null) {
@@ -1118,6 +1106,7 @@ implements IPackageService {
 			newName = nm;
 		}
 
+		// @Override
 		public void run(IProgressMonitor monitor)
 		throws InvocationTargetException, InterruptedException {
 			if((javaElement!=null)&&(newName!=null)) {

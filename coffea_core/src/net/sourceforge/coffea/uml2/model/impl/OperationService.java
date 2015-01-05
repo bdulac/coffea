@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.sourceforge.coffea.uml2.model.IClassifierService;
 import net.sourceforge.coffea.uml2.model.IMethodService;
-import net.sourceforge.coffea.uml2.model.IOperationsOwnerService;
 import net.sourceforge.coffea.uml2.model.ITypeService;
 import net.sourceforge.coffea.uml2.model.impl.MemberService;
 import net.sourceforge.coffea.uml2.model.impl.OperationService;
@@ -25,8 +24,6 @@ import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.uml2.uml.Class;
 import org.eclipse.uml2.uml.DataType;
 import org.eclipse.uml2.uml.Element;
