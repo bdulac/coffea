@@ -1,4 +1,4 @@
-*Coffea*
+*Coffea* (Eclipse, UML2Tools, JDT)
 ======
 ![](https://raw.githubusercontent.com/bdulac/coffea/gh-pages/img/img.png)
 
